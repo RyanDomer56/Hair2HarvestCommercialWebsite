@@ -72,9 +72,6 @@ export function SiteHeader() {
           </nav>
 
           <div className="hidden items-center gap-2 md:flex">
-            <Link href="/dashboard" className="btn btn-ghost btn-sm">
-              Open workspace
-            </Link>
             <Link href="/partner" className="btn btn-sm">
               Partner a shop
               <ArrowUpRight size={14} strokeWidth={2} />
@@ -110,9 +107,6 @@ export function SiteHeader() {
           <div className="shell mt-8 flex flex-col gap-3">
             <Link href="/partner" className="btn w-full">
               Partner a shop
-            </Link>
-            <Link href="/dashboard" className="btn btn-ghost w-full">
-              Open workspace
             </Link>
           </div>
           <div className="shell mt-auto pb-8">

@@ -393,8 +393,8 @@ export default function ImpactPage() {
                   Read the specification
                   <ArrowRight size={14} />
                 </Link>
-                <Link href="/dashboard" className="btn btn-sm">
-                  Open the workspace
+                <Link href="/network" className="btn btn-sm">
+                  See the shop network
                 </Link>
               </div>
             </Reveal>

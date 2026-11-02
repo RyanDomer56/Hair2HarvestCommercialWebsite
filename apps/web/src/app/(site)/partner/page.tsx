@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import { CalendarDays, Mail, MapPin, Phone } from "lucide-react";
 import { PageHero } from "@/components/site/page-hero";
 import { PartnerForm } from "@/components/site/partner-form";
 import { Reveal } from "@/components/site/reveal";
@@ -129,28 +128,20 @@ export default function PartnerPage() {
                     note: "Pilot barangay · by appointment",
                   },
                   {
-                    icon: ArrowUpRight,
-                    k: "Workspace",
-                    v: "Open the dashboard",
-                    note: "For staff and partners",
-                    href: "/dashboard",
+                    icon: CalendarDays,
+                    k: "Pickup window",
+                    v: "Tue & Fri · 8–9 PM",
+                    note: "Or whatever rule we agree on",
                   },
                 ].map((c) => {
                   const Icon = c.icon;
-                  const inner = (
-                    <div className="h-full bg-[var(--paper-raised)] p-6 transition-colors hover:bg-paper">
+                  return (
+                    <div key={c.k} className="h-full bg-[var(--paper-raised)] p-6 transition-colors hover:bg-paper">
                       <Icon size={16} className="text-clay" />
                       <p className="mono-tag mt-5 uppercase text-ink-mute">{c.k}</p>
                       <p className="mt-2 text-[0.9375rem] font-medium text-ink">{c.v}</p>
                       <p className="mt-1 text-[0.75rem] text-ink-mute">{c.note}</p>
                     </div>
-                  );
-                  return c.href ? (
-                    <Link key={c.k} href={c.href} className="block">
-                      {inner}
-                    </Link>
-                  ) : (
-                    <div key={c.k}>{inner}</div>
                   );
                 })}
               </div>

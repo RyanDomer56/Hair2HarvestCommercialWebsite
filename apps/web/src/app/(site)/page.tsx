@@ -543,8 +543,8 @@ export default function HomePage() {
                   Partner a shop
                   <ArrowUpRight size={15} />
                 </Link>
-                <Link href="/dashboard" className="btn btn-ghost">
-                  Open the workspace
+                <Link href="/network" className="btn btn-ghost">
+                  See the shop network
                 </Link>
               </div>
               <div className="mt-8 flex items-center gap-2 text-ink-mute">

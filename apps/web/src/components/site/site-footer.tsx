@@ -8,7 +8,7 @@ const columns = [
       { label: "The harvest line", href: "/system" },
       { label: "Grading standard", href: "/system#grading" },
       { label: "Batch & curing", href: "/system#batch" },
-      { label: "Lab evidence", href: "/impact" },
+      { label: "Evidence", href: "/impact" },
     ],
   },
   {
@@ -17,14 +17,12 @@ const columns = [
       { label: "Shop directory", href: "/network" },
       { label: "Pickup rules", href: "/network#rules" },
       { label: "Become a shop", href: "/partner" },
-      { label: "Collector route", href: "/dashboard/pickups" },
     ],
   },
   {
     title: "Company",
     items: [
       { label: "Research", href: "/impact" },
-      { label: "Open workspace", href: "/dashboard" },
       { label: "Contact", href: "/partner#contact" },
     ],
   },

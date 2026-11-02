@@ -26,13 +26,26 @@ hair2harvest/
 
 ## Routes
 
-| Public | Workspace |
+**Public site** — every page here is linked from the navigation and indexed.
+
+| Route | Content |
 | --- | --- |
-| `/` — hero, live 3D harvest line, problem, process, network, materials, evidence | `/dashboard` — operations overview |
-| `/system` — station detail, grading standard, pickup rules, batch timeline, roles | `/dashboard/shops` |
-| `/network` — filterable shop directory, pickup rules, contact | `/dashboard/pickups` |
-| `/impact` — collection chart, lab register, batch mass balance, planting trials | `/dashboard/batches` |
-| `/partner` — registration form with consent capture | `/dashboard/inventory`, `/machine`, `/lab`, `/experiments`, `/reports` |
+| `/` | Hero, live 3D harvest line, problem, process, network, materials, evidence |
+| `/system` | Station detail, grading standard, pickup rules, batch timeline, roles |
+| `/network` | Filterable shop directory, pickup rules, contact |
+| `/impact` | Collection chart, lab register, batch mass balance, planting trials |
+| `/partner` | Registration form with consent capture |
+
+**Operations workspace** — built but deliberately unlinked. No public page points at it and
+`robots.txt` disallows it, so it is reachable by URL only, for staff. It is kept in the
+codebase so it can be handed over or re-exposed on request.
+
+| Route | Content |
+| --- | --- |
+| `/dashboard` | Operations overview |
+| `/dashboard/shops`, `/pickups`, `/batches` | Shops, collection, composting |
+| `/dashboard/inventory`, `/machine`, `/lab` | Stock, machine telemetry, lab results |
+| `/dashboard/experiments`, `/reports` | Planting trials, exports and audit trail |
 
 ---
 
