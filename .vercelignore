@@ -1,0 +1,20 @@
+# Everything the web build needs. The Express API in apps/api is deployed
+# separately (it is a long-running server, not a serverless target), but its
+# workspace must stay in the upload so root `npm install` can resolve it.
+
+# local build output
+**/.next
+**/dist
+**/out
+
+# tooling
+.git
+.github
+**/node_modules
+.vercel
+*.log
+*.tsbuildinfo
+
+# editor noise
+.vscode
+.idea

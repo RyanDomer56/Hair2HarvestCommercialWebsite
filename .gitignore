@@ -24,3 +24,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 coverage/
+
+# vercel
+.vercel
+.env.local

@@ -41,13 +41,13 @@ export function SiteHeader() {
     <>
       <header
         className={cn(
-          "sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
+          "grain sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
           scrolled
             ? "border-b border-[var(--line)] bg-[color-mix(in_oklab,var(--paper)_92%,transparent)] backdrop-blur-md"
             : "border-b border-transparent bg-transparent",
         )}
       >
-        <div className="shell flex h-[72px] items-center justify-between gap-6">
+        <div className="shell relative z-10 flex h-[72px] items-center justify-between gap-6">
           <Wordmark />
 
           <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">

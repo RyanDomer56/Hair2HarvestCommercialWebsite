@@ -2,6 +2,8 @@
 
 A commercial web presence and operations workspace for a barbershop hair-to-compost network in Bataan, Philippines. React + TypeScript on the front, Express + MongoDB behind it.
 
+**Live:** https://hair2harvest-commercial-website.vercel.app
+
 > **The decision everything else follows from:** shops are records, not users. A barbershop never signs up, never logs in, never resets a password. Staff register it on site in about two minutes and write a code on its sack.
 
 ---
