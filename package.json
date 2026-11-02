@@ -1,0 +1,21 @@
+{
+  "name": "hair2harvest-commercial-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hair2Harvest — commercial website and operations system for a barbershop hair-to-compost network.",
+  "workspaces": [
+    "apps/web",
+    "apps/api"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "build": "npm run build --workspace=apps/web",
+    "typecheck": "npm run typecheck --workspace=apps/web",
+    "seed": "npm run seed --workspace=apps/api"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
