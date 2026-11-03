@@ -86,7 +86,7 @@ export default function HomePage() {
               </Reveal>
 
               <Reveal delay={80}>
-                <h1 className="display mt-7 text-[clamp(2.9rem,7.6vw,6.4rem)] text-ink">
+                <h1 className="display mt-7 text-[clamp(2.55rem,6.6vw,5.9rem)] text-ink">
                   Every haircut
                   <br />
                   leaves <em className="text-moss">something</em>
@@ -112,7 +112,9 @@ export default function HomePage() {
                 </Link>
               </div>
               <p className="mono-tag mt-5 text-ink-mute">
-                NO APP · NO LOGIN · NO EXTRA TASK FOR THE SHOP
+                NO APP · NO LOGIN
+                <br />
+                NO EXTRA TASK FOR THE SHOP
               </p>
             </Reveal>
           </div>
@@ -450,12 +452,12 @@ export default function HomePage() {
               />
               <div className="mt-8 flex items-center gap-6">
                 <div>
-                  <p className="num font-display text-[2rem] leading-none text-ink">+142%</p>
+                  <p className="num font-display font-semibold text-[2rem] leading-none text-ink">+142%</p>
                   <p className="mono-tag mt-2 text-ink-mute">WEEK 36 → WEEK 45</p>
                 </div>
                 <div className="h-10 w-px bg-[var(--line)]" />
                 <div>
-                  <p className="num font-display text-[2rem] leading-none text-ink">41</p>
+                  <p className="num font-display font-semibold text-[2rem] leading-none text-ink">41</p>
                   <p className="mono-tag mt-2 text-ink-mute">WEIGHED PICKUPS</p>
                 </div>
               </div>
@@ -497,7 +499,7 @@ export default function HomePage() {
               <Reveal key={item.k} delay={i * 80} className="bg-paper">
                 <div className="h-full bg-paper px-5 py-7">
                   <p className="mono-tag uppercase text-clay">{item.k}</p>
-                  <p className="num mt-6 font-display text-[2.25rem] leading-none text-ink">
+                  <p className="num mt-6 font-display font-semibold text-[2.25rem] leading-none text-ink">
                     {item.v}
                   </p>
                   <p className="mt-3 text-[0.8125rem] leading-[1.65] text-ink-soft">{item.d}</p>

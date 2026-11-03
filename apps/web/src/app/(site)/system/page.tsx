@@ -202,7 +202,7 @@ export default function SystemPage() {
               <Reveal key={s.n} delay={i * 60} className="bg-[var(--paper-raised)]">
                 <article className="grid gap-6 bg-[var(--paper-raised)] p-6 lg:grid-cols-[80px_minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 lg:p-8">
                   <div>
-                    <p className="font-display text-[2rem] leading-none text-clay">{s.n}</p>
+                    <p className="font-display font-semibold text-[2rem] leading-none text-clay">{s.n}</p>
                     <p className="mono-tag mt-3 text-ink-mute">{s.time}</p>
                   </div>
                   <div>

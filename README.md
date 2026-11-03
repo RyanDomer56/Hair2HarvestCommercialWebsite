@@ -87,7 +87,7 @@ The marketing site renders from typed fixtures in `apps/web/src/lib/data.ts` so 
 
 ## Design
 
-Two registers, one system. **Editorial** for the commercial site — cream stock `#F6F2E6`, olive ink `#242A12`, Instrument Serif for display, hairline rules, almost-square corners. **Instrument** for the workspace — pale lime sidebar `#F5FADF`, white cards, 14 px radii, tabular numbers. One accent only: `#D9F26B`, used on less than 4% of any screen. Full spec in [`docs/02-design-system.md`](docs/02-design-system.md).
+Two registers, one system. **Editorial** for the commercial site — cream stock `#F6F2E6`, olive ink `#242A12`, Montserrat for display over Poppins, hairline rules, almost-square corners. **Instrument** for the workspace — pale lime sidebar `#F5FADF`, white cards, 14 px radii, tabular numbers. One accent only: `#D9F26B`, used on less than 4% of any screen. Full spec in [`docs/02-design-system.md`](docs/02-design-system.md).
 
 ---
 

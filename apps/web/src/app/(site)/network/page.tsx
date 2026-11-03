@@ -77,9 +77,9 @@ export default function NetworkPage() {
                 label="Pickup rules"
                 title={
                   <>
-                    Why no two
+                    Why no two shops
                     <br />
-                    shops share a <em>schedule</em>.
+                    share a <em>schedule</em>.
                   </>
                 }
                 lede="Interviewed shops ranged from nightly to weekly. One mall shop asked for nightly pickup because the mall clears waste every day. A single global rota cannot serve both ends of that range."

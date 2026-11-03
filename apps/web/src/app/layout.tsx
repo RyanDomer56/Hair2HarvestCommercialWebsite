@@ -3,8 +3,10 @@ import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/500.css";
 import "@fontsource/poppins/600.css";
 import "@fontsource/poppins/700.css";
-import "@fontsource/instrument-serif/400.css";
-import "@fontsource/instrument-serif/400-italic.css";
+import "@fontsource/montserrat/400.css";
+import "@fontsource/montserrat/500.css";
+import "@fontsource/montserrat/600.css";
+import "@fontsource/montserrat/700.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,8 +35,13 @@ export const metadata: Metadata = {
     siteName: "Hair2Harvest",
   },
   icons: {
-    icon: [{ url: "/brand/h2h-mark-64.png", sizes: "64x64", type: "image/png" }],
-    apple: [{ url: "/brand/h2h-mark-128.png", sizes: "128x128" }],
+    icon: [
+      { url: "/brand/h2h-icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/h2h-icon-64.png", sizes: "64x64", type: "image/png" },
+      { url: "/brand/h2h-icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/brand/h2h-icon-180.png", sizes: "180x180", type: "image/png" }],
+    shortcut: ["/brand/h2h-icon-32.png"],
   },
 };
 

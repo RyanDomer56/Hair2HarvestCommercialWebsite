@@ -41,7 +41,7 @@ export function SectionHead({
       </div>
       <h2
         className={cn(
-          "display mt-5 text-[clamp(2rem,4.2vw,3.6rem)]",
+          "display mt-5 text-[clamp(1.75rem,3.7vw,3.05rem)]",
           align === "center" && "max-w-[24ch]",
           tone === "ink" ? "text-ink" : "text-paper",
         )}
@@ -79,7 +79,7 @@ export function Stat({
     <div>
       <p
         className={cn(
-          "num flex items-baseline gap-1.5 font-display text-[clamp(2rem,3.4vw,3rem)] leading-none",
+          "num flex items-baseline gap-1.5 font-display font-semibold text-[clamp(2rem,3.4vw,3rem)] leading-none",
           tone === "ink" && "text-ink",
           tone === "paper" && "text-paper",
           tone === "lime" && "text-lime",

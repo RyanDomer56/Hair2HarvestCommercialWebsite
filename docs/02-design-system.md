@@ -53,30 +53,32 @@ Every colour is named for a material in the process.
 
 ## 3. Type
 
-Two families, one job each.
+Two families, and only two.
 
-**Instrument Serif** — display only. A high-contrast, slightly narrow serif with a real italic. It carries headlines and pull quotes. Set tight (`-0.022em`) and large. The italic is the emphasis device: a single word in italic inside a roman headline, never a whole line.
+**Montserrat** — display. Geometric, wide, with a large x-height that holds up at 6rem. It carries headlines, pull quotes, section heads and the big numbers. Set tight (`-0.035em`).
 
-**Poppins** — everything else. 400 body, 500 UI, 600 headings inside the workspace, 700 only for the wordmark. Geometric, friendly, and already the brand's voice from the existing product.
+**Poppins** — everything else: body, UI, labels, identifiers, tabular figures. The mono role is retired; tracking and uppercase do that job now, not a third typeface.
 
-**Mono** — `ui-monospace`. Reserved for identifiers that a human reads aloud or writes on a sack: `HB-001`, `BATCH-2601`, timestamps, weights. Never for prose.
+### Emphasis is weight, not italic
+
+A slanted geometric sans reads as a mistake at display sizes. So `<em>` is **500 → 700**, not roman → italic. The colour accent (`moss`, `lime`) does the second half of the work. One emphasised word per headline, never a whole line.
 
 ### Scale
 
-| Role | Size | Line | Tracking | Family |
+| Role | Size | Line | Tracking | Family / weight |
 | --- | --- | --- | --- | --- |
-| Display XL | `clamp(3rem, 7.4vw, 6.6rem)` | 0.92 | −0.022em | Instrument |
-| Display L | `clamp(2.3rem, 4.4vw, 3.9rem)` | 0.96 | −0.02em | Instrument |
-| Display M | `clamp(1.7rem, 2.8vw, 2.4rem)` | 1.02 | −0.015em | Instrument |
-| Section label | 11 px | 1 | 0.2em | Mono, uppercase |
+| Display XL | `clamp(3rem, 7.4vw, 6.6rem)` | 0.98 | −0.035em | Montserrat 500 |
+| Display L | `clamp(2.3rem, 4.4vw, 3.9rem)` | 0.98 | −0.035em | Montserrat 500 |
+| Display M | `clamp(1.7rem, 2.8vw, 2.4rem)` | 1.02 | −0.03em | Montserrat 500 |
+| Emphasis inside display | inherit | inherit | −0.04em | Montserrat 700 |
+| Numerals in display | inherit | 1 | −0.03em | Montserrat 600, tabular |
+| Section label | 11 px | 1 | 0.2em | Poppins 500, uppercase |
 | Body L | 1.0625 rem | 1.65 | 0 | Poppins 400 |
 | Body | 0.9375 rem | 1.65 | 0 | Poppins 400 |
 | UI | 0.875 rem | 1.4 | −0.01em | Poppins 500 |
-| Micro | 0.6875 rem | 1.3 | 0.08em | Mono |
+| Micro / identifier | 0.6875 rem | 1.3 | 0.1em | Poppins 500, uppercase |
 
 Numbers are always `font-variant-numeric: tabular-nums`. A weight that shifts column width while animating is a bug.
-
----
 
 ## 4. Space, grid, radius
 
