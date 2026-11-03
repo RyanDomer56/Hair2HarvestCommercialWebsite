@@ -173,6 +173,19 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* The browser's own defaults are the usual way a third typeface sneaks in —
+     form controls pick up the OS UI font and code elements pick up monospace.
+     The whole product runs on two families, so inherit everywhere. */
+  html {
+    font-family: var(--font-sans);
+  }
+
+  :where(input, select, textarea, button, code, pre, kbd, samp) {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
   ::selection {
     background: var(--lime);
     color: var(--moss-deep);

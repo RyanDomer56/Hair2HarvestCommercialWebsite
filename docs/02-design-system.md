@@ -155,5 +155,7 @@ A procedural three.js scene: a metal plate, five stations, a conveyor, and trave
 - Four modes: `Assembled`, `Cutaway`, `Stations`, `One sack`.
 - Five cameras: `Overview`, `Side`, `Top`, `Station`, `Flight`.
 - The scene is `aria-hidden` decoration *plus* a complete text equivalent immediately below it — the five stations, their inputs and outputs, in a real list. Nothing is only available in 3D.
+- The scene inherits `--font-sans` for both its DOM chrome and every texture painted onto a canvas,
+  so the labels inside the viewport are Poppins like the rest of the product — never a system font.
 - Under `prefers-reduced-motion` it renders one composed frame and stops.
 - Without WebGL it shows a labelled fallback card, not a blank box.

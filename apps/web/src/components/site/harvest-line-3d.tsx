@@ -1979,7 +1979,7 @@ const STYLES = String.raw`
   height: 100%;
   overflow: hidden;
   background: var(--bg);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-sans, "Poppins", ui-sans-serif, sans-serif);
   color: var(--white);
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
@@ -2029,7 +2029,7 @@ const STYLES = String.raw`
 .harvest-line-3d .scene-heading .index { margin-left: auto; color: #4e535b; font-size: 9px; letter-spacing: 1px; }
 .harvest-line-3d .coordinates {
   position: absolute; top: 140px; right: 29px; color: #52575f; writing-mode: vertical-rl;
-  font: 9px ui-monospace, Menlo, SFMono-Regular, monospace; letter-spacing: 1.5px; pointer-events: none;
+  font-family: var(--font-mono, "Poppins", sans-serif); font-size: 9px; letter-spacing: 1.5px; pointer-events: none;
 }
 .harvest-line-3d .controls {
   position: absolute; bottom: 64px; left: 22px; right: 22px; display: flex;
@@ -2075,7 +2075,7 @@ const STYLES = String.raw`
 .harvest-line-3d .hint svg { color: #8c8f91; }
 .harvest-line-3d .footer-center {
   position: absolute; left: 50%; transform: translateX(-50%);
-  font: 9px ui-monospace, Menlo, SFMono-Regular, monospace; letter-spacing: 1.5px; color: #3f454d;
+  font-family: var(--font-mono, "Poppins", sans-serif); font-size: 9px; letter-spacing: 1.5px; color: #3f454d;
 }
 .harvest-line-3d #labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .harvest-line-3d .station-label {
@@ -2093,7 +2093,7 @@ const STYLES = String.raw`
 .harvest-line-3d .station-label .label-title {
   font-weight: 550; font-size: 12px; display: flex; gap: 10px; align-items: center; white-space: nowrap;
 }
-.harvest-line-3d .station-label .label-title span { color: var(--amber); font: 9px ui-monospace, Menlo, monospace; }
+.harvest-line-3d .station-label .label-title span { color: var(--amber); font-family: var(--font-mono, "Poppins", sans-serif); font-size: 9px; }
 .harvest-line-3d .station-label .label-meta {
   font-size: 9px; color: #8e939c; margin: 6px 0 0 24px; white-space: nowrap;
 }
