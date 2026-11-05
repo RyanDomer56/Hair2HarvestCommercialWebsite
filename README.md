@@ -75,15 +75,60 @@ The marketing site renders from typed fixtures in `apps/web/src/lib/data.ts` so 
 
 ---
 
-## The 3D harvest line
+## Backend
 
-`apps/web/src/components/site/harvest-line-3d.tsx` is a procedural three.js scene: a metal plate, five stations, a conveyor, and a sack that changes what it is at every stop — **Intake → Grading → Batch → Curing → Lab**.
+**It already exists.** `apps/api` is a full Express 5 + Mongoose 9 service for MongoDB — it was built
+in the first pass but not deployed, because Vercel is serverless and will not keep a long-running
+Express process alive. Until now the site rendered from typed fixtures in `apps/web/src/lib/data.ts`.
 
-- Four modes: Assembled, Cutaway, Stations, One sack.
-- Five cameras: Overview, Side, Top, Station, Flight.
-- Hover and click a station. `window.__line` exposes `setMode`, `setCamera`, `focusStation`, `play`, `pause`.
-- No models, no images, no network. It degrades to a labelled fallback without WebGL and freezes on one composed frame under `prefers-reduced-motion`.
-- Every station's content also exists as text below the scene, so nothing is 3D-only.
+| Layer | What it holds |
+| --- | --- |
+| Models | `shops`, `pickups`, `batches`, `labresults`, `users`, `auditlogs` (append-only) |
+| Routes | `/api/v1/shops`, `/pickups`, `/pickups/route`, `/batches`, `/lab`, `/overview`, `/health` |
+| Rules | Net kg derived from gross − tare; idempotent offline sync on `clientId`; a batch cannot be approved without a reviewed lab result; only clean/minor untreated stock enters a batch |
+| Seed | `npm run seed` — 8 shops, 7 pickups, 5 batches, 1 lab report |
+
+### Run the whole stack
+
+```bash
+docker compose up -d              # MongoDB 7 on :27017
+cp apps/api/.env.example apps/api/.env
+npm run dev:api                   # Express on :4000
+npm run seed                      # load the pilot data
+cp apps/web/.env.example apps/web/.env.local
+npm run dev                       # Next on :3000
+```
+
+`docker compose --profile tools up -d` also starts mongo-express on `:8081`.
+
+### How the site consumes it
+
+The deployed site already exposes the same read endpoints (`/api/v1/overview`, `/shops`, `/pickups`,
+`/batches`, `/lab`, `/health`). Set `API_URL` in the Vercel project environment to point them at the
+hosted Express service and they become a read-through to MongoDB. Unset, they return the fixtures —
+so the site never shows a broken state, and the swap is a single env var.
+
+`GET /api/v1/health` reports exactly which source is in use. `POST /api/v1/shops` (the partner form)
+forwards to Express when `API_URL` is set, otherwise returns `202 { reference }` and queues the visit.
+
+`ShopDirectory` and the machine telemetry read live through `lib/api-client.ts`, which caches the
+last good response and always falls back to fixtures on a network failure.
+
+## The 3D machine
+
+`apps/web/src/components/site/composting-drum-3d.tsx` is a procedural three.js model of **MCH-01**,
+the rotary composting drum from Modules 5 and 6 — not a generic factory.
+
+- A finned motor, cooling fan and gearbox drive a belt with moving treads around the drum shaft; a
+  toothed ring gear turns a transparent barrel whose helical paddles lift a granular compost bed.
+- Hair falls through the intake hopper, crumbs leave the discharge chute, steam rises off the pile,
+  and a core probe paints a live temperature onto a canvas screen.
+- Six clickable assemblies: motor, drum, intake, discharge, probe, control cabinet. Four modes
+  (Assembled / Cutaway / Assemblies / One batch) and five cameras.
+- `window.__drum` exposes `setMode`, `setCamera`, `focusPart`, `play`, `pause`.
+- It sits inside an instrument frame with five telemetry readouts fed by `/api/v1/overview`.
+- No models, no images, no network. Two font families only. Degrades to a labelled fallback without
+  WebGL and freezes on one frame under `prefers-reduced-motion`.
 
 ## Design
 

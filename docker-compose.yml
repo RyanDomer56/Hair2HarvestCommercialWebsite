@@ -1,0 +1,32 @@
+services:
+  mongo:
+    image: mongo:7-jammy
+    container_name: h2h-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_INITDB_DATABASE: hair2harvest
+    volumes:
+      - h2h-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional browser UI for inspecting the collections during development.
+  mongo-express:
+    image: mongo-express:1.10
+    container_name: h2h-mongo-express
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017
+      ME_CONFIG_BASICAUTH: "false"
+    profiles: ["tools"]
+
+volumes:
+  h2h-mongo-data:

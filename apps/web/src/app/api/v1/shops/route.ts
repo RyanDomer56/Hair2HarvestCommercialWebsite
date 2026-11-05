@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
+import { readResource } from "@/lib/read-resource";
+import { shops } from "@/lib/data";
 
 const API_URL = process.env.API_URL;
+
+/** GET /api/v1/shops — shop registry. */
+export async function GET() {
+  return readResource("shops", shops);
+}
 
 /**
  * Partner registration intake.

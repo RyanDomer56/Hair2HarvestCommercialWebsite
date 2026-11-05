@@ -4,26 +4,26 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-const HarvestLine3D = dynamic(() => import("./harvest-line-3d"), {
+const CompostingDrum3D = dynamic(() => import("./composting-drum-3d"), {
   ssr: false,
   loading: () => (
     <div className="flex size-full items-center justify-center bg-[#0d1007]">
       <div className="flex items-center gap-3">
         <span className="size-4 animate-spin rounded-full border border-lime/25 border-t-lime" />
         <span className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-paper/40">
-          Assembling the line
+          Starting the drum
         </span>
       </div>
     </div>
   ),
 });
 
-export function HarvestLine({ className }: { className?: string }) {
+export function CompostingDrum({ className }: { className?: string }) {
   const [ready, setReady] = useState(false);
 
   return (
     <div className={cn("relative size-full", className)}>
-      <HarvestLine3D height="100%" onReady={() => setReady(true)} />
+      <CompostingDrum3D height="100%" onReady={() => setReady(true)} />
       <div
         aria-hidden
         className={cn(

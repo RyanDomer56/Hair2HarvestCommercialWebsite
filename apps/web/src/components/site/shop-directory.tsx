@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { shops, type ShopStatus } from "@/lib/data";
+import { getShops } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { Pill } from "./ui-bits";
 
@@ -17,10 +18,23 @@ const filters: Array<{ key: "All" | ShopStatus; label: string }> = [
 export function ShopDirectory() {
   const [status, setStatus] = useState<"All" | ShopStatus>("All");
   const [q, setQ] = useState("");
+  const [records, setRecords] = useState(shops);
+  const [source, setSource] = useState<"mongodb" | "fixtures" | "fixtures-fallback">("fixtures");
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    getShops(shops, ctrl.signal).then(({ data, source: from }) => {
+      if (!ctrl.signal.aborted) {
+        setRecords(data);
+        setSource(from);
+      }
+    });
+    return () => ctrl.abort();
+  }, []);
 
   const rows = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return shops.filter((s) => {
+    return records.filter((s) => {
       const statusOk = status === "All" || s.status === status;
       const qOk =
         !needle ||
@@ -29,7 +43,7 @@ export function ShopDirectory() {
         s.barangay.toLowerCase().includes(needle);
       return statusOk && qOk;
     });
-  }, [status, q]);
+  }, [status, q, records]);
 
   return (
     <div className="card-print overflow-hidden">
@@ -37,7 +51,7 @@ export function ShopDirectory() {
         <div className="flex flex-wrap gap-1">
           {filters.map((f) => {
             const count =
-              f.key === "All" ? shops.length : shops.filter((s) => s.status === f.key).length;
+              f.key === "All" ? records.length : records.filter((s) => s.status === f.key).length;
             return (
               <button
                 key={f.key}
@@ -147,10 +161,10 @@ export function ShopDirectory() {
 
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)] bg-[var(--paper-sunk)] px-5 py-3">
         <span className="mono-tag text-ink-mute">
-          {rows.length} OF {shops.length} RECORDS
+          {rows.length} OF {records.length} RECORDS
         </span>
         <span className="mono-tag text-moss">
-          {shops.filter((s) => s.inPilotArea).length} INSIDE PILOT BARANGAY
+          {records.filter((s) => s.inPilotArea).length} INSIDE PILOT BARANGAY
         </span>
       </div>
     </div>

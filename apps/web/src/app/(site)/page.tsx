@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, MoveDown } from "lucide-react";
 import { HairWeave } from "@/components/site/hair-weave";
-import { HarvestLine } from "@/components/site/harvest-line";
+import { CompostingDrum } from "@/components/site/composting-drum";
+import { MachineFrame } from "@/components/site/machine-frame";
 import { Ticker } from "@/components/site/ticker";
 import { Reveal } from "@/components/site/reveal";
 import { AreaChart } from "@/components/site/area-chart";
@@ -123,20 +124,18 @@ export default function HomePage() {
           <Reveal delay={220} className="mt-12 lg:mt-14">
             <div className="flex items-end justify-between gap-4 pb-3">
               <div className="flex items-center gap-3">
-                <span className="mono-tag text-clay">SPECIMEN 01</span>
+                <span className="mono-tag text-clay">MACHINE 01</span>
                 <span className="h-px w-8 bg-[var(--line)]" aria-hidden />
-                <span className="mono-tag uppercase text-ink-mute">The harvest line</span>
+                <span className="mono-tag uppercase text-ink-mute">The rotary drum</span>
               </div>
               <span className="mono-tag hidden text-ink-mute sm:inline">
-                DRAG TO ROTATE · CLICK A STATION
+                DRAG TO ROTATE · CLICK AN ASSEMBLY
               </span>
             </div>
 
-            <div className="relative overflow-hidden rounded-[3px] border border-moss-deep/25 bg-[#0d1007]">
-              <div className="h-[clamp(380px,58vw,620px)] w-full">
-                <HarvestLine />
-              </div>
-            </div>
+            <MachineFrame>
+              <CompostingDrum />
+            </MachineFrame>
 
             <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-[var(--line)] pt-5 sm:grid-cols-4">
               <Stat
@@ -281,13 +280,87 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* --------------------------------------------------------- machine */}
+      <section className="section border-t border-[var(--line)]">
+        <div className="shell">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+            <Reveal>
+              <SectionHead
+                index="03"
+                label="The machine"
+                title={
+                  <>
+                    A motor, a drum,
+                    <br />
+                    and <em>forty-five days</em>.
+                  </>
+                }
+                lede="Modules 5 and 6 of the specification, built as one machine. The drum turns the mix; the panel only ever sends an authorised start or stop."
+              />
+
+              <div className="mt-8 border-t border-[var(--line)]">
+                <SpecRow label="Machine" value="MCH-01 · rotary drum" hint="Balanga pilot line" />
+                <SpecRow label="Drive" value="Finned motor · belt · reducer" hint="8 rpm, logged per session" />
+                <SpecRow label="Core temperature" value="58.6 °C" hint="Probe 02, in pile" />
+                <SpecRow label="Moisture" value="54 %" hint="Target 40–60% while composting" />
+                <SpecRow label="Batch" value="BATCH-2603" hint="Recipe v3.3 · 45 / 30 / 25" />
+                <SpecRow label="Curing" value="35–45 days" hint="Stage cannot be skipped" />
+                <SpecRow label="Web commands" value="Start / stop only" hint="No hardware safety over the wire" />
+              </div>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <div className="card-print overflow-hidden">
+                <div className="flex items-center justify-between border-b border-[var(--line)] bg-[var(--paper-sunk)] px-5 py-3">
+                  <p className="mono-tag uppercase text-ink-mute">Six assemblies · click one above</p>
+                  <span className="mono-tag text-clay">MCH-01</span>
+                </div>
+                <ul>
+                  {[
+                    ["01", "Motor & gearbox", "Module 6", "Finned 3-phase motor, fan and reducer drive the belt at 8 rpm."],
+                    ["02", "Rotary drum", "Module 5", "Helical paddles lift and turn the mix against a versioned recipe."],
+                    ["03", "Hair intake", "Graded", "Only clean and minor, untreated stock is weighed into a batch."],
+                    ["04", "Compost discharge", "Cured", "After 45 days the pile stops reheating and the compost is weighed out."],
+                    ["05", "Core probe", "Telemetry", "Temperature and moisture logged on every turning day."],
+                    ["06", "Control cabinet", "Module 6", "Session log, operator, batch ID, and the local E-stop."],
+                  ].map(([n, name, tag, desc]) => (
+                    <li
+                      key={n}
+                      className="grid grid-cols-[auto_1fr] gap-x-4 border-b border-[var(--line)] px-5 py-4 transition-colors last:border-b-0 hover:bg-[var(--paper-sunk)]"
+                    >
+                      <span className="mono-tag pt-0.5 text-clay">{n}</span>
+                      <div>
+                        <div className="flex flex-wrap items-baseline gap-x-3">
+                          <p className="text-[0.9375rem] font-medium text-ink">{name}</p>
+                          <span className="mono-tag uppercase text-ink-mute">{tag}</span>
+                        </div>
+                        <p className="mt-1 text-[0.8125rem] leading-[1.65] text-ink-soft">{desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-5 border-l-2 border-lime pl-5">
+                <p className="mono-tag uppercase text-clay">Hardware boundary</p>
+                <p className="mt-2 max-w-[58ch] text-[0.875rem] leading-[1.7] text-ink-soft">
+                  Emergency stop, lid interlock and motor shutoff are wired locally. The web panel
+                  can request a start or stop on an approved cycle — it never replaces the safety
+                  circuit. That is drawn in rust on the cabinet, not hidden in the interface.
+                </p>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
       {/* --------------------------------------------------------- network */}
       <section className="section">
         <div className="shell">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
             <Reveal>
               <SectionHead
-                index="03"
+                index="04"
                 label="The network"
                 title={
                   <>
@@ -375,7 +448,7 @@ export default function HomePage() {
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
             <Reveal>
               <SectionHead
-                index="04"
+                index="05"
                 label="What comes out"
                 tone="paper"
                 title={
@@ -439,7 +512,7 @@ export default function HomePage() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-end lg:gap-16">
             <Reveal>
               <SectionHead
-                index="05"
+                index="06"
                 label="Evidence"
                 title={
                   <>

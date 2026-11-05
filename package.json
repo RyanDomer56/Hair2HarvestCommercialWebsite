@@ -2,7 +2,7 @@
   "name": "hair2harvest-commercial-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Hair2Harvest — commercial website and operations system for a barbershop hair-to-compost network.",
+  "description": "Hair2Harvest \u2014 commercial website and operations system for a barbershop hair-to-compost network.",
   "workspaces": [
     "apps/web",
     "apps/api"
@@ -13,7 +13,10 @@
     "dev:api": "npm run dev --workspace=apps/api",
     "build": "npm run build --workspace=apps/web",
     "typecheck": "npm run typecheck --workspace=apps/web",
-    "seed": "npm run seed --workspace=apps/api"
+    "seed": "npm run seed --workspace=apps/api",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:tools": "docker compose --profile tools up -d"
   },
   "engines": {
     "node": ">=20"

@@ -147,15 +147,17 @@ Numbers are always `font-variant-numeric: tabular-nums`. A weight that shifts co
 
 ---
 
-## 9. The 3D system diagram
+## 9. The 3D machine diagram
 
-A procedural three.js scene: a metal plate, five stations, a conveyor, and travelling cargo. It is a **diagram you can turn**, not a game.
+`MCH-01` is the actual machine from Modules 5 and 6, not a generic factory — a **diagram you can turn**.
 
-- Stations: **Intake → Grading → Batch → Curing → Lab.**
-- Four modes: `Assembled`, `Cutaway`, `Stations`, `One sack`.
-- Five cameras: `Overview`, `Side`, `Top`, `Station`, `Flight`.
-- The scene is `aria-hidden` decoration *plus* a complete text equivalent immediately below it — the five stations, their inputs and outputs, in a real list. Nothing is only available in 3D.
-- The scene inherits `--font-sans` for both its DOM chrome and every texture painted onto a canvas,
-  so the labels inside the viewport are Poppins like the rest of the product — never a system font.
-- Under `prefers-reduced-motion` it renders one composed frame and stops.
-- Without WebGL it shows a labelled fallback card, not a blank box.
+- Six assemblies: **motor & gearbox**, **rotary drum**, **hair intake**, **compost discharge**, **core probe**, **control cabinet**. Every one matches a line in the system specification.
+- Visible mechanics: finned motor and spinning fan, belt with moving treads, toothed ring gear, transparent drum shell with helical paddles lifting a granular compost bed, hair falling into the hopper, crumbs leaving the chute, steam above the pile, and a temperature probe whose screen updates.
+- Four modes: `Assembled`, `Cutaway` (clipping plane opens the shell), `Assemblies` (exploded, callouts de-collided), `One batch` (camera follows the material path).
+- Five cameras: `Overview`, `Drum`, `Motor`, `Top`, `Flight`.
+- Hover/click any assembly for its module and its rule. `window.__drum` exposes `setMode`, `setCamera`, `focusPart`, `play`, `pause`.
+- The scene sits in an **instrument frame**: a top status rail, five telemetry readouts (rpm, core °C, moisture, batch, session) from `/api/v1/overview`, and a footer stating the hardware safety boundary.
+- The rust-coloured E-stop on the cabinet is deliberate: the web panel only sends authorised start/stop; emergency stop, lid interlock and motor shutoff remain local hardware.
+- All six assemblies also exist as a text list in the machine section below the hero. Nothing is only available in 3D.
+- The scene inherits `--font-sans` for its DOM chrome and every canvas-painted texture — no system font anywhere.
+- Under `prefers-reduced-motion` it renders one composed frame and stops. Without WebGL it shows a labelled fallback card, not a blank box.
