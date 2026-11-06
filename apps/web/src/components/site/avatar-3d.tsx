@@ -8,18 +8,30 @@ interface Avatar3DProps {
   src: string;
   size?: number;
   talking?: boolean;
+  /** Hex color that tints the model (multiplies its texture). Default: brand green. */
+  tint?: string;
+  /** Enable the walking bounce + lean + sway. Default: true. */
+  walk?: boolean;
   /** Called if the model can't be loaded (missing file, WebGL off, parse error). */
   onError?: () => void;
 }
 
 /**
  * Renders a downloadable 3D avatar (glTF/GLB) with three.js — no extra deps
- * beyond the `three` already in the project. Idle float + turn, a subtle
- * talking bounce, and automatic playback of the model's own animation clip
- * (so a Mixamo-rigged GLB will just work). Honors prefers-reduced-motion.
- * Falls back to the SVG avatar via `onError` if the file isn't available.
+ * beyond the `three` already in the project. Tints the model green, gives it a
+ * lively walking bounce + lean + sway (with a ground shadow to sell the motion),
+ * and a talking pulse while the assistant speaks. Honors prefers-reduced-motion.
+ * Auto-plays the model's own animation clip if one is bundled. Falls back to the
+ * SVG avatar via `onError` when the file isn't available.
  */
-export default function Avatar3D({ src, size = 72, talking = false, onError }: Avatar3DProps) {
+export default function Avatar3D({
+  src,
+  size = 72,
+  talking = false,
+  tint = "#5bbf5b",
+  walk = true,
+  onError,
+}: Avatar3DProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const talkingRef = useRef(talking);
   talkingRef.current = talking;
@@ -59,6 +71,14 @@ export default function Avatar3D({ src, size = 72, talking = false, onError }: A
     rim.position.set(-3, 1, -2);
     scene.add(rim);
 
+    // Soft ground shadow — sells the "walking" bounce.
+    const shadow = new THREE.Mesh(
+      new THREE.CircleGeometry(0.9, 32),
+      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.24, depthWrite: false }),
+    );
+    shadow.rotation.x = -Math.PI / 2;
+    scene.add(shadow);
+
     let wrap: THREE.Group | null = null;
     let mixer: THREE.AnimationMixer | null = null;
     let baseScale = 1;
@@ -73,6 +93,17 @@ export default function Avatar3D({ src, size = 72, talking = false, onError }: A
       (gltf) => {
         if (disposed) return;
         const model = gltf.scene;
+        model.traverse((o) => {
+          const mesh = o as THREE.Mesh;
+          if (mesh.isMesh) {
+            const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+            mats.forEach((m) => {
+              const sm = m as THREE.MeshStandardMaterial;
+              if (sm && "color" in sm) sm.color.set(tint);
+            });
+          }
+        });
+
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
         model.position.sub(center);
@@ -82,6 +113,9 @@ export default function Avatar3D({ src, size = 72, talking = false, onError }: A
         wrap.add(model);
         wrap.scale.setScalar(baseScale);
         scene.add(wrap);
+
+        shadow.position.y = -sphere.radius * baseScale - 0.04;
+
         if (gltf.animations && gltf.animations.length) {
           mixer = new THREE.AnimationMixer(model);
           mixer.clipAction(gltf.animations[0]).play();
@@ -96,14 +130,25 @@ export default function Avatar3D({ src, size = 72, talking = false, onError }: A
       const dt = clock.getDelta();
       elapsed += dt;
       if (wrap && !reduce) {
-        wrap.rotation.y = Math.sin(elapsed * 0.55) * 0.4;
-        wrap.rotation.x = Math.sin(elapsed * 0.4) * 0.06;
-        wrap.position.y = Math.sin(elapsed * 1.1) * 0.04;
-        if (talkingRef.current) {
-          wrap.scale.set(baseScale, baseScale * (1 + Math.sin(elapsed * 13) * 0.03), baseScale);
+        const turn = Math.sin(elapsed * 0.5) * 0.5;
+        if (walk) {
+          const step = elapsed * 3.0; // walk cadence
+          const bounce = Math.abs(Math.sin(step)); // 0..1
+          wrap.position.y = bounce * 0.07;
+          wrap.rotation.x = Math.sin(step) * 0.05; // forward/back lean
+          wrap.rotation.z = Math.sin(step * 0.5) * 0.03; // side sway
+          wrap.rotation.y = turn;
+          const s = 1 - bounce * 0.22;
+          shadow.scale.set(s, s, s);
+          (shadow.material as THREE.MeshBasicMaterial).opacity = 0.26 - bounce * 0.1;
         } else {
-          wrap.scale.setScalar(baseScale);
+          wrap.position.y = Math.sin(elapsed * 1.1) * 0.04;
+          wrap.rotation.set(Math.sin(elapsed * 0.4) * 0.06, turn, 0);
         }
+        const ty = talkingRef.current ? 1 + Math.sin(elapsed * 13) * 0.03 : 1;
+        wrap.scale.set(baseScale, baseScale * ty, baseScale);
+      } else if (wrap) {
+        wrap.rotation.y = 0.4; // static, neutral pose
       }
       if (mixer) mixer.update(dt);
       renderer.render(scene, camera);
@@ -126,14 +171,9 @@ export default function Avatar3D({ src, size = 72, talking = false, onError }: A
         renderer.domElement.parentNode.removeChild(renderer.domElement);
       }
     };
-  }, [src, size]);
+  }, [src, size, tint, walk]);
 
   return (
-    <div
-      ref={mountRef}
-      style={{ width: size, height: size }}
-      role="img"
-      aria-label="3D assistant avatar"
-    />
+    <div ref={mountRef} style={{ width: size, height: size }} role="img" aria-label="3D assistant avatar" />
   );
 }

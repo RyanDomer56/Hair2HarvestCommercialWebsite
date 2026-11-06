@@ -79,7 +79,7 @@ export function SiteFooter() {
             © 2026 HAIR2HARVEST · A COLLECTION &amp; COMPOSTING SERVICE FOR BARBERSHOPS
           </p>
           <p className="mono-tag text-ink-mute/70">
-            Assistant avatar: “Marshmallow Avatar” by SouthWake_ · CC BY · via Sketchfab
+            Assistant avatar: “Mint Melody” by oktria.taranasta · CC BY · via Sketchfab
           </p>
           <div className="flex items-center gap-5">
             <span className="mono-tag text-ink-mute">BALANGA · BATAAN · PHILIPPINES</span>

@@ -1,12 +1,15 @@
-Drop the downloaded 3D avatar here as:
+The assistant avatar lives here as:
 
-  marshmallow-avatar.glb
+  mint-melody-avatar.glb
 
-Source: "Marshmallow Avatar (Roblox UGC)" by SouthWake_ — CC BY — via Sketchfab
-( https://sketchfab.com/3d-models/marshmallow-avatar-roblox-ugc-0901b5e749584225bd2e3b443df064e1 )
+Source: "Mint_ Melody_Character" by oktria.taranasta — CC BY — via Sketchfab
+( https://sketchfab.com/3d-models/mint--melody-character-fe6a839b40de440382c142ada06f3146 )
 
-Recommended download: GLB · 1k texture (259 KB) for fastest load.
+It is tinted green at runtime and given a walking bounce + sway by
+src/components/site/avatar-3d.tsx (no edit to the file needed). Drop a
+replacement .glb here under the same name to swap the avatar.
 
-Once the file is present, the assistant avatar automatically renders it in 3D
-(idle turn + float + talking bounce). If the file is missing, the app falls
-back to the built-in 2D SVG avatar automatically.
+Note: the downloaded Sketchfab GLB has no embedded skeleton/animations, so the
+"walk" is a procedural bounce+lean+sway (plus a ground shadow). For a true
+skeletal walk, rig the model on Mixamo and re-export a GLB with a walk clip —
+avatar-3d.tsx will auto-play it.

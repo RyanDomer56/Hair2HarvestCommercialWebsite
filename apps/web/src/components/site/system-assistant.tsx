@@ -322,7 +322,7 @@ export function SystemAssistant() {
               variant={avatarVariant}
               muted={avatarMuted}
               talking={thinking}
-              modelSrc="/models/marshmallow-avatar.glb"
+              modelSrc="/models/mint-melody-avatar.glb"
             />
             {unread && (
               <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-lime ring-2 ring-paper" />
@@ -359,7 +359,7 @@ export function SystemAssistant() {
               variant={avatarVariant}
               muted={avatarMuted}
               talking={thinking}
-              modelSrc="/models/marshmallow-avatar.glb"
+              modelSrc="/models/mint-melody-avatar.glb"
             />
           </span>
           <div className="min-w-0 flex-1">
@@ -430,7 +430,7 @@ export function SystemAssistant() {
           {thinking && (
             <div className="flex items-start gap-2">
               <span className="mt-1 shrink-0">
-                <TalkingAvatar size={28} variant={avatarVariant} muted talking modelSrc="/models/marshmallow-avatar.glb" />
+                <TalkingAvatar size={28} variant={avatarVariant} muted talking modelSrc="/models/mint-melody-avatar.glb" />
               </span>
               <div className="flex items-center gap-1 rounded-[14px] rounded-bl-[4px] border border-paper/10 bg-[#1c2114] px-3.5 py-3">
                 {[0, 1, 2].map((i) => (
