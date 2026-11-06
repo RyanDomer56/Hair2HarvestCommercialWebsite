@@ -132,18 +132,28 @@ the rotary composting drum from Modules 5 and 6 — not a generic factory.
 
 ## System assistant
 
-A floating **"Ask the system"** button on every public page opens a compact chat panel. It is a
-**grounded retrieval assistant**, not a generative model: `apps/web/src/lib/chat-knowledge.ts`
-holds 35 question/answer pairs taken verbatim from the three design documents, each tagged with
-its source section. Answers are matched deterministically (exact canonical question, then keyword
-overlap), so nothing is invented — when a question is outside the corpus the assistant says so and
-offers what it can answer.
+A floating **animated avatar** bottom-right on every public page opens a compact chat panel. The
+avatar blinks and floats at rest, and its mouth animates while a reply is being composed — the
+same talking avatar appears in the panel header and beside the typing indicator.
 
-- Suggested questions on open, related questions after every answer, and a topic browser.
-- Source chip under each reply, e.g. `System design · §1 · core decision`.
-- Escape closes, input autofocuses, reduced-motion typing indicator, mobile bottom-sheet layout.
-- Scoped CSS variables keep the dark panel stable if the workspace leaves `.dark` on `<html>`.
+- Primitive: `apps/web/src/components/ui/components-primitives-avatar.tsx` (`motion` v12).
+  12 colour presets, 3 sizes, 3 shapes, with `blinking` and `talking` props. Brand preset is `lime`.
+- Reference usage: `components-primitives-avatar.demo.tsx` in the same folder.
+- Answers come from `apps/web/src/lib/chat-knowledge.ts` — 35 verified Q&A pairs drawn from the
+  three design documents. Retrieval is deterministic (exact canonical question, then phrase/keyword
+  scoring), so nothing is invented; an out-of-corpus question gets an honest "no verified answer"
+  reply with suggestions. Suggested questions on open and related questions after each reply.
+- Escape closes, input autofocuses, reduced-motion is respected, mobile becomes a bottom sheet.
+- `.assistant-scope` pins the panel palette so the workspace's `.dark` tokens cannot make the dark
+  panel unreadable.
 - Mounted in the `(site)` layout only — it does not appear in the operations workspace.
+
+### shadcn layout
+
+`apps/web/components.json` uses the `new-york` style with `@/components/ui` →
+`apps/web/src/components/ui`. That folder now exists. shadcn CLI writes generated primitives there,
+so keeping this path is what lets `npx shadcn@latest add <component>` resolve without extra config.
+Tailwind CSS v4 lives in `src/app/globals.css`; TypeScript is configured in `apps/web/tsconfig.json`.
 
 ## Design
 

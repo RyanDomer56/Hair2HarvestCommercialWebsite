@@ -1,13 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { BookOpen, ChevronDown, MessageCircle, Send, Sparkles, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Avatar from "@/components/ui/components-primitives-avatar";
 import {
   KNOWLEDGE,
   STARTER_QUESTIONS,
-  TOPICS,
   findAnswer,
   getRelated,
   type KnowledgeEntry,
@@ -27,7 +26,7 @@ const nextId = () => `m${++seq}`;
 const WELCOME: Message = {
   id: "welcome",
   role: "assistant",
-  text: "Ask me anything about how Hair2Harvest works. I answer only from the three system-design documents — if it isn't in there, I'll say so rather than guess.",
+  text: "Hi! I'm here to help with questions about Hair2Harvest — how collection works, what happens to the hair, and how we turn it into compost. What would you like to know?",
 };
 
 export function SystemAssistant() {
@@ -35,8 +34,6 @@ export function SystemAssistant() {
   const [messages, setMessages] = useState<Message[]>([WELCOME]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
-  const [browseTopic, setBrowseTopic] = useState<string | null>(null);
-  const [showBrowse, setShowBrowse] = useState(false);
   const [unread, setUnread] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -80,7 +77,6 @@ export function SystemAssistant() {
       if (!text || thinking) return;
 
       setInput("");
-      setShowBrowse(false);
       setMessages((prev) => [...prev, { id: nextId(), role: "user", text }]);
       setThinking(true);
       scrollToBottom();
@@ -94,13 +90,13 @@ export function SystemAssistant() {
               id: nextId(),
               role: "assistant",
               fallback: true,
-              text: "That isn't covered in the documents I have. I'd rather say so than invent an answer — here are the things I can speak to:",
+              text: "I don't have a verified answer for that yet. Here are a few things I can help with:",
             };
         setMessages((prev) => [...prev, reply]);
         setThinking(false);
         scrollToBottom();
         if (!open) setUnread(true);
-      }, 520);
+      }, 620);
     },
     [thinking, open, scrollToBottom],
   );
@@ -109,47 +105,51 @@ export function SystemAssistant() {
   const suggestions: KnowledgeEntry[] = lastMessage?.entry
     ? getRelated(lastMessage.entry)
     : lastMessage?.fallback || lastMessage?.id === "welcome"
-      ? STARTER_QUESTIONS.map((q) => KNOWLEDGE.find((k) => k.question === q)!).filter(Boolean).slice(0, 4)
+      ? STARTER_QUESTIONS.map((q) => KNOWLEDGE.find((k) => k.question === q)!)
+          .filter(Boolean)
+          .slice(0, 4)
       : [];
-
-  const topicQuestions = browseTopic
-    ? KNOWLEDGE.filter((k) => k.topic === browseTopic)
-    : [];
 
   return (
     <>
-      {/* launcher */}
+      {/* launcher — the avatar itself is the button */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls="system-assistant-panel"
-        aria-label={open ? "Close the system assistant" : "Ask the system design"}
+        aria-label={open ? "Close the chat" : "Chat with us"}
         className={cn(
-          "assistant-scope group fixed bottom-5 right-5 z-[70] flex h-[52px] items-center gap-2.5 rounded-full border border-lime/30 bg-moss-deep px-4 text-paper shadow-[0_10px_36px_rgba(20,26,8,.34)] transition-all duration-300 hover:-translate-y-0.5 hover:border-lime/60 sm:bottom-6 sm:right-6 sm:px-5",
-          open && "opacity-0 pointer-events-none translate-y-3",
+          "assistant-scope group fixed bottom-5 right-5 z-[70] flex items-center gap-3 transition-all duration-300 sm:bottom-6 sm:right-6",
+          open && "pointer-events-none translate-y-3 opacity-0",
         )}
       >
-        <span className="relative flex size-6 items-center justify-center">
-          <MessageCircle size={19} className="text-lime" strokeWidth={1.9} />
+        <span className="hidden rounded-full bg-moss-deep px-3.5 py-2 text-[0.75rem] font-medium text-paper opacity-0 shadow-lg transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 sm:block sm:translate-x-2">
+          Chat with us
+        </span>
+        <span className="relative inline-flex rounded-[40%] shadow-[0_12px_32px_rgba(20,26,8,.28)] ring-2 ring-paper/70 transition-transform duration-300 group-hover:scale-105">
+          <Avatar
+            color="lime"
+            size="md"
+            shape="squircle"
+            blinking={!thinking}
+            talking={thinking}
+            label="Hair2Harvest assistant"
+          />
           {unread && (
-            <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-lime ring-2 ring-moss-deep" />
+            <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-lime ring-2 ring-paper" />
           )}
         </span>
-        <span className="hidden text-[0.8125rem] font-medium tracking-[-0.01em] sm:inline">
-          Ask the system
-        </span>
-        <span className="mono-tag hidden text-lime/70 lg:inline">· 35 ANSWERS</span>
       </button>
 
       {/* panel */}
       <div
         id="system-assistant-panel"
         role="dialog"
-        aria-label="System design assistant"
+        aria-label="Hair2Harvest chat"
         aria-modal="false"
         className={cn(
-          "assistant-scope fixed bottom-5 right-3 z-[71] flex w-[calc(100vw-1.5rem)] flex-col overflow-hidden rounded-[14px] border border-lime/20 bg-[#11150c] text-paper shadow-[0_24px_80px_rgba(8,12,4,.55)] transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] sm:bottom-6 sm:right-6 sm:w-[390px]",
+          "assistant-scope fixed bottom-5 right-3 z-[71] flex w-[calc(100vw-1.5rem)] flex-col overflow-hidden rounded-[16px] border border-paper/10 bg-[#11150c] text-paper shadow-[0_24px_80px_rgba(8,12,4,.55)] transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] sm:bottom-6 sm:right-6 sm:w-[390px]",
           "h-[min(72vh,570px)]",
           open
             ? "pointer-events-auto translate-y-0 opacity-100"
@@ -158,12 +158,22 @@ export function SystemAssistant() {
       >
         {/* header */}
         <div className="flex items-center gap-3 border-b border-paper/10 bg-moss-deep px-4 py-3.5">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-lime/30 bg-[#151b0d]">
-            <Sparkles size={15} className="text-lime" />
+          <span className="shrink-0">
+            <Avatar
+              color="lime"
+              size="sm"
+              shape="squircle"
+              blinking={!thinking}
+              talking={thinking}
+              label="Assistant"
+            />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[0.8125rem] font-semibold leading-tight">System assistant</p>
-            <p className="mono-tag mt-1 text-paper/50">GROUNDED IN 3 DOCUMENTS</p>
+            <p className="text-[0.8125rem] font-semibold leading-tight">Hair2Harvest</p>
+            <p className="mt-1 flex items-center gap-1.5 text-[0.6875rem] text-paper/55">
+              <span className="size-1.5 rounded-full bg-lime" aria-hidden />
+              {thinking ? "Replying…" : "Online"}
+            </p>
           </div>
           <button
             type="button"
@@ -175,97 +185,45 @@ export function SystemAssistant() {
           </button>
         </div>
 
-        {/* scope bar */}
-        <div className="flex items-center justify-between gap-2 border-b border-paper/10 px-4 py-2">
-          <span className="mono-tag text-paper/40">
-            <span className="hidden sm:inline">NO GUESSWORK · </span>SOURCED ANSWERS
-          </span>
-          <button
-            type="button"
-            onClick={() => setShowBrowse((v) => !v)}
-            aria-expanded={showBrowse}
-            className="flex items-center gap-1 rounded-full border border-paper/15 px-2.5 py-1 text-[0.6875rem] text-paper/70 transition-colors hover:border-lime/40 hover:text-lime"
-          >
-            <BookOpen size={11} />
-            Browse
-            <ChevronDown size={11} className={cn("transition-transform", showBrowse && "rotate-180")} />
-          </button>
-        </div>
-
-        {/* topic browser */}
-        {showBrowse && (
-          <div className="border-b border-paper/10 bg-[#0c1007] px-3 py-3">
-            <div className="flex flex-wrap gap-1.5">
-              {TOPICS.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setBrowseTopic((v) => (v === t ? null : t))}
-                  className={cn(
-                    "rounded-full border px-2.5 py-1 text-[0.6875rem] transition-colors",
-                    browseTopic === t
-                      ? "border-lime bg-lime text-[#242a12]"
-                      : "border-paper/15 text-paper/70 hover:border-lime/40",
-                  )}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-            {browseTopic && (
-              <div className="mt-3 max-h-[120px] space-y-1 overflow-y-auto pr-1">
-                {topicQuestions.map((k) => (
-                  <button
-                    key={k.id}
-                    type="button"
-                    onClick={() => send(k.question)}
-                    className="block w-full rounded-md px-2 py-1.5 text-left text-[0.75rem] text-paper/75 transition-colors hover:bg-paper/8 hover:text-paper"
-                  >
-                    {k.question}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
         {/* messages */}
         <div
           ref={logRef}
           role="log"
           aria-live="polite"
           aria-relevant="additions"
-          className="thin-scroll flex-1 space-y-4 overflow-y-auto px-4 py-4"
+          className="thin-scroll flex-1 space-y-4 overflow-y-auto px-4 py-5"
         >
           {messages.map((m) => (
             <div
               key={m.id}
-              className={cn("flex flex-col gap-1.5", m.role === "user" ? "items-end" : "items-start")}
+              className={cn("flex", m.role === "user" ? "justify-end" : "justify-start")}
             >
               <div
                 className={cn(
-                  "max-w-[86%] rounded-[12px] px-3.5 py-2.5 text-[0.8125rem] leading-[1.65]",
+                  "max-w-[86%] rounded-[14px] px-3.5 py-2.5 text-[0.8125rem] leading-[1.65]",
                   m.role === "user"
-                    ? "rounded-br-[4px] bg-lime text-[#242a12] font-medium"
+                    ? "rounded-br-[4px] bg-lime font-medium text-[#242a12]"
                     : "rounded-bl-[4px] border border-paper/10 bg-[#1c2114] text-paper/90",
                 )}
               >
                 {m.text}
               </div>
-              {m.entry && (
-                <div className="flex max-w-[86%] flex-wrap items-center gap-1.5 pl-1">
-                  <span className="mono-tag rounded border border-lime/25 px-1.5 py-0.5 text-lime/80">
-                    {m.entry.doc}
-                  </span>
-                  <span className="mono-tag text-paper/35">{m.entry.source}</span>
-                </div>
-              )}
             </div>
           ))}
 
           {thinking && (
-            <div className="flex items-start">
-              <div className="flex items-center gap-1 rounded-[12px] rounded-bl-[4px] border border-paper/10 bg-[#1c2114] px-3.5 py-3">
+            <div className="flex items-start gap-2">
+              <span className="mt-1 shrink-0">
+                <Avatar
+                  color="lime"
+                  size="sm"
+                  shape="squircle"
+                  talking
+                  blinking={false}
+                  label="Replying"
+                />
+              </span>
+              <div className="flex items-center gap-1 rounded-[14px] rounded-bl-[4px] border border-paper/10 bg-[#1c2114] px-3.5 py-3">
                 {[0, 1, 2].map((i) => (
                   <span
                     key={i}
@@ -279,9 +237,6 @@ export function SystemAssistant() {
 
           {!thinking && suggestions.length > 0 && (
             <div className="pt-1">
-              <p className="mono-tag mb-2 text-paper/35">
-                {lastMessage?.entry ? "RELATED QUESTIONS" : "TRY ASKING"}
-              </p>
               <div className="flex flex-wrap gap-1.5">
                 {suggestions.map((k) => (
                   <button
@@ -311,28 +266,19 @@ export function SystemAssistant() {
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about the system…"
-              aria-label="Your question"
+              placeholder="Write a message…"
+              aria-label="Your message"
               className="min-w-0 flex-1 bg-transparent text-[0.8125rem] text-paper outline-none placeholder:text-paper/35"
             />
             <button
               type="submit"
               disabled={!input.trim() || thinking}
-              aria-label="Send question"
+              aria-label="Send message"
               className="flex size-8 shrink-0 items-center justify-center rounded-full bg-lime text-[#242a12] transition-opacity disabled:opacity-30"
             >
               <Send size={14} />
             </button>
           </form>
-          <div className="mt-2 flex items-center justify-between px-1">
-            <span className="mono-tag text-paper/30">DOCS 01–03 · v1.0</span>
-            <Link
-              href="/system"
-              className="mono-tag text-lime/70 transition-colors hover:text-lime"
-            >
-              READ THE SPEC ↗
-            </Link>
-          </div>
         </div>
       </div>
 
