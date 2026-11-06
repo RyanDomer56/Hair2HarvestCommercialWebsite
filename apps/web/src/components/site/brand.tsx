@@ -53,7 +53,7 @@ export function Wordmark({
             tone === "ink" ? "text-ink-mute" : "text-paper/50",
           )}
         >
-          soil from salons
+          soil from barbers
         </span>
       </span>
     </Link>

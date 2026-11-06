@@ -12,7 +12,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://hair2harvest.ph"),
   title: {
-    default: "Hair2Harvest — Soil from salons",
+    default: "Hair2Harvest — Soil from barbers",
     template: "%s · Hair2Harvest",
   },
   description:
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Ryan Cepeda Domer" }],
   openGraph: {
-    title: "Hair2Harvest — Soil from salons",
+    title: "Hair2Harvest — Soil from barbers",
     description:
       "Every haircut leaves something behind. We collect it, grade it, and turn it into compost — without asking a single barber to change their day.",
     type: "website",

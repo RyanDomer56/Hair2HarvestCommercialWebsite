@@ -41,7 +41,7 @@ export function SiteFooter() {
                 <p className="text-[1.05rem] font-semibold tracking-[-0.03em] text-ink">
                   hair2harvest
                 </p>
-                <p className="mono-tag mt-1 text-ink-mute">SOIL FROM SALONS</p>
+                <p className="mono-tag mt-1 text-ink-mute">SOIL FROM BARBERS</p>
               </div>
             </div>
             <p className="mt-5 max-w-[30ch] text-[0.875rem] leading-relaxed text-ink-soft">

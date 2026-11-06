@@ -83,7 +83,7 @@ export default function AboutPage() {
         label="About"
         title={
           <>
-            We turn salon hair
+            We turn barbers&rsquo; hair
             <br />
             into <em className="text-moss">soil</em>.
           </>
