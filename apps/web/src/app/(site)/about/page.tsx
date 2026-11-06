@@ -1,65 +1,56 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Leaf, Recycle, ShieldCheck, Users } from "lucide-react";
+import { ArrowUpRight, Leaf, Recycle, ShieldCheck, Users } from "lucide-react";
 import { PageHero, Prose } from "@/components/site/page-hero";
 import { Reveal } from "@/components/site/reveal";
+import { TeamFlip, type TeamGroup } from "@/components/site/team-flip";
 
 export const metadata: Metadata = {
   title: "About · Hair2Harvest",
   description:
-    "Hair2Harvest is a collection and composting service for barbershops in Balanga, Bataan — turning salon hair into tested, usable compost.",
+    "Hair2Harvest is a capstone project by Group 2, Department of Project Management — a collection and composting service for barbershops in Balanga, Bataan.",
 };
 
-const team = [
+const groups: TeamGroup[] = [
   {
-    name: "Ryan Cepeda Domer",
-    role: "Founder & Program Lead",
-    initials: "RC",
-    tone: "moss",
-    bio: "Started Hair2Harvest to give barbershops a container that actually gets picked up. Sets the collection route, the grading call, and the rule that the shop is never the one to travel.",
+    title: "Project Management",
+    members: [
+      { name: "Mikayla Tulba", role: "Project Manager", initials: "MT", tone: "moss" },
+      { name: "Sherwin G. Malenab", role: "Asst. Project Manager", initials: "SM", tone: "lime" },
+      { name: "Lairene B. Yulo", role: "Secretary", initials: "LY", tone: "clay" },
+    ],
   },
   {
-    name: "Maria L. Santos",
-    role: "Composting & Agronomy Lead",
-    initials: "MS",
-    tone: "lime",
-    bio: "Runs the drum, the recipe and the curing schedule. Treats every batch as a product with a number behind it, not a pile in the corner.",
+    title: "Developers",
+    members: [
+      { name: "Jundril Mhar C. Reyes", role: "Head", initials: "JR", tone: "moss" },
+      { name: "Ryan C. Dormer", role: "Developer", initials: "RD", tone: "lime" },
+      { name: "Andrew Jeremiah C. Salangsang", role: "Developer", initials: "AS", tone: "clay" },
+      { name: "Kier Laurence L. Atienza", role: "Developer", initials: "KA", tone: "moss" },
+      { name: "Lizette C. Apanti", role: "Developer", initials: "LA", tone: "lime" },
+      { name: "Ermalyn R. Gadon", role: "Developer", initials: "EG", tone: "clay" },
+    ],
   },
   {
-    name: "Paolo Mendoza",
-    role: "Shop Network & Logistics",
-    initials: "PM",
-    tone: "clay",
-    bio: "Keeps each shop's pickup rule — days, window and the access note that matters at 9 PM. Eight shops, one route, no two alike.",
+    title: "Documentation",
+    members: [
+      { name: "Emilou P. Quiniquing", role: "Head", initials: "EQ", tone: "moss" },
+      { name: "Lairene B. Yulo", role: "Documentation", initials: "LY", tone: "lime" },
+      { name: "Rea Mary T. Mantal", role: "Documentation", initials: "RM", tone: "clay" },
+      { name: "Rheyven D. Algeria", role: "Documentation", initials: "RA", tone: "moss" },
+      { name: "Aysen Halle C. Canate", role: "Documentation", initials: "AC", tone: "lime" },
+    ],
   },
   {
-    name: "Angela Reyes",
-    role: "Lab & Quality Assurance",
-    initials: "AR",
-    tone: "moss",
-    bio: "Owns the lab result. Nothing is called compost until N-P-K, pH, maturity and pathogens say so, and the report goes back to the shop.",
-  },
-  {
-    name: "Jomar Cruz",
-    role: "Field Collection",
-    initials: "JC",
-    tone: "lime",
-    bio: "The person at the door with the scale. Grades in seconds, weighs net of sack tare, and hands back the receipt before leaving.",
-  },
-  {
-    name: "Bea Torres",
-    role: "Community & Barangay Relations",
-    initials: "BT",
-    tone: "clay",
-    bio: "Connects the cured compost to the planting beds it came from. Makes sure the barangay sees the soil, not just the service.",
+    title: "Quality Assurance",
+    members: [
+      { name: "Sherwin G. Malenab", role: "Head", initials: "SM", tone: "moss" },
+      { name: "Canale Halle C. Ayan", role: "QA", initials: "CA", tone: "lime" },
+      { name: "Lizette C. Aparri", role: "QA", initials: "LP", tone: "clay" },
+      { name: "Rheyven D. Algeria", role: "QA", initials: "RA", tone: "moss" },
+    ],
   },
 ];
-
-const toneGradient: Record<string, string> = {
-  moss: "from-[var(--moss-deep)] to-[var(--moss)]",
-  lime: "from-[#3f6212] to-[var(--lime)]",
-  clay: "from-[#9a4a2b] to-[var(--clay)]",
-};
 
 const values = [
   {
@@ -97,12 +88,12 @@ export default function AboutPage() {
             into <em className="text-moss">soil</em>.
           </>
         }
-        lede="Hair2Harvest is a collection and composting service for barbershops in Balanga, Bataan. We pick hair up on the shop's own schedule, grade it at the door, and return a lab result with every batch."
+        lede="Hair2Harvest is our capstone project — a collection and composting service for barbershops in Balanga, Bataan. We pick hair up on the shop's own schedule, grade it at the door, and return a lab result with every batch."
         meta={[
-          { k: "Founded", v: "Balanga, Bataan" },
-          { k: "Service", v: "Collection · Composting" },
-          { k: "Shops", v: "8 enrolled" },
-          { k: "Output", v: "Lab-tested compost" },
+          { k: "Group", v: "Group 2" },
+          { k: "Department", v: "Project Management" },
+          { k: "Team", v: "15 members" },
+          { k: "Project", v: "Capstone 2026" },
         ]}
       />
 
@@ -155,49 +146,27 @@ export default function AboutPage() {
               <div className="flex items-center gap-3">
                 <span className="mono-tag text-clay">02</span>
                 <span className="h-px w-6 bg-[var(--line)]" aria-hidden />
-                <span className="eyebrow">The team</span>
+                <span className="eyebrow">The group</span>
               </div>
               <h2 className="display mt-6 text-[clamp(2rem,4.4vw,3.4rem)] text-ink">
-                The people behind
+                Fifteen of us,
                 <br />
-                the <em className="text-moss">line</em>.
+                four <em className="text-moss">roles</em>.
               </h2>
             </Reveal>
             <Reveal delay={80}>
               <p className="max-w-[40ch] text-[0.875rem] leading-[1.7] text-ink-soft sm:text-right">
-                A small crew runs collection, composting, the lab and the barangay relationships —
-                so the shop only ever meets one of us: the one at the door.
+                Hair2Harvest was built by Group 2 of the Department of Project Management. Tap any
+                card to flip it and see what each member helped with.
               </p>
             </Reveal>
           </div>
 
-          <div className="mt-12 grid gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-3">
-            {team.map((m, i) => (
-              <Reveal
-                key={m.name}
-                delay={(i % 3) * 80}
-                className="bg-[var(--paper-raised)]"
-              >
-                <article className="group flex h-full flex-col bg-[var(--paper-raised)] p-6 transition-colors hover:bg-paper">
-                  <div
-                    className={`flex size-16 items-center justify-center rounded-full bg-gradient-to-br ${
-                      toneGradient[m.tone]
-                    } font-display text-[1.25rem] font-semibold text-paper shadow-[0_2px_14px_-4px_rgba(20,40,15,0.5)]`}
-                    aria-hidden
-                  >
-                    {m.initials}
-                  </div>
-                  <h3 className="mt-5 text-[1.0625rem] font-medium tracking-[-0.02em] text-ink">
-                    {m.name}
-                  </h3>
-                  <p className="mono-tag mt-1.5 uppercase text-moss">{m.role}</p>
-                  <p className="mt-3 text-[0.8125rem] leading-[1.65] text-ink-soft">{m.bio}</p>
-                </article>
-              </Reveal>
-            ))}
+          <div className="mt-12">
+            <TeamFlip groups={groups} />
           </div>
           <p className="mono-tag mt-5 text-ink-mute">
-            TEAM PHOTOS &amp; BIOS ARE PLACEHOLDERS — REPLACE WITH REAL PROFILES IN THE CMS OR PAGE SOURCE.
+            PHOTOS, CONTRIBUTION NOTES &amp; ROLES ARE PLACEHOLDERS — REPLACE WITH REAL PROFILES IN THE PAGE SOURCE.
           </p>
         </div>
       </section>

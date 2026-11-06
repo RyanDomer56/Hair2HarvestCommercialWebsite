@@ -363,6 +363,43 @@
   font-size: 0.8125rem;
 }
 
+/* ------------------------------------------------------------ team flip cards */
+.team-flip {
+  perspective: 1100px;
+}
+
+.team-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.team-flip.is-flipped .team-flip-inner {
+  transform: rotateY(180deg);
+}
+
+.team-flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  border-radius: 3px;
+}
+
+.team-flip-back {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-flip-inner {
+    transition: none;
+  }
+}
+
 /* ----------------------------------------------------------------- cards */
 
 .card-print {
