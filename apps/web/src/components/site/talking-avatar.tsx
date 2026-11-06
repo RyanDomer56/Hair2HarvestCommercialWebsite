@@ -14,10 +14,19 @@ export type TalkingAvatarHandle = { speak: (text: string) => void };
  */
 export const TalkingAvatar = forwardRef<
   TalkingAvatarHandle,
-  { size?: number; variant: AvatarVariant; muted?: boolean; talking?: boolean; modelSrc?: string }
->(({ size = 48, variant, muted = false, talking: controlledTalking, modelSrc }, ref) => {
+  {
+    size?: number;
+    variant: AvatarVariant;
+    muted?: boolean;
+    talking?: boolean;
+    modelSrc?: string;
+    modelFallbackSrc?: string;
+    faceMode?: boolean;
+  }
+>(({ size = 48, variant, muted = false, talking: controlledTalking, modelSrc, modelFallbackSrc, faceMode }, ref) => {
   const [speaking, setSpeaking] = useState(false);
   const [modelFailed, setModelFailed] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
   const talking = controlledTalking ?? speaking;
 
   const speak = useCallback(
@@ -55,13 +64,19 @@ export const TalkingAvatar = forwardRef<
 
   useImperativeHandle(ref, () => ({ speak }), [speak]);
 
-  if (modelSrc && !modelFailed) {
+  const activeSrc = useFallback && modelFallbackSrc ? modelFallbackSrc : modelSrc;
+
+  if (activeSrc && !modelFailed) {
     return (
       <Avatar3D
-        src={modelSrc}
+        src={activeSrc}
         size={size}
         talking={talking}
-        onError={() => setModelFailed(true)}
+        faceMode={faceMode}
+        onError={() => {
+          if (!useFallback && modelFallbackSrc) setUseFallback(true);
+          else setModelFailed(true);
+        }}
       />
     );
   }

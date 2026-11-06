@@ -1,15 +1,21 @@
-The assistant avatar lives here as:
+Assistant avatar files (rendered by src/components/site/avatar-3d.tsx):
 
-  mint-melody-avatar.glb
+  marshmallow-avatar.glb   <- PRIMARY. Drop the "Marshmallow Avatar (Roblox UGC)"
+                              by SouthWake_ (CC BY, via Sketchfab) here to use it.
+  mint-melody-avatar.glb   <- FALLBACK. "Mint_ Melody_Character" by oktria.taranasta
+                              (CC BY, via Sketchfab). Shown until the marshmallow
+                              file is added.
 
-Source: "Mint_ Melody_Character" by oktria.taranasta — CC BY — via Sketchfab
-( https://sketchfab.com/3d-models/mint--melody-character-fe6a839b40de440382c142ada06f3146 )
+Behavior (see avatar-3d.tsx):
+  - The assistant uses faceMode: the camera zooms onto the head so the FACE is
+    clearly visible (not just the body), and the face does a talking head-nod +
+    pulse while the assistant speaks.
+  - Models are tinted green at runtime (no file edit needed).
+  - If marshmallow-avatar.glb is missing, it falls back to mint-melody-avatar.glb,
+    then to the built-in SVG avatar.
 
-It is tinted green at runtime and given a walking bounce + sway by
-src/components/site/avatar-3d.tsx (no edit to the file needed). Drop a
-replacement .glb here under the same name to swap the avatar.
+Sketchfab's download API needs a login, so the GLB must be downloaded in your
+browser (open the model page -> Download -> GLB) and placed here manually.
 
-Note: the downloaded Sketchfab GLB has no embedded skeleton/animations, so the
-"walk" is a procedural bounce+lean+sway (plus a ground shadow). For a true
-skeletal walk, rig the model on Mixamo and re-export a GLB with a walk clip —
-avatar-3d.tsx will auto-play it.
+Note: these free Sketchfab GLBs ship with no skeleton/animations, so "walk"/"talk"
+are procedural. Rig on Mixamo for a true skeletal clip — avatar-3d.tsx auto-plays it.
