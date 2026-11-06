@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowUpRight, Home, Menu, X } from "lucide-react";
 import { Wordmark } from "./brand";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +18,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const onHome = pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -48,9 +49,25 @@ export function SiteHeader() {
         )}
       >
         <div className="shell relative z-10 flex h-[72px] items-center justify-between gap-6">
+          {/* The wordmark is intentionally NOT a link. Older visitors do not
+              think to click a logo; the labelled Introduction button is the
+              clear way back to the homepage. */}
           <Wordmark />
 
           <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
+            <Link
+              href="/"
+              aria-current={onHome ? "page" : undefined}
+              className={cn(
+                "mr-1 inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[0.8125rem] font-medium tracking-[-0.01em] transition-colors",
+                onHome
+                  ? "border-moss bg-moss text-paper"
+                  : "border-[var(--line)] bg-paper text-ink hover:border-moss hover:text-moss",
+              )}
+            >
+              <Home size={13} strokeWidth={2} aria-hidden />
+              Introduction
+            </Link>
             {links.map((l) => {
               const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
               return (
@@ -93,6 +110,15 @@ export function SiteHeader() {
       {open && (
         <div className="fixed inset-0 top-[72px] z-40 flex flex-col bg-paper md:hidden">
           <nav className="shell flex flex-col pt-6" aria-label="Mobile">
+            <Link
+              href="/"
+              aria-current={onHome ? "page" : undefined}
+              className="mb-2 flex items-center gap-2.5 rounded-full border border-moss bg-moss px-4 py-3 text-paper"
+            >
+              <Home size={16} aria-hidden />
+              <span className="display text-[1.5rem]">Introduction</span>
+              <span className="mono-tag ml-auto text-paper/60">HOME</span>
+            </Link>
             {links.map((l, i) => (
               <Link
                 key={l.href}

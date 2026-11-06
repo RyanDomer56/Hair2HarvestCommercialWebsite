@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -32,11 +31,7 @@ export function Wordmark({
   tone?: "ink" | "paper";
 }) {
   return (
-    <Link
-      href="/"
-      aria-label="Hair2Harvest home"
-      className={cn("group flex items-center gap-2.5", className)}
-    >
+    <div className={cn("flex items-center gap-2.5", className)} aria-label="Hair2Harvest">
       <BrandMark size={34} priority />
       <span className="flex flex-col leading-none">
         <span
@@ -56,6 +51,6 @@ export function Wordmark({
           soil from barbers
         </span>
       </span>
-    </Link>
+    </div>
   );
 }

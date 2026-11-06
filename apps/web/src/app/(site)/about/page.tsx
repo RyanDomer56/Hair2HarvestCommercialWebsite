@@ -10,12 +10,13 @@ export const metadata: Metadata = {
     "Hair2Harvest is a student project in Balanga, Bataan. We collect hair clippings from barbershops and turn them into compost for local planting beds.",
 };
 
-/* Name + main responsibility only — nothing else (QA #19). */
+/* The 13-member roster, spelled exactly as supplied. Name + main
+   responsibility only — nothing else (QA #19). Each person appears once. */
 const groups = [
   {
     title: "Project Management",
     members: [
-      { name: "Mikayla Tulba", role: "Project manager" },
+      { name: "Mikylla Tulba", role: "Project manager" },
       { name: "Sherwin G. Malenab", role: "Assistant project manager" },
       { name: "Lairene B. Yulo", role: "Secretary" },
     ],
@@ -23,31 +24,26 @@ const groups = [
   {
     title: "Developers",
     members: [
-      { name: "Jundril Mhar C. Reyes", role: "Lead developer" },
-      { name: "Ryan C. Dormer", role: "Developer" },
+      { name: "Jundill Mhar C. Reyes", role: "Lead developer" },
+      { name: "Ryan C. Domer", role: "Developer" },
       { name: "Andrew Jeremiah C. Salangsang", role: "Developer" },
       { name: "Kier Laurence L. Atienza", role: "Developer" },
-      { name: "Lizette C. Apanti", role: "Developer" },
+      { name: "Liezette C. Aparri", role: "Developer" },
       { name: "Ermalyn R. Gadon", role: "Developer" },
     ],
   },
   {
     title: "Documentation",
     members: [
-      { name: "Emilou P. Quiniquing", role: "Lead documentation" },
-      { name: "Lairene B. Yulo", role: "Documentation" },
+      { name: "Emilou P. Quimiguing", role: "Documentation lead" },
       { name: "Rea Mary T. Mantal", role: "Documentation" },
       { name: "Rheyven D. Algeria", role: "Documentation" },
-      { name: "Aysen Halle C. Canate", role: "Documentation" },
     ],
   },
   {
     title: "Quality Assurance",
     members: [
-      { name: "Sherwin G. Malenab", role: "Lead quality assurance" },
-      { name: "Canale Halle C. Ayan", role: "Quality assurance" },
-      { name: "Lizette C. Aparri", role: "Quality assurance" },
-      { name: "Rheyven D. Algeria", role: "Quality assurance" },
+      { name: "Ayan Haile C. Canale", role: "Quality assurance" },
     ],
   },
 ];
@@ -91,7 +87,7 @@ export default function AboutPage() {
         lede="Hair2Harvest is a student project in Balanga, Bataan. We pick up hair clippings from barbershops and turn them into compost for planting beds nearby. We come to the shop, and we share the results with you."
         meta={[
           { k: "Based in", v: "Balanga" },
-          { k: "Team", v: "15 members" },
+          { k: "Team", v: "13 members" },
           { k: "Started", v: "2026" },
           { k: "Cost to join", v: "Free" },
         ]}
@@ -153,7 +149,7 @@ export default function AboutPage() {
               <em className="text-moss">behind it</em>.
             </h2>
             <p className="mt-5 max-w-[52ch] text-[0.875rem] leading-[1.7] text-ink-soft">
-              Fifteen students, grouped by what each one looks after.
+              Thirteen students, grouped by what each one looks after.
             </p>
           </Reveal>
 
