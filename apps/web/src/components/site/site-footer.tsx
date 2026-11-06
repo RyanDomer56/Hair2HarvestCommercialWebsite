@@ -22,8 +22,9 @@ const columns = [
   {
     title: "Company",
     items: [
-      { label: "Research", href: "/impact" },
-      { label: "Contact", href: "/partner#contact" },
+      { label: "About us", href: "/about" },
+      { label: "Our team", href: "/about#team" },
+      { label: "Get in touch", href: "/partner#contact" },
     ],
   },
 ];
@@ -75,13 +76,13 @@ export function SiteFooter() {
 
         <div className="mt-14 flex flex-col gap-4 border-t border-[var(--line)] pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="mono-tag text-ink-mute">
-            © 2026 HAIR2HARVEST · RESEARCH PROJECT OF RYAN CEPEDA DOMER
+            © 2026 HAIR2HARVEST · A COLLECTION &amp; COMPOSTING SERVICE FOR BARBERSHOPS
           </p>
           <div className="flex items-center gap-5">
-            <span className="mono-tag text-ink-mute">MONGODB · EXPRESS · REACT · NODE</span>
+            <span className="mono-tag text-ink-mute">BALANGA · BATAAN · PHILIPPINES</span>
             <span className="flex items-center gap-1.5">
               <span className="live-dot size-1.5 rounded-full bg-moss" aria-hidden />
-              <span className="mono-tag text-moss">LINE RUNNING</span>
+              <span className="mono-tag text-moss">NOW COLLECTING</span>
             </span>
           </div>
         </div>

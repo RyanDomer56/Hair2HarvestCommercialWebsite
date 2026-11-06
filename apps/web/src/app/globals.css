@@ -338,6 +338,17 @@
   border-color: color-mix(in oklab, var(--ink) 26%, transparent);
 }
 
+.btn-ghost-paper {
+  --btn-bg: transparent;
+  --btn-fg: var(--paper);
+  border-color: color-mix(in oklab, var(--paper) 28%, transparent);
+}
+
+.btn-ghost-paper:hover {
+  background: color-mix(in oklab, var(--paper) 9%, transparent);
+  border-color: color-mix(in oklab, var(--paper) 46%, transparent);
+}
+
 .btn-lime {
   --btn-bg: var(--lime);
   --btn-fg: var(--moss-deep);

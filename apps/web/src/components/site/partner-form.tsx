@@ -188,7 +188,7 @@ export function PartnerForm() {
         <label className="flex items-start gap-3">
           <input type="checkbox" name="photoPermission" className="mt-0.5 size-4 accent-[var(--moss)]" />
           <span className="text-[0.8125rem] leading-[1.6] text-ink-soft">
-            Photos of the shop&apos;s waste container may be used in the research write-up. Optional.
+            Photos of the shop&apos;s setup help us plan the collection. Optional.
           </span>
         </label>
       </div>

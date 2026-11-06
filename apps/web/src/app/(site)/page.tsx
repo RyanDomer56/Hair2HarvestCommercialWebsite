@@ -79,7 +79,7 @@ export default function HomePage() {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   <span className="flex items-center gap-2">
                     <span className="live-dot size-1.5 rounded-full bg-moss" aria-hidden />
-                    <span className="eyebrow text-moss">Pilot live · Balanga, Bataan</span>
+                    <span className="eyebrow text-moss">Now collecting · Balanga, Bataan</span>
                   </span>
                   <span className="h-3 w-px bg-[var(--line)]" aria-hidden />
                   <span className="eyebrow">Line 001 · Nov 2026</span>
@@ -299,7 +299,7 @@ export default function HomePage() {
               />
 
               <div className="mt-8 border-t border-[var(--line)]">
-                <SpecRow label="Machine" value="MCH-01 · rotary drum" hint="Balanga pilot line" />
+                <SpecRow label="Machine" value="MCH-01 · rotary drum" hint="Balanga, Bataan" />
                 <SpecRow label="Drive" value="Finned motor · belt · reducer" hint="8 rpm, logged per session" />
                 <SpecRow label="Core temperature" value="58.6 °C" hint="Probe 02, in pile" />
                 <SpecRow label="Moisture" value="54 %" hint="Target 40–60% while composting" />
@@ -434,7 +434,7 @@ export default function HomePage() {
                 </ul>
                 <div className="flex items-center justify-between border-t border-[var(--line)] bg-[var(--paper-sunk)] px-5 py-3">
                   <span className="mono-tag text-ink-mute">SHOWING 5 OF 8 RECORDS</span>
-                  <span className="mono-tag text-moss">MONGODB · SHOPS</span>
+                  <span className="mono-tag text-moss">8 SHOPS · BALANGA</span>
                 </div>
               </div>
             </Reveal>

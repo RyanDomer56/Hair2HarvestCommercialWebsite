@@ -164,7 +164,7 @@ export function ShopDirectory() {
           {rows.length} OF {records.length} RECORDS
         </span>
         <span className="mono-tag text-moss">
-          {records.filter((s) => s.inPilotArea).length} INSIDE PILOT BARANGAY
+          {records.filter((s) => s.inPilotArea).length} IN SERVICE AREA
         </span>
       </div>
     </div>

@@ -11,6 +11,7 @@ const links = [
   { href: "/system", label: "The system" },
   { href: "/network", label: "Shop network" },
   { href: "/impact", label: "Evidence" },
+  { href: "/about", label: "About" },
   { href: "/partner", label: "Partner" },
 ];
 
@@ -110,7 +111,7 @@ export function SiteHeader() {
             </Link>
           </div>
           <div className="shell mt-auto pb-8">
-            <p className="eyebrow">Balanga, Bataan · Pilot 2026</p>
+            <p className="eyebrow">Balanga, Bataan · Philippines</p>
           </div>
         </div>
       )}

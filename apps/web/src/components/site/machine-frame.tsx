@@ -24,15 +24,13 @@ const FALLBACK: OverviewPayload = {
 
 export function MachineFrame({ children }: { children: React.ReactNode }) {
   const [machine, setMachine] = useState<MachineTelemetry>(FALLBACK.machine);
-  const [source, setSource] = useState<"mongodb" | "fixtures" | "fixtures-fallback">("fixtures");
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
     const ctrl = new AbortController();
-    getOverview(FALLBACK, ctrl.signal).then(({ data, source: from }) => {
+    getOverview(FALLBACK, ctrl.signal).then(({ data }) => {
       if (ctrl.signal.aborted) return;
       if (data?.machine) setMachine(data.machine);
-      setSource(from);
     });
     return () => ctrl.abort();
   }, []);
@@ -103,9 +101,7 @@ export function MachineFrame({ children }: { children: React.ReactNode }) {
         <span className="mono-tag text-paper/35">
           E-STOP · LID INTERLOCK · MOTOR SHUTOFF ARE LOCAL HARDWARE
         </span>
-        <span className="mono-tag text-lime/80">
-          {source === "mongodb" ? "MONGODB · LIVE" : "FIXTURES · DEMO"}
-        </span>
+        <span className="mono-tag text-lime/80">BALANGA · PHILIPPINES</span>
       </div>
     </div>
   );
