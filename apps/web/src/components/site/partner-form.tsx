@@ -145,7 +145,11 @@ export function PartnerForm() {
           >
             <span className="mono-tag uppercase text-ink-mute">
               {f.label}
-              {f.required && <span className="ml-1 text-clay">*</span>}
+              {f.required ? (
+                <span className="ml-1 text-clay">*</span>
+              ) : (
+                <span className="ml-1 text-ink-mute">(Optional)</span>
+              )}
             </span>
             {f.type === "select" ? (
               <select
@@ -202,7 +206,7 @@ export function PartnerForm() {
         <label className="flex items-start gap-3">
           <input type="checkbox" name="photoPermission" className="mt-0.5 size-4 accent-[var(--moss)]" />
           <span className="text-[0.8125rem] leading-[1.6] text-ink-soft">
-            Photos of the shop&apos;s setup help us plan the collection. Optional.
+            Photos of the shop&apos;s setup help us plan the collection. (Optional)
           </span>
         </label>
       </div>
