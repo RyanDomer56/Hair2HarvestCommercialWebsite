@@ -34,6 +34,15 @@ export async function POST(request: Request) {
     );
   }
 
+  // Mobile must be digits only and at most 11 characters (Philippine format).
+  const mobile = String(payload.mobile ?? "");
+  if (!/^\d{1,11}$/.test(mobile)) {
+    return NextResponse.json(
+      { error: "Mobile number must be digits only, up to 11 characters" },
+      { status: 422 },
+    );
+  }
+
   if (API_URL) {
     try {
       const upstream = await fetch(`${API_URL.replace(/\/$/, "")}/api/v1/shops`, {

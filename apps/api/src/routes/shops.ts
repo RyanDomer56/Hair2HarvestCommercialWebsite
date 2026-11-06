@@ -17,7 +17,7 @@ const pickupRuleSchema = z.object({
 const createShopSchema = z.object({
   name: z.string().min(2),
   contact: z.string().min(2),
-  mobile: z.string().min(7),
+  mobile: z.string().regex(/^\d{7,11}$/, "Mobile must be 7-11 digits"),
   channel: z.enum(["SMS", "Messenger", "Viber", "Call"]).default("SMS"),
   barangay: z.string().min(2),
   address: z.string().optional(),

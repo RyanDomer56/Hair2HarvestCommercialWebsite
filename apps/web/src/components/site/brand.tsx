@@ -45,7 +45,7 @@ export function Wordmark({
             tone === "ink" ? "text-ink" : "text-paper",
           )}
         >
-          hair2harvest
+          Hair2Harvest
         </span>
         <span
           className={cn(

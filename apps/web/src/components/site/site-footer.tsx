@@ -39,7 +39,7 @@ export function SiteFooter() {
               <BrandMark size={44} />
               <div>
                 <p className="text-[1.05rem] font-semibold tracking-[-0.03em] text-ink">
-                  hair2harvest
+                  Hair2Harvest
                 </p>
                 <p className="mono-tag mt-1 text-ink-mute">SOIL FROM BARBERS</p>
               </div>
@@ -90,7 +90,7 @@ export function SiteFooter() {
 
       <div aria-hidden className="pointer-events-none select-none overflow-hidden">
         <p className="-mb-[0.22em] translate-y-[0.06em] whitespace-nowrap text-center font-display text-[clamp(4rem,15vw,13rem)] leading-none tracking-[-0.04em] text-[color-mix(in_oklab,var(--ink)_9%,transparent)]">
-          hair2harvest
+          Hair2Harvest
         </p>
       </div>
     </footer>

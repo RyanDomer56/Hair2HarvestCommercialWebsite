@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   keywords: [
     "hair compost",
     "barbershop waste",
-    "hair2harvest",
+    "Hair2Harvest",
     "organic fertilizer",
     "circular economy Philippines",
     "Bataan",

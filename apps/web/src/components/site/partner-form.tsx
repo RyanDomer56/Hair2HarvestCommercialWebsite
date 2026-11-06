@@ -72,6 +72,16 @@ const fields: Field[] = [
   },
 ];
 
+/**
+ * Keeps a telephone input digits-only and capped at 11 characters.
+ * Stripping non-digits in the change handler means letters never appear,
+ * and slicing at 11 guarantees the cap even on paste.
+ */
+function sanitizeTel(e: React.ChangeEvent<HTMLInputElement>) {
+  const clean = e.target.value.replace(/\D/g, "").slice(0, 11);
+  if (clean !== e.target.value) e.target.value = clean;
+}
+
 export function PartnerForm() {
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -163,6 +173,10 @@ export function PartnerForm() {
                 type={f.type ?? "text"}
                 required={f.required}
                 placeholder={f.placeholder}
+                inputMode={f.type === "tel" ? "numeric" : undefined}
+                maxLength={f.type === "tel" ? 11 : undefined}
+                pattern={f.type === "tel" ? "[0-9]{0,11}" : undefined}
+                onChange={f.type === "tel" ? sanitizeTel : undefined}
                 className="h-11 rounded-[3px] border border-[var(--line)] bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors placeholder:text-ink-mute/60 focus:border-moss"
               />
             )}
