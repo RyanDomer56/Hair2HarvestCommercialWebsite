@@ -2,6 +2,7 @@
 
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import { AvatarCharacter, type AvatarVariant } from "./avatar-character";
+import Avatar3D from "./avatar-3d";
 
 export type TalkingAvatarHandle = { speak: (text: string) => void };
 
@@ -13,9 +14,10 @@ export type TalkingAvatarHandle = { speak: (text: string) => void };
  */
 export const TalkingAvatar = forwardRef<
   TalkingAvatarHandle,
-  { size?: number; variant: AvatarVariant; muted?: boolean; talking?: boolean }
->(({ size = 48, variant, muted = false, talking: controlledTalking }, ref) => {
+  { size?: number; variant: AvatarVariant; muted?: boolean; talking?: boolean; modelSrc?: string }
+>(({ size = 48, variant, muted = false, talking: controlledTalking, modelSrc }, ref) => {
   const [speaking, setSpeaking] = useState(false);
+  const [modelFailed, setModelFailed] = useState(false);
   const talking = controlledTalking ?? speaking;
 
   const speak = useCallback(
@@ -53,6 +55,16 @@ export const TalkingAvatar = forwardRef<
 
   useImperativeHandle(ref, () => ({ speak }), [speak]);
 
+  if (modelSrc && !modelFailed) {
+    return (
+      <Avatar3D
+        src={modelSrc}
+        size={size}
+        talking={talking}
+        onError={() => setModelFailed(true)}
+      />
+    );
+  }
   return <AvatarCharacter size={size} variant={variant} talking={talking} />;
 });
 
