@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { Send, X } from "lucide-react";
+import { RefreshCw, Send, Volume2, VolumeX, X } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
-import Avatar from "@/components/ui/components-primitives-avatar";
+import { TalkingAvatar, type TalkingAvatarHandle } from "./talking-avatar";
+import type { AvatarVariant } from "./avatar-character";
 import {
   KNOWLEDGE,
   STARTER_QUESTIONS,
@@ -37,6 +38,47 @@ export function SystemAssistant() {
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
   const [unread, setUnread] = useState(false);
+
+  // --- talking avatar state (variant + mute, persisted) -----------------
+  const [avatarVariant, setAvatarVariant] = useState<AvatarVariant>("sprout");
+  const [avatarMuted, setAvatarMuted] = useState(false);
+  const headerAvatarRef = useRef<TalkingAvatarHandle>(null);
+
+  useEffect(() => {
+    try {
+      const sv = localStorage.getItem("h2h-avatar-variant");
+      if (sv) setAvatarVariant(sv as AvatarVariant);
+      setAvatarMuted(localStorage.getItem("h2h-avatar-muted") === "1");
+    } catch {
+      /* noop */
+    }
+  }, []);
+
+  const cycleVariant = () => {
+    setAvatarVariant((prev) => {
+      const order: AvatarVariant[] = ["sprout", "ember", "bloom"];
+      const next = order[(order.indexOf(prev) + 1) % order.length];
+      try {
+        localStorage.setItem("h2h-avatar-variant", next);
+      } catch {
+        /* noop */
+      }
+      return next;
+    });
+  };
+
+  const toggleMute = () => {
+    setAvatarMuted((m) => {
+      const nm = !m;
+      try {
+        localStorage.setItem("h2h-avatar-muted", nm ? "1" : "0");
+        if (nm && typeof window !== "undefined") window.speechSynthesis?.cancel();
+      } catch {
+        /* noop */
+      }
+      return nm;
+    });
+  };
 
   const inputRef = useRef<HTMLInputElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
@@ -167,7 +209,11 @@ export function SystemAssistant() {
       movedRef.current = false;
       return;
     }
-    setOpen((v) => !v);
+    setOpen((v) => {
+      const nv = !v;
+      if (!nv && typeof window !== "undefined") window.speechSynthesis?.cancel();
+      return nv;
+    });
   };
 
   const scrollToBottom = useCallback(() => {
@@ -199,6 +245,7 @@ export function SystemAssistant() {
 
   useEffect(() => () => {
     if (timerRef.current) window.clearTimeout(timerRef.current);
+    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
   }, []);
 
   const send = useCallback(
@@ -226,6 +273,8 @@ export function SystemAssistant() {
         setThinking(false);
         scrollToBottom();
         if (!open) setUnread(true);
+        // The avatar reads the reply aloud (Web Speech API) when not muted.
+        headerAvatarRef.current?.speak(reply.text);
       }, 620);
     },
     [thinking, open, scrollToBottom],
@@ -268,13 +317,11 @@ export function SystemAssistant() {
             ref={tiltRef}
             className="relative inline-flex rounded-[40%] shadow-[0_14px_34px_rgba(20,26,8,.32)] ring-2 ring-paper/70 transition-transform duration-150 ease-out"
           >
-            <Avatar
-              color="lime"
-              size="md"
-              shape="squircle"
-              blinking={!thinking}
+            <TalkingAvatar
+              size={64}
+              variant={avatarVariant}
+              muted={avatarMuted}
               talking={thinking}
-              label="Hair2Harvest assistant"
             />
             {unread && (
               <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-lime ring-2 ring-paper" />
@@ -305,13 +352,12 @@ export function SystemAssistant() {
         {/* header */}
         <div className="flex items-center gap-3 border-b border-paper/10 bg-moss-deep px-4 py-3.5">
           <span className="shrink-0">
-            <Avatar
-              color="lime"
-              size="sm"
-              shape="squircle"
-              blinking={!thinking}
+            <TalkingAvatar
+              ref={headerAvatarRef}
+              size={38}
+              variant={avatarVariant}
+              muted={avatarMuted}
               talking={thinking}
-              label="Assistant"
             />
           </span>
           <div className="min-w-0 flex-1">
@@ -321,14 +367,36 @@ export function SystemAssistant() {
               {thinking ? "Replying…" : "Online"}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            aria-label="Close"
-            className="flex size-8 items-center justify-center rounded-full text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
-          >
-            <X size={16} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={cycleVariant}
+              aria-label="Change avatar"
+              className="flex size-8 items-center justify-center rounded-full text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
+            >
+              <RefreshCw size={15} />
+            </button>
+            <button
+              type="button"
+              onClick={toggleMute}
+              aria-label={avatarMuted ? "Unmute voice" : "Mute voice"}
+              aria-pressed={avatarMuted}
+              className="flex size-8 items-center justify-center rounded-full text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
+            >
+              {avatarMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+                setOpen(false);
+              }}
+              aria-label="Close"
+              className="flex size-8 items-center justify-center rounded-full text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
+            >
+              <X size={16} />
+            </button>
+          </div>
         </div>
 
         {/* messages */}
@@ -360,14 +428,7 @@ export function SystemAssistant() {
           {thinking && (
             <div className="flex items-start gap-2">
               <span className="mt-1 shrink-0">
-                <Avatar
-                  color="lime"
-                  size="sm"
-                  shape="squircle"
-                  talking
-                  blinking={false}
-                  label="Replying"
-                />
+                <TalkingAvatar size={28} variant={avatarVariant} muted talking />
               </span>
               <div className="flex items-center gap-1 rounded-[14px] rounded-bl-[4px] border border-paper/10 bg-[#1c2114] px-3.5 py-3">
                 {[0, 1, 2].map((i) => (
