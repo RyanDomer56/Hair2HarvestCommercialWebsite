@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { Send, X } from "lucide-react";
+import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import Avatar from "@/components/ui/components-primitives-avatar";
 import {
@@ -39,6 +41,134 @@ export function SystemAssistant() {
   const inputRef = useRef<HTMLInputElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<number | null>(null);
+
+  const reduceMotion = useReducedMotion();
+
+  // --- draggable launcher state -------------------------------------------
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const tiltRef = useRef<HTMLSpanElement>(null);
+  const dragRef = useRef<{ px: number; py: number; ox: number; oy: number; moved: boolean } | null>(
+    null,
+  );
+  const movedRef = useRef(false);
+  const openRef = useRef(open);
+  openRef.current = open;
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+
+  // Place the launcher (restored from the client's last position, else bottom-right).
+  useEffect(() => {
+    const place = () => {
+      const el = btnRef.current;
+      if (!el) return;
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      const saved =
+        typeof window !== "undefined" ? localStorage.getItem("h2h-assistant-pos") : null;
+      let x: number;
+      let y: number;
+      if (saved) {
+        const [fx, fy] = saved.split(",").map(Number);
+        x = Math.round(fx * (window.innerWidth - w));
+        y = Math.round(fy * (window.innerHeight - h));
+      } else {
+        x = window.innerWidth - w - 20;
+        y = window.innerHeight - h - 20;
+      }
+      x = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+      y = Math.max(8, Math.min(y, window.innerHeight - h - 8));
+      setPos({ x, y });
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, []);
+
+  // 3D tilt toward the cursor for a living, dimensional feel.
+  useEffect(() => {
+    if (reduceMotion) return;
+    let raf = 0;
+    const onMove = (e: PointerEvent) => {
+      if (openRef.current || dragRef.current) return;
+      const el = tiltRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      const ry = Math.max(-14, Math.min(14, ((e.clientX - cx) / 260) * 18));
+      const rx = Math.max(-14, Math.min(14, (-(e.clientY - cy) / 260) * 18));
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        if (tiltRef.current) {
+          tiltRef.current.style.transform = `perspective(720px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        }
+      });
+    };
+    window.addEventListener("pointermove", onMove);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, [reduceMotion]);
+
+  const onLauncherPointerDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (open || !pos) return;
+    try {
+      btnRef.current?.setPointerCapture(e.pointerId);
+    } catch {
+      /* noop */
+    }
+    dragRef.current = { px: e.clientX, py: e.clientY, ox: pos.x, oy: pos.y, moved: false };
+  };
+  const onLauncherPointerMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const d = dragRef.current;
+    if (!d || !pos) return;
+    const dx = e.clientX - d.px;
+    const dy = e.clientY - d.py;
+    if (!d.moved && Math.hypot(dx, dy) > 6) {
+      d.moved = true;
+      movedRef.current = true;
+    }
+    if (d.moved) {
+      const el = btnRef.current;
+      if (!el) return;
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      const x = Math.max(8, Math.min(d.ox + dx, window.innerWidth - w - 8));
+      const y = Math.max(8, Math.min(d.oy + dy, window.innerHeight - h - 8));
+      setPos({ x, y });
+    }
+  };
+  const onLauncherPointerUp = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const d = dragRef.current;
+    if (!d) return;
+    try {
+      btnRef.current?.releasePointerCapture(e.pointerId);
+    } catch {
+      /* noop */
+    }
+    if (d.moved && pos) {
+      const el = btnRef.current;
+      if (el) {
+        const w = el.offsetWidth;
+        const h = el.offsetHeight;
+        const fx = pos.x / (window.innerWidth - w);
+        const fy = pos.y / (window.innerHeight - h);
+        try {
+          localStorage.setItem("h2h-assistant-pos", `${fx},${fy}`);
+        } catch {
+          /* noop */
+        }
+      }
+    }
+    dragRef.current = null;
+  };
+  const onLauncherClick = () => {
+    if (movedRef.current) {
+      movedRef.current = false;
+      return;
+    }
+    setOpen((v) => !v);
+  };
 
   const scrollToBottom = useCallback(() => {
     requestAnimationFrame(() => {
@@ -112,33 +242,49 @@ export function SystemAssistant() {
 
   return (
     <>
-      {/* launcher — the avatar itself is the button */}
+      {/* launcher — the avatar itself is the button, and it is draggable */}
       <button
+        ref={btnRef}
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={onLauncherClick}
+        onPointerDown={onLauncherPointerDown}
+        onPointerMove={onLauncherPointerMove}
+        onPointerUp={onLauncherPointerUp}
         aria-expanded={open}
         aria-controls="system-assistant-panel"
-        aria-label={open ? "Close the chat" : "Chat with us"}
+        aria-label={open ? "Close the chat" : "Chat with us — drag me anywhere"}
         className={cn(
-          "assistant-scope group fixed bottom-5 right-5 z-[70] flex items-center gap-3 transition-all duration-300 sm:bottom-6 sm:right-6",
+          "assistant-scope group fixed z-[70] flex items-center gap-3 transition-[opacity,transform] duration-300",
+          pos ? "" : "bottom-5 right-5 sm:bottom-6 sm:right-6",
           open && "pointer-events-none translate-y-3 opacity-0",
         )}
+        style={pos ? { left: pos.x, top: pos.y } : undefined}
       >
         <span className="hidden rounded-full bg-moss-deep px-3.5 py-2 text-[0.75rem] font-medium text-paper opacity-0 shadow-lg transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 sm:block sm:translate-x-2">
           Chat with us
         </span>
-        <span className="relative inline-flex rounded-[40%] shadow-[0_12px_32px_rgba(20,26,8,.28)] ring-2 ring-paper/70 transition-transform duration-300 group-hover:scale-105">
-          <Avatar
-            color="lime"
-            size="md"
-            shape="squircle"
-            blinking={!thinking}
-            talking={thinking}
-            label="Hair2Harvest assistant"
+        <span className="relative inline-flex">
+          <span
+            ref={tiltRef}
+            className="relative inline-flex rounded-[40%] shadow-[0_14px_34px_rgba(20,26,8,.32)] ring-2 ring-paper/70 transition-transform duration-150 ease-out"
+          >
+            <Avatar
+              color="lime"
+              size="md"
+              shape="squircle"
+              blinking={!thinking}
+              talking={thinking}
+              label="Hair2Harvest assistant"
+            />
+            {unread && (
+              <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-lime ring-2 ring-paper" />
+            )}
+          </span>
+          {/* contact shadow grounds the floating orb */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-[-16px] left-1/2 h-[10px] w-[58%] -translate-x-1/2 rounded-full bg-black/35 blur-md"
           />
-          {unread && (
-            <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-lime ring-2 ring-paper" />
-          )}
         </span>
       </button>
 

@@ -49,6 +49,12 @@ const KEYFRAMES = `
   0%, 100% { opacity: .35; transform: scale(1); }
   50%      { opacity: .8;  transform: scale(1.08); }
 }
+@keyframes av-gaze {
+  0%, 62%, 100% { transform: translateX(0); }
+  70%           { transform: translateX(2px); }
+  78%           { transform: translateX(-2px); }
+  86%           { transform: translateX(1px); }
+}
 `;
 
 const PRESETS: Record<
@@ -256,8 +262,13 @@ function Avatar({
     <>
       <style>{KEYFRAMES}</style>
       <motion.div
-        animate={reduceMotion ? undefined : { y: [0, -3, 0] }}
-        transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
+        animate={
+          reduceMotion
+            ? undefined
+            : { y: [0, -3, 0], rotateX: [2, -2, 2], rotateY: [-4, 4, -4] }
+        }
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{ transformPerspective: 700, transformStyle: "preserve-3d" }}
         className="relative inline-flex"
       >
         {/* soft halo while speaking */}
@@ -348,22 +359,37 @@ function Avatar({
             }}
           />
 
+          {/* specular highlight — gives the orb a 3D sheen */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-[20%] top-[15%] size-[26%] rounded-full bg-white/70 blur-[2px] mix-blend-screen"
+          />
+
           <div className="relative z-10 flex flex-col items-center">
-            <div className={["flex items-center", dims.eyeGap, dims.eyeY].join(" ")}>
-              <Eye
-                blinking={blinking && !talking}
-                delayMs={0}
-                irisGradient={preset.iris}
-                sizeClass={dims.eye}
-                reduceMotion={reduceMotion}
-              />
-              <Eye
-                blinking={blinking && !talking}
-                delayMs={60}
-                irisGradient={preset.iris}
-                sizeClass={dims.eye}
-                reduceMotion={reduceMotion}
-              />
+            <div className={["flex items-center", dims.eyeY].join(" ")}>
+              <div
+                className={["flex items-center", dims.eyeGap].join(" ")}
+                style={
+                  blinking && !talking && !reduceMotion
+                    ? { animation: "av-gaze 7s ease-in-out infinite" }
+                    : undefined
+                }
+              >
+                <Eye
+                  blinking={blinking && !talking}
+                  delayMs={0}
+                  irisGradient={preset.iris}
+                  sizeClass={dims.eye}
+                  reduceMotion={reduceMotion}
+                />
+                <Eye
+                  blinking={blinking && !talking}
+                  delayMs={60}
+                  irisGradient={preset.iris}
+                  sizeClass={dims.eye}
+                  reduceMotion={reduceMotion}
+                />
+              </div>
             </div>
 
             {/* mouth — a quiet line at rest, animated speech while talking */}
