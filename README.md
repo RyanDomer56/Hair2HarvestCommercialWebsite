@@ -130,6 +130,21 @@ the rotary composting drum from Modules 5 and 6 — not a generic factory.
 - No models, no images, no network. Two font families only. Degrades to a labelled fallback without
   WebGL and freezes on one frame under `prefers-reduced-motion`.
 
+## System assistant
+
+A floating **"Ask the system"** button on every public page opens a compact chat panel. It is a
+**grounded retrieval assistant**, not a generative model: `apps/web/src/lib/chat-knowledge.ts`
+holds 35 question/answer pairs taken verbatim from the three design documents, each tagged with
+its source section. Answers are matched deterministically (exact canonical question, then keyword
+overlap), so nothing is invented — when a question is outside the corpus the assistant says so and
+offers what it can answer.
+
+- Suggested questions on open, related questions after every answer, and a topic browser.
+- Source chip under each reply, e.g. `System design · §1 · core decision`.
+- Escape closes, input autofocuses, reduced-motion typing indicator, mobile bottom-sheet layout.
+- Scoped CSS variables keep the dark panel stable if the workspace leaves `.dark` on `<html>`.
+- Mounted in the `(site)` layout only — it does not appear in the operations workspace.
+
 ## Design
 
 Two registers, one system. **Editorial** for the commercial site — cream stock `#F6F2E6`, olive ink `#242A12`, Montserrat for display over Poppins, hairline rules, almost-square corners. **Instrument** for the workspace — pale lime sidebar `#F5FADF`, white cards, 14 px radii, tabular numbers. One accent only: `#D9F26B`, used on less than 4% of any screen. Full spec in [`docs/02-design-system.md`](docs/02-design-system.md).

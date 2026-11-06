@@ -408,6 +408,17 @@
 
 /* --------------------------------------------------------------- motion */
 
+/* The chat panel is dark-on-dark by design and must not inherit the
+   workspace's .dark token overrides when a user navigates back to the site. */
+.assistant-scope {
+  --paper: #f6f2e6;
+  --paper-raised: #fffdf7;
+  --moss-deep: #2c3518;
+  --lime: #d9f26b;
+  --ink: #242a12;
+  color-scheme: dark;
+}
+
 /* The instrument frame supplies its own header/footer rails, so the scene's
    internal chrome would be a duplicate. The in-viewport caption, coordinates,
    mode bar and camera row stay. */
