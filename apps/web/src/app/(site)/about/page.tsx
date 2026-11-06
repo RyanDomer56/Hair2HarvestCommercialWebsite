@@ -215,7 +215,7 @@ export default function AboutPage() {
             </Reveal>
             <Reveal delay={120}>
               <p className="max-w-[42ch] text-[0.9375rem] leading-[1.7] text-paper/75">
-                We register a shop on site in about two minutes — no password, no dashboard. You keep
+                We register a shop on a short visit — no password, no dashboard. You keep
                 cutting hair; we collect it, compost it, and tell you what happened.
               </p>
               <div className="mt-6 flex flex-wrap gap-2.5">

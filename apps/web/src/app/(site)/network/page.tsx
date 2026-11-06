@@ -130,12 +130,6 @@ export default function NetworkPage() {
                         <span className="mono-tag text-ink-mute">WINDOW</span>
                         <span className="text-right text-[0.8125rem] text-ink">{s.window}</span>
                       </div>
-                      <div className="flex justify-between gap-3">
-                        <span className="mono-tag text-ink-mute">ACCESS</span>
-                        <span className="max-w-[62%] text-right text-[0.75rem] leading-snug text-ink-soft">
-                          {s.access}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 ))}
@@ -144,8 +138,8 @@ export default function NetworkPage() {
           </div>
 
           <Reveal delay={160}>
-            <div className="mt-14 grid gap-8 border-t border-[var(--line)] pt-8 sm:grid-cols-3">
-              <Stat value="2" unit="min" label="Registration time" note="Staff-filled, on a phone" />
+              <div className="mt-14 grid gap-8 border-t border-[var(--line)] pt-8 sm:grid-cols-3">
+              <Stat value="0" label="Trips to barangay hall" note="We come to you" />
               <Stat value="0" label="Shop logins" note="Code on a sack is the identity" />
               <Stat value="3" label="Message templates" note="Reminder, missed, recorded" />
             </div>
@@ -167,7 +161,7 @@ export default function NetworkPage() {
                     the <em>shop</em>.
                   </>
                 }
-                lede="No trip to the barangay hall. No form to fill at a counter. A staff member visits, registers the shop in about two minutes, and leaves a labelled sack."
+                lede="No trip to the barangay hall. No form to fill at a counter. A staff member visits, registers the shop on a short visit, and leaves a labelled sack."
               />
             </Reveal>
             <Reveal delay={100}>

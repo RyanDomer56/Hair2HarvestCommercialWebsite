@@ -124,8 +124,8 @@ export function PartnerForm() {
         <div>
           <h3 className="text-[1.125rem] font-medium text-ink">Request received.</h3>
           <p className="mt-2 max-w-[46ch] text-[0.875rem] leading-[1.7] text-ink-soft">
-            A staff member will confirm the visit window by SMS. Registration takes about two
-            minutes on site, and the first labelled sack comes with us.
+            A staff member will confirm the visit window by SMS. Registration takes a few minutes
+            on a visit, and the first labelled sack comes with us.
           </p>
         </div>
         <p className="mono-tag text-ink-mute">

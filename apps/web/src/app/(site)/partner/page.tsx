@@ -3,12 +3,12 @@ import { CalendarDays, Mail, MapPin, Phone } from "lucide-react";
 import { PageHero } from "@/components/site/page-hero";
 import { PartnerForm } from "@/components/site/partner-form";
 import { Reveal } from "@/components/site/reveal";
-import { SectionHead, SpecRow, Stat } from "@/components/site/ui-bits";
+import { SectionHead, Stat } from "@/components/site/ui-bits";
 
 export const metadata: Metadata = {
   title: "Partner a shop",
   description:
-    "Register a barbershop with Hair2Harvest. Two minutes on site, a labelled sack, and a pickup rule that fits your hours.",
+    "Register a barbershop with Hair2Harvest. A short visit, a labelled sack, and a pickup rule that fits your hours.",
 };
 
 export default function PartnerPage() {
@@ -19,14 +19,14 @@ export default function PartnerPage() {
         label="Partner"
         title={
           <>
-            Two minutes,
+            A short visit,
             <br />
             then we <em>disappear</em>.
           </>
         }
-        lede="A staff member registers the shop on site. Six fields, one checkbox, one labelled sack. After that the pickup rule does the work and the shop keeps cutting hair."
+        lede="A staff member registers the shop on a short visit. A labelled sack, a pickup rule that fits your hours, and you keep cutting hair. Nothing for you to run."
         meta={[
-          { k: "Registration", v: "~2 minutes" },
+          { k: "Registration", v: "A short visit" },
           { k: "Cost to shop", v: "None" },
           { k: "Login required", v: "No" },
           { k: "First pickup", v: "Same week" },
@@ -51,15 +51,12 @@ export default function PartnerPage() {
               </Reveal>
 
               <Reveal delay={80}>
-                <div className="mt-8 border-t border-[var(--line)]">
-                  <SpecRow label="Shop name" value="Required" />
-                  <SpecRow label="Contact person" value="Required" />
-                  <SpecRow label="Mobile number" value="Required" hint="One number, one channel" />
-                  <SpecRow label="Barangay" value="Required" hint="Also flags pilot eligibility" />
-                  <SpecRow label="Opening hours" value="Required" />
-                  <SpecRow label="Pickup rule" value="Days · window · access" />
-                  <SpecRow label="Consent + photo permission" value="Checkbox" />
-                </div>
+                <p className="mt-8 max-w-[46ch] text-[0.9375rem] leading-[1.7] text-ink-soft">
+                  We ask for your shop name, a contact person, a mobile number, your barangay, and
+                  the window that suits you best. That is the whole registration — everything else we
+                  measure ourselves on the visit, and nothing we collect ever asks you to log in
+                  again.
+                </p>
               </Reveal>
 
               <Reveal delay={140}>

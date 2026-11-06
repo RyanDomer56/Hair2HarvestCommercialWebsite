@@ -8,11 +8,10 @@ import { Wordmark } from "./brand";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/system", label: "The system" },
+  { href: "/about", label: "About" },
+  { href: "/system", label: "How it works" },
   { href: "/network", label: "Shop network" },
   { href: "/impact", label: "Evidence" },
-  { href: "/about", label: "About" },
-  { href: "/partner", label: "Partner" },
 ];
 
 export function SiteHeader() {

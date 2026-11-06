@@ -49,7 +49,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "How is a shop registered?",
     aliases: ["register", "registration", "enrol", "enroll", "onboard", "two minutes", "join", "form"],
     answer:
-      "Staff fill a one-screen form during a site visit in about two minutes: contact, mobile, barangay, pickup rule and consent. Consent records the date, who explained it, and photo permission. The shop starts as a Candidate and is written into the registry as HB-001, HB-002 and so on.",
+      "Staff fill a one-screen form during a short site visit: contact, mobile, barangay, pickup rule and consent. Consent records the date, who explained it, and photo permission. The shop starts as a Candidate and is written into the registry as HB-001, HB-002 and so on.",
     source: "§1.2 · Module 2",
     doc: "System design",
     related: ["shop-code", "pickup-rules", "status-shop"],

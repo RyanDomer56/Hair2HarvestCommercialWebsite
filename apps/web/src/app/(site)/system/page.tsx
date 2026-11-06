@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PageHero } from "@/components/site/page-hero";
 import { Reveal } from "@/components/site/reveal";
+import { MachineFrame } from "@/components/site/machine-frame";
+import { CompostingDrum } from "@/components/site/composting-drum";
 import { SectionHead, SpecRow, Pill } from "@/components/site/ui-bits";
 import { shops, pickups } from "@/lib/data";
 
@@ -14,8 +16,8 @@ export const metadata: Metadata = {
 
 const decisions = [
   {
-    k: "Shops have no accounts",
-    v: "Staff register the shop on site in about two minutes and write a code on the sack. No password, no dashboard, no drop-off.",
+    k:     "Shops have no accounts",
+    v: "Staff register the shop on a short visit and write a code on the sack. No password, no dashboard, no drop-off.",
   },
   {
     k: "The pickup rule is per shop",
@@ -39,7 +41,7 @@ const stationDetail = [
   {
     n: "01",
     name: "Intake",
-    time: "2 minutes, on site",
+    time: "On site",
     body: "The shop's labelled sack is opened in front of staff. Sack count is recorded, the container is photographed against the shop code, and the shop taps or initials on the collector's phone. That tap is the acknowledgment — no login required.",
     inputs: ["Labelled sack", "Shop code", "Collector phone"],
     outputs: ["Pickup record", "Photo log", "Acknowledgment"],
@@ -426,12 +428,37 @@ export default function SystemPage() {
         </div>
       </section>
 
-      {/* roles */}
+      {/* prototype */}
       <section className="border-y border-[var(--line)] bg-[var(--paper-raised)]">
         <div className="shell section">
           <Reveal>
             <SectionHead
               index="01.6"
+              label="Prototype"
+              title={
+                <>
+                  The machine,
+                  <br />
+                  in the <em>room</em>.
+                </>
+              }
+              lede="The rotary drum (MCH-01) is the only machine in the loop. Drag to rotate, click an assembly. The web panel can only request a start or stop on an approved cycle — the safety circuit stays local."
+            />
+          </Reveal>
+          <Reveal delay={100}>
+            <MachineFrame>
+              <CompostingDrum />
+            </MachineFrame>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* roles */}
+      <section className="border-y border-[var(--line)] bg-[var(--paper-raised)]">
+        <div className="shell section">
+          <Reveal>
+            <SectionHead
+              index="01.7"
               label="Access"
               title={
                 <>
@@ -485,8 +512,8 @@ export default function SystemPage() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
             <Reveal>
               <SectionHead
-                index="01.7"
-                label="Still open"
+              index="01.8"
+              label="Still open"
                 title={
                   <>
                     What we have

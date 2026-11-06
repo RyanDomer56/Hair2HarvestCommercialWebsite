@@ -194,3 +194,27 @@ export function Pill({
     </span>
   );
 }
+
+export function StatusLegend({ className }: { className?: string }) {
+  const items: Array<{ tone: "moss" | "lime" | "clay" | "mute"; label: string; def: string }> = [
+    { tone: "moss", label: "Enrolled", def: "Active partner — we collect on a set schedule." },
+    { tone: "lime", label: "Candidate", def: "Visited or requested; first pickup not yet set." },
+    { tone: "clay", label: "Paused", def: "Temporarily not collecting; history is kept." },
+    { tone: "mute", label: "Withdrawn", def: "Stopped participating." },
+  ];
+  return (
+    <div
+      className={cn(
+        "grid gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-4",
+        className,
+      )}
+    >
+      {items.map((it) => (
+        <div key={it.label} className="bg-paper p-4">
+          <Pill tone={it.tone}>{it.label}</Pill>
+          <p className="mt-2 text-[0.75rem] leading-snug text-ink-soft">{it.def}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
