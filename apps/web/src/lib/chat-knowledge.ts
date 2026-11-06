@@ -32,12 +32,34 @@ export const FALLBACK_ANSWER =
   "I don't have a checked answer for that, and I don't want to guess — especially about pickup times or joining. Please call or message us and a real person will help: " +
   `${CONTACT.phone} (${CONTACT.hours}), or ${CONTACT.email}. You can also tap one of the questions below.`;
 
+/** When we cannot verify an answer but we do know where the topic lives. */
+export const POINTER_ANSWER =
+  "I don't have a checked answer for that, but I can show you where to find it on this site — use the link below. If you still need help, a real person can answer: " +
+  `${CONTACT.phone} (${CONTACT.hours}), or ${CONTACT.email}.`;
+
+/** Asked when someone requests private, per-shop operational details. */
+export const PRIVATE_INFO_ANSWER =
+  "I can't share that here. Pickup times, contact names, mobile numbers and access notes are private — only Hair2Harvest staff can see them. For your own shop's details, please call or message us: " +
+  `${CONTACT.phone} (${CONTACT.hours}), or ${CONTACT.email}.`;
+
+/**
+ * True only for requests for a SPECIFIC private detail (an exact time, a named
+ * contact, a mobile number, where a sack is kept). General questions such as
+ * "How are pickup schedules decided?" must still get their normal answer.
+ */
+export function isPrivateInfoRequest(input: string): boolean {
+  const t = input.toLowerCase();
+  return /what time|ano(ng)? oras|exact (time|day)|specific (time|day)|tomorrow|bukas|contact person|who (is|do i|should i) (the )?(contact|call|ask)|mobile number|phone number|numero ng|side door|access (note|instruction)|where (is|are) .{0,24}(sack|kept|stored)|saan (nakatago|nakalagay)/i.test(
+    t,
+  );
+}
+
 export const KNOWLEDGE: KnowledgeEntry[] = [
   {
     id: "what-is",
     topic: "Overview",
     question: "What is Hair2Harvest?",
-    aliases: ["what is hair2harvest", "what does hair2harvest do", "about the project", "overview", "purpose", "idea", "concept", "explain the project", "elevator", "hair2harvest"],
+    aliases: ["what is hair2harvest", "what does hair2harvest do", "about the project", "overview", "purpose", "idea", "concept", "explain the project", "elevator", "hair2harvest", "ano ito", "ano ang hair2harvest", "tungkol saan", "ano ang ginagawa"],
     answer:
       "Hair2Harvest is a free service for barbershops in Balanga, Bataan. We pick up the hair you sweep up, mix it with dry leaves and other plant material, and turn it into compost for planting beds nearby. We come to your shop — there is no app, no login and no extra work for you.",
     source: "§1 What the system is",
@@ -59,7 +81,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: "register",
     topic: "Shops",
     question: "How is a shop registered?",
-    aliases: ["register", "registration", "enrol", "enroll", "onboard", "join", "form", "sign up"],
+    aliases: ["register", "registration", "enrol", "enroll", "onboard", "join", "form", "sign up", "magparehistro", "sumali", "paano sumali", "rehistro", "pormularyo", "magpatala", "paano magparehistro"],
     answer:
       "A staff member visits your shop, asks a few simple questions and fills in the form for you. It takes almost none of your time. We leave a labelled sack and agree the pickup days with you then. There is no account to create and nothing for you to fill in online. To ask for a visit, use the 'Join the shops' form on this website or call us.",
     source: "§1.2 · Module 2",
@@ -81,7 +103,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: "pickup-rules",
     topic: "Collection",
     question: "How are pickup schedules decided?",
-    aliases: ["schedule", "frequency", "days", "twice weekly", "pickup rule", "window", "peak", "timing", "when"],
+    aliases: ["schedule", "frequency", "days", "twice weekly", "pickup rule", "window", "peak", "timing", "when", "kailan kukunin", "oras ng kolekta", "iskedyul ng kuha", "kailan ang pickup"],
     answer:
       "We agree the pickup days and time with each shop during our visit, so it fits the shop's own hours. We always come to you — you never need to travel. These details are private: only Hair2Harvest staff can see them. For the exact time for a particular shop, please call or message us.",
     source: "§1.2 · §2 · Module 3",
@@ -158,7 +180,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: "status-shop",
     topic: "Status",
     question: "What are the shop statuses?",
-    aliases: ["status", "candidate", "enrolled", "paused", "withdrawn", "lifecycle", "state"],
+    aliases: ["status", "candidate", "enrolled", "paused", "withdrawn", "lifecycle", "state", "katayuan", "ano ang enrolled", "ibig sabihin ng enrolled", "kahulugan ng status"],
     answer:
       "Enrolled means an active partner — we pick up hair regularly. Candidate means the shop is interested or has been visited, but pickups have not started yet. Paused means the shop is taking a break but is still part of the network. Withdrawn means the shop no longer takes part. Only Enrolled shops are being collected from.",
     source: "§3.2 · Shops route",
@@ -334,9 +356,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: "notifications",
     topic: "Communication",
     question: "How are shops contacted?",
-    aliases: ["notification", "sms", "messenger", "message", "contact", "template", "reminder", "skip", "reply"],
+    aliases: ["notification", "sms", "messenger", "message", "paalala", "text message", "reminder"],
     answer:
-      "Outbound only: three templates — pickup reminder, pickup missed/rescheduled, and pickup recorded — sent by staff from their own phone as templated SMS or Messenger. Shops reply 'skip' or 'not full'; staff mark the pickup accordingly. No shop inbox exists.",
+      "We send short messages about pickups — for example a reminder, a missed pickup, or a confirmation that a pickup was recorded. A staff member sends them. Your number is never shown on this website.",
     source: "§4 · Module 11",
     doc: "System design",
     related: ["no-accounts", "pickup-rules", "status-pickup"],
@@ -391,7 +413,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: "partner",
     topic: "Shops",
     question: "How can a shop join?",
-    aliases: ["partner", "join", "sign up", "apply", "interested", "contact", "shop owner", "get started"],
+    aliases: ["partner", "join", "sign up", "apply", "interested", "shop owner", "get started", "saan magpaparehistro", "saan sumali", "paano makilahok", "gusto sumali"],
     answer:
       "Use the 'Join the shops' form on this website, or call or message us. A staff member will visit your shop, explain the programme, fill in a short form and leave a labelled sack. It is free, it takes almost none of your time, and there is no account to create.",
     source: "§1 · Web intake route",

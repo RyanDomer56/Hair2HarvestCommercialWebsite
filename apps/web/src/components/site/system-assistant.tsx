@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { RefreshCw, Send, Volume2, VolumeX, X } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, CircleHelp, RefreshCw, Send, Volume2, VolumeX, X } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { TalkingAvatar, type TalkingAvatarHandle } from "./talking-avatar";
@@ -10,12 +11,26 @@ import type { AvatarVariant } from "./avatar-character";
 import {
   CONTACT,
   FALLBACK_ANSWER,
+  POINTER_ANSWER,
+  PRIVATE_INFO_ANSWER,
   KNOWLEDGE,
   STARTER_QUESTIONS,
   findAnswer,
   getRelated,
+  isPrivateInfoRequest,
   type KnowledgeEntry,
 } from "@/lib/chat-knowledge";
+import { HELP_GROUPS, HELP_PLACES, findInSystem } from "@/lib/site-help";
+
+type ChatLink = { title: string; href: string; blurb: string };
+
+type ChatApiReply = {
+  answer: string;
+  source: "local" | "ai";
+  question?: string;
+  fallback?: boolean;
+  links: ChatLink[];
+};
 
 type Message = {
   id: string;
@@ -23,6 +38,8 @@ type Message = {
   text: string;
   entry?: KnowledgeEntry;
   fallback?: boolean;
+  links?: ChatLink[];
+  source?: "local" | "ai";
 };
 
 let seq = 0;
@@ -31,7 +48,7 @@ const nextId = () => `m${++seq}`;
 const WELCOME: Message = {
   id: "welcome",
   role: "assistant",
-  text: "Hi! You can ask me about Hair2Harvest in English or Tagalog — what we do, what happens when you join, and how hair becomes compost. What would you like to know?",
+  text: "Hi! Ask me in English or Tagalog — what we do, what happens when you join, and how hair becomes compost. I can also show you where to find things on the site. Tap the ? button for help.",
 };
 
 export function SystemAssistant() {
@@ -40,6 +57,8 @@ export function SystemAssistant() {
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
   const [unread, setUnread] = useState(false);
+  const [view, setView] = useState<"chat" | "help">("chat");
+  const [mode, setMode] = useState<"local" | "ai" | null>(null);
 
   // --- talking avatar state (variant + mute, persisted) -----------------
   const [avatarVariant, setAvatarVariant] = useState<AvatarVariant>("sprout");
@@ -84,7 +103,6 @@ export function SystemAssistant() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<number | null>(null);
 
   const reduceMotion = useReducedMotion();
 
@@ -246,38 +264,88 @@ export function SystemAssistant() {
   }, [open]);
 
   useEffect(() => () => {
-    if (timerRef.current) window.clearTimeout(timerRef.current);
     if (typeof window !== "undefined") window.speechSynthesis?.cancel();
   }, []);
 
+  // Ask the server which mode is active. Never exposes the key.
+  useEffect(() => {
+    const ctrl = new AbortController();
+    fetch("/api/v1/chat", { signal: ctrl.signal })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { mode?: "local" | "ai" } | null) => {
+        if (d?.mode) setMode(d.mode);
+      })
+      .catch(() => {
+        /* offline: local fallback still works */
+      });
+    return () => ctrl.abort();
+  }, []);
+
   const send = useCallback(
-    (raw: string) => {
+    async (raw: string) => {
       const text = raw.trim();
       if (!text || thinking) return;
 
       setInput("");
+      setView("chat");
       setMessages((prev) => [...prev, { id: nextId(), role: "user", text }]);
       setThinking(true);
       scrollToBottom();
 
-      if (timerRef.current) window.clearTimeout(timerRef.current);
-      timerRef.current = window.setTimeout(() => {
+      let reply: Message;
+      try {
+        const res = await fetch("/api/v1/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text }),
+          signal: AbortSignal.timeout(14000),
+        });
+        if (!res.ok) throw new Error("chat unavailable");
+        const data = (await res.json()) as ChatApiReply;
+        const entry = data.question
+          ? KNOWLEDGE.find((k) => k.question === data.question)
+          : undefined;
+        reply = {
+          id: nextId(),
+          role: "assistant",
+          text: data.answer,
+          entry,
+          fallback: data.fallback,
+          links: data.links,
+          source: data.source,
+        };
+      } catch {
+        // Network/timeout: still answer from the verified local corpus.
+        const links = findInSystem(text).map((p) => ({
+          title: p.title,
+          href: p.href,
+          blurb: p.blurb,
+        }));
         const { entry } = findAnswer(text);
-        const reply: Message = entry
-          ? { id: nextId(), role: "assistant", text: entry.answer, entry }
-          : {
-              id: nextId(),
-              role: "assistant",
-              fallback: true,
-              text: FALLBACK_ANSWER,
-            };
-        setMessages((prev) => [...prev, reply]);
-        setThinking(false);
-        scrollToBottom();
-        if (!open) setUnread(true);
-        // The avatar reads the reply aloud (Web Speech API) when not muted.
-        headerAvatarRef.current?.speak(reply.text);
-      }, 620);
+        const answer = isPrivateInfoRequest(text)
+          ? PRIVATE_INFO_ANSWER
+          : entry
+            ? entry.answer
+            : links.length > 0
+              ? POINTER_ANSWER
+              : FALLBACK_ANSWER;
+        reply = {
+          id: nextId(),
+          role: "assistant",
+          text: answer,
+          entry: entry ?? undefined,
+          fallback: !entry,
+          links,
+          source: "local",
+        };
+      }
+
+      setMessages((prev) => [...prev, reply]);
+      setThinking(false);
+      scrollToBottom();
+      if (!open) setUnread(true);
+      // The avatar reads the reply aloud (Web Speech API) when not muted.
+      headerAvatarRef.current?.speak(reply.text);
     },
     [thinking, open, scrollToBottom],
   );
@@ -372,10 +440,25 @@ export function SystemAssistant() {
             <p className="text-[0.8125rem] font-semibold leading-tight">Hair2Harvest</p>
             <p className="mt-1 flex items-center gap-1.5 text-[0.6875rem] text-paper/55">
               <span className="size-1.5 rounded-full bg-lime" aria-hidden />
-              {thinking ? "Replying…" : "Online"}
+              {thinking ? "Replying…" : mode === "ai" ? "AI assisted · checked answers" : "Online"}
             </p>
           </div>
           <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setView((v) => (v === "help" ? "chat" : "help"))}
+              aria-label={view === "help" ? "Back to chat" : "Help — find where things are"}
+              aria-pressed={view === "help"}
+              title="Help — find where things are"
+              className={cn(
+                "flex size-8 items-center justify-center rounded-full transition-colors",
+                view === "help"
+                  ? "bg-lime/15 text-lime"
+                  : "text-paper/60 hover:bg-paper/10 hover:text-paper",
+              )}
+            >
+              <CircleHelp size={15} />
+            </button>
             <button
               type="button"
               onClick={cycleVariant}
@@ -415,6 +498,64 @@ export function SystemAssistant() {
           aria-relevant="additions"
           className="thin-scroll flex-1 space-y-4 overflow-y-auto px-4 py-5"
         >
+          {view === "help" ? (
+            <div className="space-y-5">
+              <div>
+                <p className="text-[0.875rem] font-medium text-paper">Where can I find it?</p>
+                <p className="mt-1.5 text-[0.75rem] leading-[1.6] text-paper/60">
+                  Tap any place below and we will take you straight there. You can also just ask me
+                  in English or Tagalog.
+                </p>
+              </div>
+
+              {HELP_GROUPS.map((group) => (
+                <div key={group}>
+                  <p className="mono-tag uppercase text-lime/80">{group}</p>
+                  <div className="mt-2 flex flex-col gap-1.5">
+                    {HELP_PLACES.filter((p) => p.group === group).map((p) => (
+                      <Link
+                        key={p.id}
+                        href={p.href}
+                        onClick={() => setView("chat")}
+                        className="group flex items-start justify-between gap-2 rounded-[10px] border border-paper/12 bg-[#1c2114] px-3 py-2.5 transition-colors hover:border-lime/35 hover:bg-lime/5"
+                      >
+                        <span className="min-w-0">
+                          <span className="block text-[0.8125rem] font-medium text-paper/90">
+                            {p.title}
+                          </span>
+                          <span className="mt-0.5 block text-[0.6875rem] leading-snug text-paper/50">
+                            {p.blurb}
+                          </span>
+                        </span>
+                        <ArrowUpRight
+                          size={13}
+                          className="mt-0.5 shrink-0 text-paper/40 transition-colors group-hover:text-lime"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <div className="rounded-[10px] border border-paper/12 px-3 py-2.5">
+                <p className="mono-tag uppercase text-paper/40">Need a person instead?</p>
+                <p className="mt-1.5 text-[0.75rem] leading-[1.6] text-paper/70">
+                  {CONTACT.phone} ({CONTACT.hours})
+                  <br />
+                  {CONTACT.email}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setView("chat")}
+                className="w-full rounded-full border border-paper/20 py-2 text-[0.75rem] font-medium text-paper/75 transition-colors hover:border-lime/40 hover:text-lime"
+              >
+                Back to chat
+              </button>
+            </div>
+          ) : (
+            <>
           {messages.map((m) => (
             <div
               key={m.id}
@@ -430,6 +571,35 @@ export function SystemAssistant() {
               >
                 {m.text}
               </div>
+
+              {m.links && m.links.length > 0 && (
+                <div className="mt-2 w-full max-w-[86%]">
+                  <p className="mono-tag mb-1.5 uppercase text-paper/40">Find it here</p>
+                  <div className="flex flex-col gap-1.5">
+                    {m.links.map((l) => (
+                      <Link
+                        key={`${l.href}-${l.title}`}
+                        href={l.href}
+                        className="group flex items-start justify-between gap-2 rounded-[10px] border border-lime/25 bg-lime/5 px-3 py-2 transition-colors hover:bg-lime/15"
+                      >
+                        <span className="min-w-0">
+                          <span className="block text-[0.75rem] font-medium text-lime">
+                            {l.title}
+                          </span>
+                          <span className="mt-0.5 block text-[0.6875rem] leading-snug text-paper/55">
+                            {l.blurb}
+                          </span>
+                        </span>
+                        <ArrowUpRight
+                          size={13}
+                          className="mt-0.5 shrink-0 text-lime transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {m.fallback && (
                 <div className="mt-2 flex flex-wrap gap-2">
                   <a
@@ -482,10 +652,20 @@ export function SystemAssistant() {
               </div>
             </div>
           )}
+            </>
+          )}
         </div>
 
         {/* composer */}
         <div className="border-t border-paper/10 bg-[#0c1007] px-3 py-3">
+          <button
+            type="button"
+            onClick={() => setView("help")}
+            className="mb-2.5 flex w-full items-center justify-center gap-1.5 rounded-full border border-paper/12 py-1.5 text-[0.6875rem] font-medium text-paper/60 transition-colors hover:border-lime/40 hover:text-lime"
+          >
+            <CircleHelp size={12} />
+            Where can I find it? Browse the site
+          </button>
           <form
             onSubmit={(e) => {
               e.preventDefault();

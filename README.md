@@ -161,6 +161,28 @@ Two registers, one system. **Editorial** for the commercial site — cream stock
 
 ---
 
+## Chatbot
+
+The assistant answers in English or Tagalog and can **locate where anything lives on the site** —
+every reply can include a "Find it here" link, and the **?** button in the chat header opens a
+browseable map of all pages (including staff dashboard sections).
+
+It works in two modes:
+
+| Mode | Setup | Cost |
+| --- | --- | --- |
+| Verified local answers (default) | none | Free, works offline |
+| AI-written answers | `CHAT_API_KEY` + `CHAT_BASE_URL` + `CHAT_MODEL` | Free with Gemini / OpenRouter free models / Groq; OpenAI is paid |
+
+The endpoint is `POST /api/v1/chat` (and `GET` reports the active mode). Answers are grounded in
+`src/lib/chat-knowledge.ts`; the model is instructed never to invent pickup times, registration
+details or contact information, and any API failure falls back to the checked local answer. Keys
+are server-side only — never use a `NEXT_PUBLIC_` prefix. See
+[`apps/web/.env.example`](apps/web/.env.example) for the free provider URLs and model names.
+The page index lives in `src/lib/site-help.ts`.
+
+---
+
 ## Honest limits
 
 The research behind this build has open questions, and the interface says so rather than rounding up:
