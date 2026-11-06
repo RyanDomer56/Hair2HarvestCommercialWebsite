@@ -366,7 +366,7 @@ export default function ImpactPage() {
                 {[
                   [
                     "Weight",
-                    "Every pickup is weighed gross on a calibrated hanging scale. Net kg = gross − 0.18 kg standard sack tare. Tare is configurable and flagged as an assumption.",
+                    "Every pickup is weighed on a calibrated hanging scale. We subtract the weight of the empty sack (0.18 kg), so the number we record is the hair alone.",
                   ],
                   [
                     "Grade",

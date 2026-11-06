@@ -20,6 +20,18 @@ export type KnowledgeEntry = {
   related?: string[];
 };
 
+/** Verified contact details — shown when the assistant has no checked answer. */
+export const CONTACT = {
+  phone: "+63 917 000 0000",
+  phoneLink: "+639170000000",
+  email: "hello@hair2harvest.ph",
+  hours: "Mon–Sat, 9 AM–7 PM",
+};
+
+export const FALLBACK_ANSWER =
+  "I don't have a checked answer for that, and I don't want to guess — especially about pickup times or joining. Please call or message us and a real person will help: " +
+  `${CONTACT.phone} (${CONTACT.hours}), or ${CONTACT.email}. You can also tap one of the questions below.`;
+
 export const KNOWLEDGE: KnowledgeEntry[] = [
   {
     id: "what-is",
@@ -27,7 +39,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "What is Hair2Harvest?",
     aliases: ["what is hair2harvest", "what does hair2harvest do", "about the project", "overview", "purpose", "idea", "concept", "explain the project", "elevator", "hair2harvest"],
     answer:
-      "Hair2Harvest collects human hair from barbershops, grades it at the door, composts it in batches, and proves the output with lab results and planting experiments. The commercial site explains the service to shops and partners; the operations workspace runs collection, batching and the evidence trail.",
+      "Hair2Harvest is a free service for barbershops in Balanga, Bataan. We pick up the hair you sweep up, mix it with dry leaves and other plant material, and turn it into compost for planting beds nearby. We come to your shop — there is no app, no login and no extra work for you.",
     source: "§1 What the system is",
     doc: "System design",
     related: ["no-accounts", "modules", "partner"],
@@ -38,7 +50,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "Do shops need an account or login?",
     aliases: ["login", "log in", "have to log", "need a login", "account", "password", "sign up", "signup", "supplier", "barbershop", "shop account", "user", "auth", "register themselves"],
     answer:
-      "No. Suppliers are records, not users. A barbershop never signs up, never logs in and never resets a password. That single decision removes an entire auth surface, a supplier dashboard, and the largest known source of drop-off in the original design.",
+      "No. A barbershop never signs up and never needs a password. A staff member visits, fills in a short form and leaves a labelled sack. You just keep cutting hair.",
     source: "§1 · core decision",
     doc: "System design",
     related: ["register", "shop-code", "roles"],
@@ -47,9 +59,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: "register",
     topic: "Shops",
     question: "How is a shop registered?",
-    aliases: ["register", "registration", "enrol", "enroll", "onboard", "two minutes", "join", "form"],
+    aliases: ["register", "registration", "enrol", "enroll", "onboard", "join", "form", "sign up"],
     answer:
-      "Staff fill a one-screen form during a short site visit: contact, mobile, barangay, pickup rule and consent. Consent records the date, who explained it, and photo permission. The shop starts as a Candidate and is written into the registry as HB-001, HB-002 and so on.",
+      "A staff member visits your shop, asks a few simple questions and fills in the form for you. It takes almost none of your time. We leave a labelled sack and agree the pickup days with you then. There is no account to create and nothing for you to fill in online. To ask for a visit, use the 'Join the shops' form on this website or call us.",
     source: "§1.2 · Module 2",
     doc: "System design",
     related: ["shop-code", "pickup-rules", "status-shop"],
@@ -71,7 +83,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "How are pickup schedules decided?",
     aliases: ["schedule", "frequency", "days", "twice weekly", "pickup rule", "window", "peak", "timing", "when"],
     answer:
-      "Each shop gets its own rule: frequency, days, time window, access notes and a peak-day flag. The default is twice weekly, after closing (around 8–9 PM). The collector route is an ordered list sorted by time window then barangay — not a routing engine.",
+      "We agree the pickup days and time with each shop during our visit, so it fits the shop's own hours. We always come to you — you never need to travel. These details are private: only Hair2Harvest staff can see them. For the exact time for a particular shop, please call or message us.",
     source: "§1.2 · §2 · Module 3",
     doc: "System design",
     related: ["collector", "map", "notifications"],
@@ -104,10 +116,10 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "What sack tare do you use?",
     aliases: ["tare", "0.18", "assumption", "sack weight", "configured"],
     answer:
-      "0.18 kg, configurable via SACK_TARE_KG. It is flagged as an assumption in the design — the real sack tare has not been measured yet and is listed among the open items carried forward.",
+      "We subtract a small standard weight for the empty sack (0.18 kg) from the total, so the number we record is the hair alone. This keeps our weights fair and consistent.",
     source: "§6 open items · Pickups model",
     doc: "System design",
-    related: ["weighing", "open"],
+    related: ["weighing", "grades"],
   },
   {
     id: "grades",
@@ -137,10 +149,10 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "What happens to treated hair?",
     aliases: ["treated", "chemical", "coloured", "colored", "rebonded", "hold", "unsure", "separate"],
     answer:
-      "Treated hair is flagged Yes, No or Unsure. Treated and unsure stock sits in a separate Held line and is excluded from batches by default. Whether treated hair is acceptable in compost at all is still an open research question.",
+      "If hair has been chemically treated, or we are not sure, we keep it aside. It does not go into compost until we are certain it is safe. We still collect it from the shop — nothing is refused. A staff member can explain more during the visit.",
     source: "§1.2 · §3.2 · §6",
     doc: "System design",
-    related: ["batch-stock", "open", "grades"],
+    related: ["batch-stock", "grades", "mixed"],
   },
   {
     id: "status-shop",
@@ -148,7 +160,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "What are the shop statuses?",
     aliases: ["status", "candidate", "enrolled", "paused", "withdrawn", "lifecycle", "state"],
     answer:
-      "Candidate → Enrolled → Paused (which can return to Enrolled) or Withdrawn. Only enrolled shops can be collected from; the API returns 409 if a pickup names any other status.",
+      "Enrolled means an active partner — we pick up hair regularly. Candidate means the shop is interested or has been visited, but pickups have not started yet. Paused means the shop is taking a break but is still part of the network. Withdrawn means the shop no longer takes part. Only Enrolled shops are being collected from.",
     source: "§3.2 · Shops route",
     doc: "System design",
     related: ["register", "status-pickup", "status-batch"],
@@ -373,35 +385,15 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     doc: "Design system",
     related: ["machine", "design", "safety"],
   },
-  {
-    id: "open",
-    topic: "Limits",
-    question: "What is still unresolved?",
-    aliases: ["open", "unknown", "unresolved", "assumption", "question", "research", "gap", "limitation", "not verified"],
-    answer:
-      "Which candidate shops sit inside the pilot barangay; whether treated hair is acceptable and at what share; how to serve the mall shop wanting nightly pickup; the real sack tare; the barangay's written answer on a separate hair programme; and verification of the P.D. 856 and DSQC claims. The interface states these as assumptions, never as facts.",
-    source: "§6 Open items carried forward",
-    doc: "System design",
-    related: ["tare", "treated", "regulations"],
-  },
-  {
-    id: "regulations",
-    topic: "Limits",
-    question: "What about P.D. 856 and DSQC?",
-    aliases: ["p.d. 856", "pd 856", "dsqc", "regulation", "law", "legal", "compliance", "sanitation", "certification"],
-    answer:
-      "Those claims are carried forward as unverified. Verification against official sources is an open item; the site never states an unverified regulatory claim as settled, and no certification or health outcome is claimed.",
-    source: "§6 · §8 Copy",
-    doc: "System design",
-    related: ["open", "evidence"],
-  },
+  /* Unresolved research questions are deliberately not published on the site
+     or in the assistant. Point visitors to a real person instead. */
   {
     id: "partner",
     topic: "Shops",
     question: "How can a shop join?",
     aliases: ["partner", "join", "sign up", "apply", "interested", "contact", "shop owner", "get started"],
     answer:
-      "Use the 'Partner a shop' form. There is no account to create — staff visit, explain the programme, record consent and agree a pickup rule. The form forwards to the shops API when API_URL is set; otherwise it returns a reference and the visit is queued.",
+      "Use the 'Join the shops' form on this website, or call or message us. A staff member will visit your shop, explain the programme, fill in a short form and leave a labelled sack. It is free, it takes almost none of your time, and there is no account to create.",
     source: "§1 · Web intake route",
     doc: "Data model",
     related: ["register", "no-accounts", "pickup-rules"],
@@ -409,12 +401,12 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
 ];
 
 export const STARTER_QUESTIONS = [
+  "What is Hair2Harvest?",
+  "How can a shop join?",
   "Do shops need an account or login?",
+  "How is a shop registered?",
   "How are pickup schedules decided?",
-  "What happens to treated hair?",
-  "When can a batch be approved?",
-  "What does the MCH-01 machine do?",
-  "What is still unresolved?",
+  "What does the laboratory test?",
 ];
 
 export const TOPICS = Array.from(new Set(KNOWLEDGE.map((k) => k.topic)));

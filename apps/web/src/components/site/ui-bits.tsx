@@ -197,10 +197,10 @@ export function Pill({
 
 export function StatusLegend({ className }: { className?: string }) {
   const items: Array<{ tone: "moss" | "lime" | "clay" | "mute"; label: string; def: string }> = [
-    { tone: "moss", label: "Enrolled", def: "Active partner — we collect on a set schedule." },
-    { tone: "lime", label: "Candidate", def: "Visited or requested; first pickup not yet set." },
-    { tone: "clay", label: "Paused", def: "Temporarily not collecting; history is kept." },
-    { tone: "mute", label: "Withdrawn", def: "Stopped participating." },
+    { tone: "moss", label: "Enrolled", def: "Active partner. We pick up hair regularly." },
+    { tone: "lime", label: "Candidate", def: "Interested or visited. Pickups have not started yet." },
+    { tone: "clay", label: "Paused", def: "Taking a break, but still part of the network." },
+    { tone: "mute", label: "Withdrawn", def: "No longer taking part." },
   ];
   return (
     <div

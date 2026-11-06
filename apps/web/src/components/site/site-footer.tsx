@@ -3,20 +3,19 @@ import { BrandMark } from "./brand";
 
 const columns = [
   {
-    title: "System",
+    title: "Learn",
     items: [
-      { label: "The harvest line", href: "/system" },
-      { label: "Grading standard", href: "/system#grading" },
-      { label: "Batch & curing", href: "/system#batch" },
-      { label: "Evidence", href: "/impact" },
+      { label: "How it works", href: "/system" },
+      { label: "Checking the hair", href: "/system#grading" },
+      { label: "What we have measured", href: "/impact" },
     ],
   },
   {
-    title: "Network",
+    title: "Shops",
     items: [
-      { label: "Shop directory", href: "/network" },
-      { label: "Pickup rules", href: "/network#rules" },
-      { label: "Become a shop", href: "/partner" },
+      { label: "Shop list", href: "/network" },
+      { label: "Pickups", href: "/network#rules" },
+      { label: "Join us", href: "/partner" },
     ],
   },
   {
@@ -24,7 +23,7 @@ const columns = [
     items: [
       { label: "About us", href: "/about" },
       { label: "Our team", href: "/about#team" },
-      { label: "Get in touch", href: "/partner#contact" },
+      { label: "Contact us", href: "/partner#contact" },
     ],
   },
 ];
@@ -45,8 +44,8 @@ export function SiteFooter() {
               </div>
             </div>
             <p className="mt-5 max-w-[30ch] text-[0.875rem] leading-relaxed text-ink-soft">
-              A collection and composting service for barbershops. We come to the shop, grade the
-              hair at the door, and hand back the evidence.
+              A free service for barbershops. We collect hair clippings and turn them into compost
+              for planting beds nearby. We come to you.
             </p>
             <p className="mono-tag mt-6 text-ink-mute">
               BALANGA · BATAAN · PHILIPPINES

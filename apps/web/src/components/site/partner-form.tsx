@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 type Field = {
   name: string;
   label: string;
-  type?: "text" | "tel" | "select" | "textarea";
+  type?: "text" | "tel" | "select";
   placeholder?: string;
   options?: string[];
   required?: boolean;
@@ -15,18 +15,19 @@ type Field = {
   span?: 1 | 2;
 };
 
+/* Keep it short: only what we truly need to arrange the first visit. */
 const fields: Field[] = [
   {
     name: "name",
     label: "Shop name",
-    placeholder: "Barako Brothers Grooming",
+    placeholder: "e.g. Barako Brothers Grooming",
     required: true,
     span: 2,
   },
   {
     name: "contact",
     label: "Contact person",
-    placeholder: "Ruel Santos",
+    placeholder: "Who should we ask for?",
     required: true,
   },
   {
@@ -35,7 +36,7 @@ const fields: Field[] = [
     type: "tel",
     placeholder: "0917 402 1188",
     required: true,
-    hint: "Used only for pickup messages.",
+    hint: "Numbers only, up to 11 digits.",
   },
   {
     name: "barangay",
@@ -45,38 +46,14 @@ const fields: Field[] = [
     required: true,
   },
   {
-    name: "channel",
-    label: "Preferred channel",
+    name: "visit",
+    label: "Best time to visit",
     type: "select",
-    options: ["SMS", "Messenger", "Viber", "Call"],
-  },
-  {
-    name: "frequency",
-    label: "Pickup frequency",
-    type: "select",
-    options: ["Twice a week", "Weekly", "Nightly", "Not sure yet"],
-    hint: "We can change this after the first month.",
-  },
-  {
-    name: "window",
-    label: "Best time window",
-    type: "select",
-    options: ["After closing · 8–9 PM", "After closing · 9–10 PM", "Midday · 11 AM–12 NN", "Afternoon · 2–4 PM"],
-  },
-  {
-    name: "access",
-    label: "Access notes",
-    type: "textarea",
-    placeholder: "Mall loading dock, level B1. Guard has the sack.",
-    span: 2,
+    options: ["Any time is fine", "Morning · 9–11 AM", "Afternoon · 2–4 PM", "After closing · 8–9 PM"],
   },
 ];
 
-/**
- * Keeps a telephone input digits-only and capped at 11 characters.
- * Stripping non-digits in the change handler means letters never appear,
- * and slicing at 11 guarantees the cap even on paste.
- */
+/** Keeps the phone field digits-only and capped at 11 characters. */
 function sanitizeTel(e: React.ChangeEvent<HTMLInputElement>) {
   const clean = e.target.value.replace(/\D/g, "").slice(0, 11);
   if (clean !== e.target.value) e.target.value = clean;
@@ -100,7 +77,6 @@ export function PartnerForm() {
         body: JSON.stringify({
           ...data,
           consent: data.consent === "on",
-          photoPermission: data.photoPermission === "on",
         }),
       });
 
@@ -110,7 +86,7 @@ export function PartnerForm() {
     } catch {
       setState("error");
       setMessage(
-        "The request could not be sent. Call or message 0917 000 0000 and we will register the shop on the visit.",
+        "We could not send your request. Please call or message 0917 000 0000 and we will help you join on the visit.",
       );
     }
   }
@@ -122,14 +98,14 @@ export function PartnerForm() {
           <Check size={18} />
         </span>
         <div>
-          <h3 className="text-[1.125rem] font-medium text-ink">Request received.</h3>
+          <h3 className="text-[1.125rem] font-medium text-ink">Thank you!</h3>
           <p className="mt-2 max-w-[46ch] text-[0.875rem] leading-[1.7] text-ink-soft">
-            A staff member will confirm the visit window by SMS. Registration takes a few minutes
-            on a visit, and the first labelled sack comes with us.
+            We will message you to agree on a visit. A staff member brings the labelled sack and
+            fills in the short form for you. It takes almost none of your time.
           </p>
         </div>
         <p className="mono-tag text-ink-mute">
-          REFERENCE WILL BE SENT BY SMS · NO ACCOUNT CREATED
+          NO ACCOUNT NEEDED · WE WILL MESSAGE YOU
         </p>
       </div>
     );
@@ -137,7 +113,12 @@ export function PartnerForm() {
 
   return (
     <form onSubmit={onSubmit} className="card-print p-6 sm:p-8">
-      <div className="grid gap-5 sm:grid-cols-2">
+      <p className="text-[0.9375rem] leading-[1.7] text-ink-soft">
+        Fill in these few details and we will get in touch. A staff member does the rest when we
+        visit.
+      </p>
+
+      <div className="mt-6 grid gap-5 sm:grid-cols-2">
         {fields.map((f) => (
           <label
             key={f.name}
@@ -164,13 +145,6 @@ export function PartnerForm() {
                   </option>
                 ))}
               </select>
-            ) : f.type === "textarea" ? (
-              <textarea
-                name={f.name}
-                rows={3}
-                placeholder={f.placeholder}
-                className="resize-none rounded-[3px] border border-[var(--line)] bg-paper-raised px-3 py-2.5 text-[0.875rem] text-ink outline-none transition-colors placeholder:text-ink-mute/60 focus:border-moss"
-              />
             ) : (
               <input
                 name={f.name}
@@ -189,7 +163,7 @@ export function PartnerForm() {
         ))}
       </div>
 
-      <div className="mt-6 space-y-3 border-t border-[var(--line)] pt-5">
+      <div className="mt-6 border-t border-[var(--line)] pt-5">
         <label className="flex items-start gap-3">
           <input
             type="checkbox"
@@ -198,15 +172,8 @@ export function PartnerForm() {
             className="mt-0.5 size-4 accent-[var(--moss)]"
           />
           <span className="text-[0.8125rem] leading-[1.6] text-ink-soft">
-            The shop agrees to separate hair into the labelled sack and to let Hair2Harvest collect
-            it on the agreed rule. Consent is recorded with today&apos;s date and the name of the
-            staff member who explained it.
-          </span>
-        </label>
-        <label className="flex items-start gap-3">
-          <input type="checkbox" name="photoPermission" className="mt-0.5 size-4 accent-[var(--moss)]" />
-          <span className="text-[0.8125rem] leading-[1.6] text-ink-soft">
-            Photos of the shop&apos;s setup help us plan the collection. (Optional)
+            I agree that Hair2Harvest can collect hair clippings from my shop. A staff member will
+            explain the programme during the visit.
           </span>
         </label>
       </div>
@@ -219,7 +186,7 @@ export function PartnerForm() {
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="mono-tag max-w-[32ch] leading-relaxed text-ink-mute">
-          NO PASSWORD · NO DASHBOARD · NO EXTRA TASK FOR THE SHOP
+          FREE TO JOIN · NO PASSWORD · NO APP
         </p>
         <button type="submit" disabled={state === "sending"} className="btn btn-sm sm:w-auto">
           {state === "sending" ? (
@@ -228,7 +195,7 @@ export function PartnerForm() {
               Sending
             </>
           ) : (
-            "Request a visit"
+            "Ask for a visit"
           )}
         </button>
       </div>

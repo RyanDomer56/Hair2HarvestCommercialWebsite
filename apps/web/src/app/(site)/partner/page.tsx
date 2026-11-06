@@ -6,9 +6,9 @@ import { Reveal } from "@/components/site/reveal";
 import { SectionHead, Stat } from "@/components/site/ui-bits";
 
 export const metadata: Metadata = {
-  title: "Partner a shop",
+  title: "Join Hair2Harvest",
   description:
-    "Register a barbershop with Hair2Harvest. A short visit, a labelled sack, and a pickup rule that fits your hours.",
+    "Join Hair2Harvest for free. We visit your shop, fill in a short form and leave a labelled sack. No account, no app, almost none of your time.",
 };
 
 export default function PartnerPage() {
@@ -16,19 +16,19 @@ export default function PartnerPage() {
     <>
       <PageHero
         index="03"
-        label="Partner"
+        label="Join us"
         title={
           <>
-            A short visit,
+            We do the work.
             <br />
-            then we <em>disappear</em>.
+            You keep <em>cutting hair</em>.
           </>
         }
-        lede="A staff member registers the shop on a short visit. A labelled sack, a pickup rule that fits your hours, and you keep cutting hair. Nothing for you to run."
+        lede="A staff member visits your shop and fills in a short form for you. We leave a labelled sack and agree on a good time to collect. It takes almost none of your time."
         meta={[
-          { k: "Registration", v: "A short visit" },
-          { k: "Cost to shop", v: "None" },
-          { k: "Login required", v: "No" },
+          { k: "Your time", v: "Almost none" },
+          { k: "Cost", v: "Free" },
+          { k: "Account needed", v: "No" },
           { k: "First pickup", v: "Same week" },
         ]}
       />
@@ -40,40 +40,39 @@ export default function PartnerPage() {
               <Reveal>
                 <SectionHead
                   index="03.1"
-                  label="Registration"
+                  label="Joining"
                   title={
                     <>
                       What we <em>ask</em>.
                     </>
                   }
-                  lede="Only what changes the pickup. Nothing that requires the shop to log in later, and nothing we can measure ourselves."
+                  lede="Only a few simple details. We fill in the form ourselves when we visit."
                 />
               </Reveal>
 
               <Reveal delay={80}>
                 <p className="mt-8 max-w-[46ch] text-[0.9375rem] leading-[1.7] text-ink-soft">
-                  We ask for your shop name, a contact person, a mobile number, your barangay, and
-                  the window that suits you best. That is the whole registration — everything else we
-                  measure ourselves on the visit, and nothing we collect ever asks you to log in
-                  again.
+                  Your shop name, a contact person, a mobile number and your barangay. That is all we
+                  need to start. We agree the pickup days together during the visit — you do not need
+                  to decide anything now.
                 </p>
               </Reveal>
 
               <Reveal delay={140}>
                 <div className="mt-8 grid grid-cols-2 gap-6">
-                  <Stat value="0" label="Passwords created" />
-                  <Stat value="1" label="Sack, labelled with your code" />
+                  <Stat value="0" label="Passwords to remember" />
+                  <Stat value="1" label="Sack, labelled for your shop" />
                 </div>
               </Reveal>
 
               <Reveal delay={200}>
                 <div className="mt-10 border-t border-[var(--line)] pt-6">
-                  <p className="mono-tag uppercase text-ink-mute">What you receive</p>
+                  <p className="mono-tag uppercase text-ink-mute">What you get</p>
                   <ul className="mt-4 space-y-3">
                     {[
-                      "A pickup receipt with sack count and net kilograms.",
-                      "A short message when the batch your hair went into is tested.",
-                      "First refusal on cured compost for your barangay's planting beds.",
+                      "A receipt every time we collect your hair.",
+                      "A short message when your hair's compost has been checked.",
+                      "Compost for planting beds in your barangay.",
                     ].map((x) => (
                       <li key={x} className="flex gap-3 text-[0.875rem] leading-[1.65] text-ink-soft">
                         <span className="mt-2 size-1 shrink-0 rounded-full bg-moss" aria-hidden />
@@ -109,7 +108,7 @@ export default function PartnerPage() {
                     <em>person</em>.
                   </>
                 }
-                lede="There is no support portal. There is a phone number and two people who answer it."
+                lede="No ticket system, no support portal. Call or message us and a real person answers."
               />
             </Reveal>
 
@@ -117,18 +116,18 @@ export default function PartnerPage() {
               <div className="grid gap-px bg-[var(--line)] sm:grid-cols-2">
                 {[
                   { icon: Phone, k: "Mobile", v: "+63 917 000 0000", note: "Mon–Sat, 9 AM–7 PM" },
-                  { icon: Mail, k: "Email", v: "hello@hair2harvest.ph", note: "Replies within a day" },
+                  { icon: Mail, k: "Email", v: "hello@hair2harvest.ph", note: "We reply within a day" },
                   {
                     icon: MapPin,
-                    k: "Site",
+                    k: "We are in",
                     v: "Balanga, Bataan",
-                    note: "Pilot barangay · by appointment",
+                    note: "We come to your shop",
                   },
                   {
                     icon: CalendarDays,
-                    k: "Pickup window",
-                    v: "Tue & Fri · 8–9 PM",
-                    note: "Or whatever rule we agree on",
+                    k: "Pickup",
+                    v: "We agree it together",
+                    note: "A time that suits your shop",
                   },
                 ].map((c) => {
                   const Icon = c.icon;

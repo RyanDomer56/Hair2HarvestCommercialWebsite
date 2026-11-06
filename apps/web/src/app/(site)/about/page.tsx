@@ -3,51 +3,51 @@ import Link from "next/link";
 import { ArrowUpRight, Leaf, Recycle, ShieldCheck, Users } from "lucide-react";
 import { PageHero, Prose } from "@/components/site/page-hero";
 import { Reveal } from "@/components/site/reveal";
-import { TeamFlip, type TeamGroup } from "@/components/site/team-flip";
 
 export const metadata: Metadata = {
-  title: "About · Hair2Harvest",
+  title: "About us · Hair2Harvest",
   description:
-    "Hair2Harvest is a capstone project by Group 2, Department of Project Management — a collection and composting service for barbershops in Balanga, Bataan.",
+    "Hair2Harvest is a student project in Balanga, Bataan. We collect hair clippings from barbershops and turn them into compost for local planting beds.",
 };
 
-const groups: TeamGroup[] = [
+/* Name + main responsibility only — nothing else (QA #19). */
+const groups = [
   {
     title: "Project Management",
     members: [
-      { name: "Mikayla Tulba", role: "Project Manager", initials: "MT", tone: "moss" },
-      { name: "Sherwin G. Malenab", role: "Asst. Project Manager", initials: "SM", tone: "lime" },
-      { name: "Lairene B. Yulo", role: "Secretary", initials: "LY", tone: "clay" },
+      { name: "Mikayla Tulba", role: "Project manager" },
+      { name: "Sherwin G. Malenab", role: "Assistant project manager" },
+      { name: "Lairene B. Yulo", role: "Secretary" },
     ],
   },
   {
     title: "Developers",
     members: [
-      { name: "Jundril Mhar C. Reyes", role: "Head", initials: "JR", tone: "moss" },
-      { name: "Ryan C. Dormer", role: "Developer", initials: "RD", tone: "lime" },
-      { name: "Andrew Jeremiah C. Salangsang", role: "Developer", initials: "AS", tone: "clay" },
-      { name: "Kier Laurence L. Atienza", role: "Developer", initials: "KA", tone: "moss" },
-      { name: "Lizette C. Apanti", role: "Developer", initials: "LA", tone: "lime" },
-      { name: "Ermalyn R. Gadon", role: "Developer", initials: "EG", tone: "clay" },
+      { name: "Jundril Mhar C. Reyes", role: "Lead developer" },
+      { name: "Ryan C. Dormer", role: "Developer" },
+      { name: "Andrew Jeremiah C. Salangsang", role: "Developer" },
+      { name: "Kier Laurence L. Atienza", role: "Developer" },
+      { name: "Lizette C. Apanti", role: "Developer" },
+      { name: "Ermalyn R. Gadon", role: "Developer" },
     ],
   },
   {
     title: "Documentation",
     members: [
-      { name: "Emilou P. Quiniquing", role: "Head", initials: "EQ", tone: "moss" },
-      { name: "Lairene B. Yulo", role: "Documentation", initials: "LY", tone: "lime" },
-      { name: "Rea Mary T. Mantal", role: "Documentation", initials: "RM", tone: "clay" },
-      { name: "Rheyven D. Algeria", role: "Documentation", initials: "RA", tone: "moss" },
-      { name: "Aysen Halle C. Canate", role: "Documentation", initials: "AC", tone: "lime" },
+      { name: "Emilou P. Quiniquing", role: "Lead documentation" },
+      { name: "Lairene B. Yulo", role: "Documentation" },
+      { name: "Rea Mary T. Mantal", role: "Documentation" },
+      { name: "Rheyven D. Algeria", role: "Documentation" },
+      { name: "Aysen Halle C. Canate", role: "Documentation" },
     ],
   },
   {
     title: "Quality Assurance",
     members: [
-      { name: "Sherwin G. Malenab", role: "Head", initials: "SM", tone: "moss" },
-      { name: "Canale Halle C. Ayan", role: "QA", initials: "CA", tone: "lime" },
-      { name: "Lizette C. Aparri", role: "QA", initials: "LP", tone: "clay" },
-      { name: "Rheyven D. Algeria", role: "QA", initials: "RA", tone: "moss" },
+      { name: "Sherwin G. Malenab", role: "Lead quality assurance" },
+      { name: "Canale Halle C. Ayan", role: "Quality assurance" },
+      { name: "Lizette C. Aparri", role: "Quality assurance" },
+      { name: "Rheyven D. Algeria", role: "Quality assurance" },
     ],
   },
 ];
@@ -56,22 +56,22 @@ const values = [
   {
     icon: Recycle,
     k: "Nothing is wasted",
-    v: "The same sack changes what it is at every station. Hair that can't be batched is graded mixed and held — never quietly thrown away.",
+    v: "Hair that cannot be used is kept aside, never quietly thrown away.",
   },
   {
     icon: ShieldCheck,
-    k: "Evidence over claims",
-    v: "Every batch carries a lab result. We print the number on the report, not on a slogan.",
+    k: "We check our work",
+    v: "Every batch is checked by a laboratory before we call it compost.",
   },
   {
     icon: Users,
     k: "The shop comes first",
-    v: "No app, no login, no new habit. We go to the shop on its schedule; the shop keeps cutting hair.",
+    v: "No app, no login, no new habit. We go to the shop on its own schedule.",
   },
   {
     icon: Leaf,
     k: "Local by design",
-    v: "Collection, composting and planting stay in Balanga, Bataan. The soil returns to the barangays it came from.",
+    v: "The hair is collected here, composted here, and the soil stays here.",
   },
 ];
 
@@ -80,20 +80,20 @@ export default function AboutPage() {
     <>
       <PageHero
         index="00"
-        label="About"
+        label="About us"
         title={
           <>
-            We turn barbers&rsquo; hair
+            We turn hair
             <br />
             into <em className="text-moss">soil</em>.
           </>
         }
-        lede="Hair2Harvest is our capstone project — a collection and composting service for barbershops in Balanga, Bataan. We pick hair up on the shop's own schedule, grade it at the door, and return a lab result with every batch."
+        lede="Hair2Harvest is a student project in Balanga, Bataan. We pick up hair clippings from barbershops and turn them into compost for planting beds nearby. We come to the shop, and we share the results with you."
         meta={[
-          { k: "Group", v: "Group 2" },
-          { k: "Department", v: "Project Management" },
+          { k: "Based in", v: "Balanga" },
           { k: "Team", v: "15 members" },
-          { k: "Project", v: "Capstone 2026" },
+          { k: "Started", v: "2026" },
+          { k: "Cost to join", v: "Free" },
         ]}
       />
 
@@ -108,29 +108,29 @@ export default function AboutPage() {
                 <span className="eyebrow">Our story</span>
               </div>
               <h2 className="display mt-6 text-[clamp(2rem,4.4vw,3.4rem)] text-ink">
-                A container that
+                We bring
                 <br />
-                actually gets <em className="text-moss">picked up</em>.
+                the <em className="text-moss">sack</em> to you.
               </h2>
             </Reveal>
 
             <Reveal delay={100}>
               <Prose>
                 <p>
-                  A barbershop in Bataan sweeps out four to six kilos of hair a week. Most of it goes
-                  into the same sack as tissue and plastic, because no one has a container for it —
-                  and no time to haul one to the barangay hall.
+                  A barbershop sweeps out a few kilos of hair every week. Most of it goes into the
+                  bin with the tissue and plastic, because there is no separate container for it —
+                  and no time to take it anywhere.
                 </p>
                 <p>
-                  Hair2Harvest begins where the shop already is. We bring a labelled sack, collect on
-                  the shop&rsquo;s own schedule, and grade the hair at the door in seconds. Clean and
-                  minor stock is weighed into a batch; mixed material is held, never batched. The pile
-                  cures for 35&ndash;45 days, then a laboratory signs off before we call it compost.
+                  So we start at the shop. We bring a labelled sack, collect the hair on a day that
+                  suits the owner, and check what is in the sack at the door. Clean hair is weighed
+                  and mixed with dry leaves and other plant material. After about six weeks, a
+                  laboratory checks the compost before we use it.
                 </p>
                 <p>
-                  What comes back to the shop is a receipt and a lab result — and what comes back to
-                  the barangay is soil for its planting beds. No app, no login, no extra task for the
-                  people behind the chair.
+                  The shop gets a receipt and the lab result. The compost goes to planting beds in
+                  the same barangay. No app, no login and no extra work for the people behind the
+                  chair.
                 </p>
               </Prose>
             </Reveal>
@@ -141,33 +141,39 @@ export default function AboutPage() {
       {/* --------------------------------------------------------- team */}
       <section id="team" className="relative scroll-mt-24 border-y border-[var(--line)] bg-[var(--paper-raised)]">
         <div className="shell section">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-            <Reveal>
-              <div className="flex items-center gap-3">
-                <span className="mono-tag text-clay">02</span>
-                <span className="h-px w-6 bg-[var(--line)]" aria-hidden />
-                <span className="eyebrow">The group</span>
-              </div>
-              <h2 className="display mt-6 text-[clamp(2rem,4.4vw,3.4rem)] text-ink">
-                Fifteen of us,
-                <br />
-                four <em className="text-moss">roles</em>.
-              </h2>
-            </Reveal>
-            <Reveal delay={80}>
-              <p className="max-w-[40ch] text-[0.875rem] leading-[1.7] text-ink-soft sm:text-right">
-                Hair2Harvest was built by Group 2 of the Department of Project Management. Tap any
-                card to flip it and see what each member helped with.
-              </p>
-            </Reveal>
-          </div>
+          <Reveal>
+            <div className="flex items-center gap-3">
+              <span className="mono-tag text-clay">02</span>
+              <span className="h-px w-6 bg-[var(--line)]" aria-hidden />
+              <span className="eyebrow">Our team</span>
+            </div>
+            <h2 className="display mt-6 text-[clamp(2rem,4.4vw,3.4rem)] text-ink">
+              The people
+              <br />
+              <em className="text-moss">behind it</em>.
+            </h2>
+            <p className="mt-5 max-w-[52ch] text-[0.875rem] leading-[1.7] text-ink-soft">
+              Fifteen students, grouped by what each one looks after.
+            </p>
+          </Reveal>
 
-          <div className="mt-12">
-            <TeamFlip groups={groups} />
+          <div className="mt-12 space-y-10">
+            {groups.map((g, i) => (
+              <Reveal key={g.title} delay={i * 60}>
+                <div>
+                  <p className="mono-tag uppercase text-clay">{g.title}</p>
+                  <ul className="mt-4 grid gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-3">
+                    {g.members.map((m) => (
+                      <li key={`${g.title}-${m.name}`} className="bg-[var(--paper-raised)] px-5 py-4">
+                        <p className="text-[0.9375rem] font-medium text-ink">{m.name}</p>
+                        <p className="mt-1 text-[0.8125rem] text-ink-soft">{m.role}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            ))}
           </div>
-          <p className="mono-tag mt-5 text-ink-mute">
-            PHOTOS, CONTRIBUTION NOTES &amp; ROLES ARE PLACEHOLDERS — REPLACE WITH REAL PROFILES IN THE PAGE SOURCE.
-          </p>
         </div>
       </section>
 
@@ -178,12 +184,12 @@ export default function AboutPage() {
             <div className="flex items-center gap-3">
               <span className="mono-tag text-clay">03</span>
               <span className="h-px w-6 bg-[var(--line)]" aria-hidden />
-              <span className="eyebrow">What we hold to</span>
+              <span className="eyebrow">What we believe</span>
             </div>
             <h2 className="display mt-6 text-[clamp(2rem,4.4vw,3.4rem)] text-ink">
-              Four rules we
+              Four simple
               <br />
-              don&rsquo;t <em className="text-moss">bend</em>.
+              <em className="text-moss">rules</em>.
             </h2>
           </Reveal>
 
@@ -210,21 +216,21 @@ export default function AboutPage() {
               <h2 className="display mt-6 text-[clamp(2.2rem,5.6vw,4.4rem)] text-paper">
                 Know a shop
                 <br />
-                with hair to <em className="text-lime">spare?</em>
+                that could <em className="text-lime">join?</em>
               </h2>
             </Reveal>
             <Reveal delay={120}>
               <p className="max-w-[42ch] text-[0.9375rem] leading-[1.7] text-paper/75">
-                We register a shop on a short visit — no password, no dashboard. You keep
-                cutting hair; we collect it, compost it, and tell you what happened.
+                Joining is free and takes almost none of your time. We do the paperwork, you keep
+                cutting hair, and we tell you what happened to it.
               </p>
               <div className="mt-6 flex flex-wrap gap-2.5">
                 <Link href="/partner" className="btn btn-lime">
-                  Partner a shop
+                  Join the shops
                   <ArrowUpRight size={15} />
                 </Link>
                 <Link href="/network" className="btn btn-ghost-paper">
-                  See the shop network
+                  See the shops
                 </Link>
               </div>
             </Reveal>

@@ -153,8 +153,9 @@ export function ShopDirectory() {
         DETAILS ARE RESTRICTED TO HAIR2HARVEST STAFF.
       </p>
 
-      <div className="mt-6">
-        <StatusLegend />
+      <div className="mt-8">
+        <p className="mono-tag uppercase text-ink-mute">What the status means</p>
+        <StatusLegend className="mt-3" />
       </div>
     </div>
   );

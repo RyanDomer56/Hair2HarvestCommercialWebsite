@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { TalkingAvatar, type TalkingAvatarHandle } from "./talking-avatar";
 import type { AvatarVariant } from "./avatar-character";
 import {
+  CONTACT,
+  FALLBACK_ANSWER,
   KNOWLEDGE,
   STARTER_QUESTIONS,
   findAnswer,
@@ -29,7 +31,7 @@ const nextId = () => `m${++seq}`;
 const WELCOME: Message = {
   id: "welcome",
   role: "assistant",
-  text: "Hi! I'm here to help with questions about Hair2Harvest — how collection works, what happens to the hair, and how we turn it into compost. What would you like to know?",
+  text: "Hi! You can ask me about Hair2Harvest in English or Tagalog — what we do, what happens when you join, and how hair becomes compost. What would you like to know?",
 };
 
 export function SystemAssistant() {
@@ -267,7 +269,7 @@ export function SystemAssistant() {
               id: nextId(),
               role: "assistant",
               fallback: true,
-              text: "I don't have a verified answer for that yet. Here are a few things I can help with:",
+              text: FALLBACK_ANSWER,
             };
         setMessages((prev) => [...prev, reply]);
         setThinking(false);
@@ -416,7 +418,7 @@ export function SystemAssistant() {
           {messages.map((m) => (
             <div
               key={m.id}
-              className={cn("flex", m.role === "user" ? "justify-end" : "justify-start")}
+              className={cn("flex flex-col", m.role === "user" ? "items-end" : "items-start")}
             >
               <div
                 className={cn(
@@ -428,6 +430,22 @@ export function SystemAssistant() {
               >
                 {m.text}
               </div>
+              {m.fallback && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <a
+                    href={`tel:${CONTACT.phoneLink}`}
+                    className="rounded-full border border-lime/40 bg-lime/10 px-3 py-1.5 text-[0.6875rem] font-medium text-lime transition-colors hover:bg-lime/20"
+                  >
+                    Call us
+                  </a>
+                  <a
+                    href={`mailto:${CONTACT.email}`}
+                    className="rounded-full border border-paper/20 px-3 py-1.5 text-[0.6875rem] font-medium text-paper/75 transition-colors hover:border-paper/40"
+                  >
+                    Email us
+                  </a>
+                </div>
+              )}
             </div>
           ))}
 

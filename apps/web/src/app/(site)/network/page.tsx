@@ -4,13 +4,13 @@ import { ArrowUpRight } from "lucide-react";
 import { PageHero } from "@/components/site/page-hero";
 import { ShopDirectory } from "@/components/site/shop-directory";
 import { Reveal } from "@/components/site/reveal";
-import { SectionHead, Stat, Pill } from "@/components/site/ui-bits";
+import { SectionHead, Stat } from "@/components/site/ui-bits";
 import { shops } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Shop network",
   description:
-    "The Hair2Harvest shop directory: eight barbershops in Bataan, each with its own pickup rule, access note and status.",
+    "See the barbershops that have joined Hair2Harvest in Balanga, Bataan. We show shop name, barangay and partnership status only — contact and pickup details stay private.",
 };
 
 export default function NetworkPage() {
@@ -24,18 +24,18 @@ export default function NetworkPage() {
         label="Shop network"
         title={
           <>
-            Eight shops.
+            Shops already
             <br />
-            One <em>route</em>.
+            <em>with us</em>.
           </>
         }
-        lede="A shop is a record, not an account. Staff register it on site, write a code on its sack, and from then on the pickup rule does the work."
-        cta={{ label: "Register a shop", href: "/partner" }}
+        lede="Real barbershops in Balanga, Bataan taking part in Hair2Harvest. To protect every owner, we show only the shop name, barangay and partnership status here."
+        cta={{ label: "Join the shops", href: "/partner" }}
         meta={[
-          { k: "Enrolled", v: String(enrolled.length) },
-          { k: "Candidates", v: String(shops.filter((s) => s.status === "Candidate").length) },
-          { k: "In pilot area", v: String(shops.filter((s) => s.inPilotArea).length) },
-          { k: "Collected", v: `${totalKg.toFixed(1)} kg` },
+          { k: "Shops joined", v: String(enrolled.length) },
+          { k: "Coming soon", v: String(shops.filter((s) => s.status === "Candidate").length) },
+          { k: "Hair collected", v: `${totalKg.toFixed(1)} kg` },
+          { k: "Cost to join", v: "Free" },
         ]}
       />
 
@@ -48,13 +48,13 @@ export default function NetworkPage() {
                 label="Directory"
                 title={
                   <>
-                    The <em>ledger</em>.
+                    The shop <em>list</em>.
                   </>
                 }
               />
               <p className="max-w-[40ch] text-[0.8125rem] leading-[1.65] text-ink-soft sm:text-right">
-                Status is a lifecycle, not a label: candidate → enrolled → paused or withdrawn. A
-                paused shop keeps its history and its sack.
+                You can filter by status or search a shop by name or barangay. The words under the
+                list explain what each status means.
               </p>
             </div>
           </Reveal>
@@ -70,78 +70,54 @@ export default function NetworkPage() {
         className="scroll-mt-24 border-y border-[var(--line)] bg-[var(--paper-raised)]"
       >
         <div className="shell section">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
             <Reveal>
               <SectionHead
                 index="02.2"
-                label="Pickup rules"
+                label="Pickups"
                 title={
                   <>
-                    Why no two shops
+                    We fit your
                     <br />
-                    share a <em>schedule</em>.
+                    <em>hours</em>.
                   </>
                 }
-                lede="Interviewed shops ranged from nightly to weekly. One mall shop asked for nightly pickup because the mall clears waste every day. A single global rota cannot serve both ends of that range."
+                lede="Every shop is different, so we agree the pickup days and time together during the visit. Some shops want us twice a week, others once. We always come to you."
               />
-              <div className="mt-8 space-y-4">
-                {[
-                  [
-                    "Nightly",
-                    "Mall-based shop. Mall clears waste daily. Two sacks and a Mon/Thu rule as the cost-controlled fallback — confirmed with the shop, not assumed.",
-                  ],
-                  [
-                    "Twice weekly",
-                    "The default. Keeps a sack from sitting longer than a week and matches the middle of the observed range.",
-                  ],
-                  [
-                    "Weekly",
-                    "Low-volume shop with cool, dry storage. Longer gaps are fine if the sack is out of the waste stream.",
-                  ],
-                ].map(([k, v], i) => (
-                  <Reveal key={k} delay={i * 70}>
-                    <div className="border-t border-[var(--line)] pt-4">
-                      <p className="mono-tag uppercase text-clay">{k}</p>
-                      <p className="mt-2 text-[0.875rem] leading-[1.7] text-ink-soft">{v}</p>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
+              <p className="mt-6 max-w-[46ch] text-[0.875rem] leading-[1.7] text-ink-soft">
+                These details are private. Only Hair2Harvest staff can see them, so no one else
+                knows when hair is collected or who to ask for.
+              </p>
             </Reveal>
 
-            <Reveal delay={120}>
-              <div className="grid gap-px bg-[var(--line)] sm:grid-cols-2">
-                {enrolled.slice(0, 4).map((s) => (
-                  <div key={s.code} className="bg-paper p-5">
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="mono-tag text-clay">{s.code}</p>
-                      <Pill tone={s.peakDay ? "clay" : "mute"}>
-                        {s.peakDay ? "Peak heavy" : "Steady"}
-                      </Pill>
-                    </div>
-                    <p className="mt-4 text-[0.9375rem] font-medium text-ink">{s.name}</p>
-                    <p className="mt-1 text-[0.75rem] text-ink-mute">{s.barangay}</p>
-                    <div className="mt-4 space-y-2 border-t border-[var(--line)] pt-3">
-                      <div className="flex justify-between gap-3">
-                        <span className="mono-tag text-ink-mute">DAYS</span>
-                        <span className="text-[0.8125rem] text-ink">{s.days.join(" & ")}</span>
+            <Reveal delay={100}>
+              <div className="card-print p-6 sm:p-8">
+                <p className="mono-tag uppercase text-ink-mute">What stays private</p>
+                <ul className="mt-5 space-y-4">
+                  {[
+                    ["Contact person", "Who we call or message at the shop."],
+                    ["Mobile number", "Used only for pickup messages."],
+                    ["Pickup days and time", "Agreed with the shop, never published."],
+                    ["Access notes", "How we reach the sack on a visit."],
+                  ].map(([k, v], i) => (
+                    <li key={k} className="flex gap-4 border-b border-[var(--line)] pb-4 last:border-b-0 last:pb-0">
+                      <span className="mono-tag mt-1 text-clay">0{i + 1}</span>
+                      <div>
+                        <p className="text-[0.875rem] font-medium text-ink">{k}</p>
+                        <p className="mt-1 text-[0.8125rem] leading-[1.65] text-ink-soft">{v}</p>
                       </div>
-                      <div className="flex justify-between gap-3">
-                        <span className="mono-tag text-ink-mute">WINDOW</span>
-                        <span className="text-right text-[0.8125rem] text-ink">{s.window}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </Reveal>
           </div>
 
           <Reveal delay={160}>
-              <div className="mt-14 grid gap-8 border-t border-[var(--line)] pt-8 sm:grid-cols-3">
-              <Stat value="0" label="Trips to barangay hall" note="We come to you" />
-              <Stat value="0" label="Shop logins" note="Code on a sack is the identity" />
-              <Stat value="3" label="Message templates" note="Reminder, missed, recorded" />
+            <div className="mt-14 grid gap-8 border-t border-[var(--line)] pt-8 sm:grid-cols-3">
+              <Stat value="0" label="Trips to the barangay hall" note="We come to you" />
+              <Stat value="0" label="Accounts for shops" note="A code on a sack is enough" />
+              <Stat value="Free" label="Cost to join" note="No fees, no equipment to buy" />
             </div>
           </Reveal>
         </div>
@@ -153,25 +129,25 @@ export default function NetworkPage() {
             <Reveal>
               <SectionHead
                 index="02.3"
-                label="Contact"
+                label="Joining"
                 title={
                   <>
-                    We come to
+                    Four easy
                     <br />
-                    the <em>shop</em>.
+                    <em>steps</em>.
                   </>
                 }
-                lede="No trip to the barangay hall. No form to fill at a counter. A staff member visits, registers the shop on a short visit, and leaves a labelled sack."
+                lede="No counter to visit, no paperwork to fill in by yourself. A staff member comes to your shop and does it with you."
               />
             </Reveal>
             <Reveal delay={100}>
               <div className="card-print p-6">
                 <ol className="space-y-5">
                   {[
-                    ["Visit", "We arrive inside your slowest hour, not your peak."],
-                    ["Register", "Name, contact, hours, pickup rule, consent. Six fields."],
-                    ["Sack", "We hand over a labelled sack and write your shop code on it."],
-                    ["Collect", "We return on your rule. You tap to confirm. That's it."],
+                    ["Visit", "We come at a quiet hour that suits you."],
+                    ["Short form", "We ask a few simple questions and write them down for you."],
+                    ["Sack", "We leave a labelled sack for your hair clippings."],
+                    ["Collect", "We come back when we agreed. That is all."],
                   ].map(([k, v], i) => (
                     <li key={k} className="flex gap-4">
                       <span className="mono-tag mt-1 text-clay">0{i + 1}</span>
@@ -183,7 +159,7 @@ export default function NetworkPage() {
                   ))}
                 </ol>
                 <Link href="/partner" className="btn btn-sm mt-6 w-full">
-                  Request a visit
+                  Ask for a visit
                   <ArrowUpRight size={14} />
                 </Link>
               </div>
