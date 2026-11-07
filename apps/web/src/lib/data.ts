@@ -86,7 +86,7 @@ export const shops: Shop[] = [
   {
     code: "HB-001",
     name: "Barako Brothers Grooming",
-    barangay: "Balanga · Poblacion",
+    barangay: "Novaliches Proper",
     contact: "Ruel Santos",
     mobile: "+63 917 402 1188",
     channel: "SMS",
@@ -106,7 +106,7 @@ export const shops: Shop[] = [
   {
     code: "HB-002",
     name: "Corte Manila Barbershop",
-    barangay: "Balanga · Cupang",
+    barangay: "Novaliches Proper",
     contact: "Jomar Dela Cruz",
     mobile: "+63 916 220 7741",
     channel: "Messenger",
@@ -126,7 +126,7 @@ export const shops: Shop[] = [
   {
     code: "HB-003",
     name: "The Cutting Room",
-    barangay: "Balanga · Tuyo",
+    barangay: "Novaliches Proper",
     contact: "Ana Villamor",
     mobile: "+63 927 118 3390",
     channel: "Viber",
@@ -146,7 +146,7 @@ export const shops: Shop[] = [
   {
     code: "HB-004",
     name: "Fade District",
-    barangay: "Abucay · Poblacion",
+    barangay: "Novaliches Proper",
     contact: "Nikko Reyes",
     mobile: "+63 905 771 2264",
     channel: "SMS",
@@ -166,7 +166,7 @@ export const shops: Shop[] = [
   {
     code: "HB-005",
     name: "Gupit ni Tatay",
-    barangay: "Samal · Poblacion",
+    barangay: "Novaliches Proper",
     contact: "Efren Bautista",
     mobile: "+63 918 664 0021",
     channel: "Call",
@@ -186,7 +186,7 @@ export const shops: Shop[] = [
   {
     code: "HB-006",
     name: "Sharp & Co.",
-    barangay: "Balanga · Ibayo",
+    barangay: "Novaliches Proper",
     contact: "Migs Aquino",
     mobile: "+63 939 220 1187",
     channel: "Messenger",
@@ -206,7 +206,7 @@ export const shops: Shop[] = [
   {
     code: "HB-007",
     name: "Bente Singko Barber Studio",
-    barangay: "Balanga · San Jose",
+    barangay: "Novaliches Proper",
     contact: "Dennis Ocampo",
     mobile: "+63 917 883 5512",
     channel: "SMS",
@@ -226,7 +226,7 @@ export const shops: Shop[] = [
   {
     code: "HB-008",
     name: "Heneral Gupit",
-    barangay: "Pilar · Poblacion",
+    barangay: "Novaliches Proper",
     contact: "Lito Marasigan",
     mobile: "+63 921 447 0093",
     channel: "Viber",
@@ -493,16 +493,16 @@ export const labResults: LabResult[] = [
 /* ------------------------------------------------------------ aggregates */
 
 export const collectionSeries = [
-  { label: "Wk 36", kg: 18.4 },
-  { label: "Wk 37", kg: 22.1 },
-  { label: "Wk 38", kg: 26.8 },
-  { label: "Wk 39", kg: 24.2 },
-  { label: "Wk 40", kg: 31.6 },
-  { label: "Wk 41", kg: 29.4 },
-  { label: "Wk 42", kg: 35.8 },
-  { label: "Wk 43", kg: 38.2 },
-  { label: "Wk 44", kg: 41.7 },
-  { label: "Wk 45", kg: 44.6 },
+  { label: "Wk 36", kg: 18.4, month: "Sep" },
+  { label: "Wk 37", kg: 22.1, month: "Sep" },
+  { label: "Wk 38", kg: 26.8, month: "Sep" },
+  { label: "Wk 39", kg: 24.2, month: "Sep" },
+  { label: "Wk 40", kg: 31.6, month: "Oct" },
+  { label: "Wk 41", kg: 29.4, month: "Oct" },
+  { label: "Wk 42", kg: 35.8, month: "Oct" },
+  { label: "Wk 43", kg: 38.2, month: "Oct" },
+  { label: "Wk 44", kg: 41.7, month: "Nov" },
+  { label: "Wk 45", kg: 44.6, month: "Nov" },
 ];
 
 export const gradeMix = [

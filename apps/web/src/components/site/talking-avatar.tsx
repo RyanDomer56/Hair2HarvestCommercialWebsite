@@ -1,38 +1,42 @@
 "use client";
 
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
-import { AvatarCharacter, type AvatarVariant } from "./avatar-character";
-import Avatar3D from "./avatar-3d";
+import Avatar3D, { type AvatarDance } from "./avatar-3d";
+import { AvatarScissor } from "./avatar-character";
 
-export type TalkingAvatarHandle = { speak: (text: string) => void };
+export type TalkingAvatarHandle = {
+  speak: (text: string, onEnd?: () => void) => void;
+};
 
 /**
- * Wraps AvatarCharacter and gives it a voice via the browser's free,
- * built-in Web Speech API (no key, no quota, works offline). The mouth is
- * animated while speaking. `muted` silences it; `talking` can also be driven
- * externally (e.g. while "thinking").
+ * Wraps the 3D scissor avatar (an OBJ you supply, e.g. /models/ScissorAvatarH2H.obj)
+ * and gives it a voice via the browser's free, built-in Web Speech API (no key,
+ * no quota, works offline). The 3D model dances while "talking" and can be told
+ * which dance to perform via the `dance` prop; if the OBJ can't load it falls
+ * back to "Snip", the SVG scissor mascot. `muted` silences the voice.
  */
 export const TalkingAvatar = forwardRef<
   TalkingAvatarHandle,
   {
     size?: number;
-    variant: AvatarVariant;
     muted?: boolean;
     talking?: boolean;
+    dance?: AvatarDance;
     modelSrc?: string;
     modelFallbackSrc?: string;
     faceMode?: boolean;
   }
->(({ size = 48, variant, muted = false, talking: controlledTalking, modelSrc, modelFallbackSrc, faceMode }, ref) => {
+>(({ size = 48, muted = false, talking: controlledTalking, dance = "idle", modelSrc, modelFallbackSrc, faceMode }, ref) => {
   const [speaking, setSpeaking] = useState(false);
   const [modelFailed, setModelFailed] = useState(false);
   const [useFallback, setUseFallback] = useState(false);
   const talking = controlledTalking ?? speaking;
 
   const speak = useCallback(
-    (text: string) => {
+    (text: string, onEnd?: () => void) => {
       if (muted || typeof window === "undefined" || !("speechSynthesis" in window)) {
         setSpeaking(false);
+        onEnd?.();
         return;
       }
       try {
@@ -54,8 +58,14 @@ export const TalkingAvatar = forwardRef<
       u.rate = 1.02;
       u.pitch = 1;
       u.onstart = () => setSpeaking(true);
-      u.onend = () => setSpeaking(false);
-      u.onerror = () => setSpeaking(false);
+      u.onend = () => {
+        setSpeaking(false);
+        onEnd?.();
+      };
+      u.onerror = () => {
+        setSpeaking(false);
+        onEnd?.();
+      };
       setSpeaking(true);
       window.speechSynthesis.speak(u);
     },
@@ -72,6 +82,7 @@ export const TalkingAvatar = forwardRef<
         src={activeSrc}
         size={size}
         talking={talking}
+        dance={dance}
         faceMode={faceMode}
         onError={() => {
           if (!useFallback && modelFallbackSrc) setUseFallback(true);
@@ -80,7 +91,7 @@ export const TalkingAvatar = forwardRef<
       />
     );
   }
-  return <AvatarCharacter size={size} variant={variant} talking={talking} />;
+  return <AvatarScissor size={size} talking={talking} />;
 });
 
 TalkingAvatar.displayName = "TalkingAvatar";

@@ -3,21 +3,54 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Home, Menu, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Home, Menu, X } from "lucide-react";
 import { Wordmark } from "./brand";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/about", label: "About" },
-  { href: "/system", label: "How it works" },
-  { href: "/network", label: "Shop network" },
-  { href: "/impact", label: "Evidence" },
+  {
+    href: "/about",
+    label: "About",
+    menu: [
+      { href: "/about", label: "Our story" },
+      { href: "/about#team", label: "Our team" },
+      { href: "/about#values", label: "What we believe" },
+    ],
+  },
+  {
+    href: "/system",
+    label: "How it works",
+    menu: [
+      { href: "/system", label: "The five steps" },
+      { href: "/system#grading", label: "Checking the hair" },
+      { href: "/system#machine", label: "The machine" },
+    ],
+  },
+  {
+    href: "/network",
+    label: "Shop Partners",
+    menu: [
+      { href: "/network", label: "Directory" },
+      { href: "/network#rules", label: "Pickups & privacy" },
+      { href: "/partner", label: "Join a shop" },
+    ],
+  },
+  {
+    href: "/impact",
+    label: "Our impact",
+    menu: [
+      { href: "/impact#collection", label: "Collection" },
+      { href: "/impact#lab", label: "Laboratory" },
+      { href: "/impact#trials", label: "Planting trials" },
+    ],
+  },
 ];
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const onHome = pathname === "/";
 
   useEffect(() => {
@@ -70,20 +103,59 @@ export function SiteHeader() {
             </Link>
             {links.map((l) => {
               const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
+              const isOpen = menuOpen === l.href;
               return (
-                <Link
+                <div
                   key={l.href}
-                  href={l.href}
-                  className={cn(
-                    "relative rounded-full px-3.5 py-2 text-[0.8125rem] font-medium tracking-[-0.01em] transition-colors",
-                    active ? "text-ink" : "text-ink-soft hover:text-ink",
-                  )}
+                  className="relative"
+                  onMouseEnter={() => setMenuOpen(l.href)}
+                  onMouseLeave={() => setMenuOpen(null)}
                 >
-                  {l.label}
-                  {active && (
-                    <span className="absolute inset-x-3.5 -bottom-0.5 h-px bg-moss" aria-hidden />
+                  <Link
+                    href={l.href}
+                    aria-current={active ? "page" : undefined}
+                    aria-expanded={isOpen}
+                    onFocus={() => setMenuOpen(l.href)}
+                    onBlur={() => setMenuOpen(null)}
+                    className={cn(
+                      "inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[0.8125rem] font-medium tracking-[-0.01em] transition-colors",
+                      active ? "text-ink" : "text-ink-soft hover:text-ink",
+                    )}
+                  >
+                    {l.label}
+                    {l.menu && (
+                      <ChevronDown
+                        size={13}
+                        className={cn("transition-transform", isOpen && "rotate-180")}
+                        aria-hidden
+                      />
+                    )}
+                    {active && (
+                      <span className="absolute inset-x-3.5 -bottom-0.5 h-px bg-moss" aria-hidden />
+                    )}
+                  </Link>
+
+                  {l.menu && isOpen && (
+                    <div className="absolute left-0 top-full pt-2">
+                      <div className="card-print w-56 overflow-hidden rounded-[6px] border border-[var(--line)] bg-paper p-1.5 shadow-[0_18px_40px_rgba(8,12,4,.18)]">
+                        {l.menu.map((m) => (
+                          <Link
+                            key={m.href}
+                            href={m.href}
+                            className="group flex items-center justify-between gap-2 rounded-[4px] px-3 py-2 text-[0.8125rem] text-ink-soft transition-colors hover:bg-[var(--paper-sunk)] hover:text-ink"
+                          >
+                            {m.label}
+                            <ArrowUpRight
+                              size={13}
+                              className="text-ink-mute opacity-0 transition-opacity group-hover:opacity-100"
+                              aria-hidden
+                            />
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   )}
-                </Link>
+                </div>
               );
             })}
           </nav>
@@ -108,7 +180,7 @@ export function SiteHeader() {
       </header>
 
       {open && (
-        <div className="fixed inset-0 top-[72px] z-40 flex flex-col bg-paper md:hidden">
+        <div className="fixed inset-0 top-[72px] z-40 flex flex-col overflow-y-auto bg-paper md:hidden">
           <nav className="shell flex flex-col pt-6" aria-label="Mobile">
             <Link
               href="/"
@@ -120,14 +192,29 @@ export function SiteHeader() {
               <span className="mono-tag ml-auto text-paper/60">HOME</span>
             </Link>
             {links.map((l, i) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="flex items-baseline justify-between border-b border-[var(--line)] py-5"
-              >
-                <span className="display text-[2rem] text-ink">{l.label}</span>
-                <span className="mono-tag text-ink-mute">0{i + 1}</span>
-              </Link>
+              <div key={l.href} className="border-b border-[var(--line)]">
+                <Link
+                  href={l.href}
+                  className="flex items-baseline justify-between py-5"
+                >
+                  <span className="display text-[2rem] text-ink">{l.label}</span>
+                  <span className="mono-tag text-ink-mute">0{i + 1}</span>
+                </Link>
+                {l.menu && (
+                  <div className="flex flex-col gap-1 pb-4">
+                    {l.menu.map((m) => (
+                      <Link
+                        key={m.href}
+                        href={m.href}
+                        className="flex items-center gap-2 rounded-[6px] bg-[var(--paper-sunk)] px-3 py-2 text-[0.875rem] text-ink-soft"
+                      >
+                        <ArrowUpRight size={13} className="text-ink-mute" aria-hidden />
+                        {m.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
           <div className="shell mt-8 flex flex-col gap-3">
@@ -136,7 +223,7 @@ export function SiteHeader() {
             </Link>
           </div>
           <div className="shell mt-auto pb-8">
-            <p className="eyebrow">Balanga, Bataan · Philippines</p>
+            <p className="eyebrow">Barangay Novaliches Proper · Philippines</p>
           </div>
         </div>
       )}

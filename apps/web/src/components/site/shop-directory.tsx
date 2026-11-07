@@ -7,12 +7,12 @@ import { getShops } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { Pill, StatusLegend } from "./ui-bits";
 
-const filters: Array<{ key: "All" | ShopStatus; label: string }> = [
-  { key: "All", label: "All shops" },
-  { key: "Enrolled", label: "Enrolled" },
-  { key: "Candidate", label: "Candidate" },
-  { key: "Paused", label: "Paused" },
-  { key: "Withdrawn", label: "Withdrawn" },
+const filters: Array<{ key: "All" | ShopStatus; label: string; desc: string }> = [
+  { key: "All", label: "All shops", desc: "Every shop on the list, in any status." },
+  { key: "Enrolled", label: "Enrolled", desc: "Actively collecting hair with us." },
+  { key: "Candidate", label: "Candidate", desc: "Agreed to join; visit or first pickup still pending." },
+  { key: "Paused", label: "Paused", desc: "Temporarily not collecting — will start again." },
+  { key: "Withdrawn", label: "Withdrawn", desc: "Decided not to take part for now." },
 ];
 
 export function ShopDirectory() {
@@ -59,6 +59,7 @@ export function ShopDirectory() {
                   type="button"
                   onClick={() => setStatus(f.key)}
                   aria-pressed={status === f.key}
+                  title={f.desc}
                   className={cn(
                     "rounded-full px-3 py-1.5 text-[0.75rem] font-medium transition-colors",
                     status === f.key
@@ -150,7 +151,7 @@ export function ShopDirectory() {
 
       <p className="mono-tag mt-4 text-ink-mute">
         PUBLIC DIRECTORY SHOWS SHOP NAME, BARANGAY &amp; PARTNERSHIP STATUS ONLY. CONTACT AND ACCESS
-        DETAILS ARE RESTRICTED TO HAIR2HARVEST STAFF.
+        DETAILS ARE RESTRICTED TO THE HAIR2HARVEST COLLECTION TEAM.
       </p>
 
       <div className="mt-8">

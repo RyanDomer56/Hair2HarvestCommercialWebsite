@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { PageHero } from "@/components/site/page-hero";
 import { Reveal } from "@/components/site/reveal";
-import { AreaChart } from "@/components/site/area-chart";
-import { SectionHead, SpecRow, Stat, Pill } from "@/components/site/ui-bits";
+import { CollectionChart } from "@/components/site/collection-chart";
+import { SectionHead, SpecRow, Pill } from "@/components/site/ui-bits";
 import { collectionSeries, gradeMix, labResults, batches } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Evidence",
+  title: "Our impact",
   description:
     "Ten weeks of weighed pickups, four laboratory reports and two curing batches — the measurement trail behind Hair2Harvest compost.",
 };
@@ -20,6 +21,20 @@ const experiments = [
   { crop: "Pechay", treatment: "Hair compost 10%", control: "No amendment", height: "+3%", stage: "Week 2 of 8" },
 ];
 
+// Directional badge: green up / red down, reflecting the sign of the delta.
+function Delta({ value, tone }: { value: string; tone?: "moss" | "rust" }) {
+  const num = parseFloat(value.replace(/[+−%]/g, ""));
+  const up = num >= 0;
+  const color = tone ?? (up ? "text-moss" : "text-rust");
+  const Icon = up ? ArrowUpRight : ArrowDownRight;
+  return (
+    <span className={cn("inline-flex items-center gap-1", color)}>
+      <Icon size={14} strokeWidth={2.5} aria-hidden />
+      {value}
+    </span>
+  );
+}
+
 export default function ImpactPage() {
   const total = collectionSeries.reduce((a, d) => a + d.kg, 0);
 
@@ -27,7 +42,7 @@ export default function ImpactPage() {
     <>
       <PageHero
         index="04"
-        label="Evidence"
+        label="Our impact"
         title={
           <>
             Measured,
@@ -35,7 +50,7 @@ export default function ImpactPage() {
             not <em>claimed</em>.
           </>
         }
-        lede="Every number on this page comes from a scale, a thermometer or a laboratory report. Where the evidence is thin, the page says so instead of rounding up."
+        lede="Every number on this page comes from a scale, a thermometer or a laboratory report. Where the data is thin, the page says so instead of rounding up."
         meta={[
           { k: "Weighed pickups", v: "41" },
           { k: "Net collected", v: `${total.toFixed(1)} kg` },
@@ -45,7 +60,7 @@ export default function ImpactPage() {
       />
 
       {/* collection */}
-      <section className="section">
+      <section id="collection" className="scroll-mt-24 section">
         <div className="shell">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-16">
             <Reveal>
@@ -64,33 +79,19 @@ export default function ImpactPage() {
               <div className="mt-8 border-t border-[var(--line)]">
                 <SpecRow label="First week" value="18.4 kg" hint="Wk 36 · 4 shops" />
                 <SpecRow label="Last week" value="44.6 kg" hint="Wk 45 · 4 shops, 2 candidates" />
-                <SpecRow label="Growth" value="+142 %" />
+                <SpecRow label="Growth" value={<Delta value="+142 %" />} />
                 <SpecRow label="Average per pickup" value="6.94 kg" hint="n = 41" />
               </div>
             </Reveal>
 
             <Reveal delay={100}>
-              <div className="card-print p-5 sm:p-7">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="mono-tag uppercase text-ink-mute">Net kilograms per week</p>
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1.5">
-                      <span className="h-0.5 w-4 bg-moss" aria-hidden />
-                      <span className="mono-tag text-ink-mute">COLLECTED</span>
-                    </span>
-                  </div>
-                </div>
-                <AreaChart
-                  data={collectionSeries.map((d) => ({ label: d.label, value: d.kg }))}
-                  height={260}
-                  className="mt-6"
-                />
-                <div className="mt-6 grid grid-cols-3 gap-4 border-t border-[var(--line)] pt-5">
-                  <Stat value="62" unit="%" label="Clean" note="of 41 pickups" />
-                  <Stat value="27" unit="%" label="Minor" note="batched with a note" />
-                  <Stat value="11" unit="%" label="Mixed" note="held, never batched" />
-                </div>
-              </div>
+              <CollectionChart
+                data={collectionSeries.map((d) => ({
+                  label: d.label,
+                  value: d.kg,
+                  month: d.month,
+                }))}
+              />
             </Reveal>
           </div>
 
@@ -119,7 +120,7 @@ export default function ImpactPage() {
       </section>
 
       {/* lab */}
-      <section className="border-y border-[var(--line)] bg-[var(--paper-raised)]">
+      <section id="lab" className="scroll-mt-24 border-y border-[var(--line)] bg-[var(--paper-raised)]">
         <div className="shell section">
           <Reveal>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -264,7 +265,8 @@ export default function ImpactPage() {
                             {b.currentKg.toFixed(1)}
                             <span className="ml-1 text-[0.75rem] font-normal text-ink-mute">kg now</span>
                           </p>
-                          <p className="mono-tag mt-1 text-moss">
+                          <p className="mono-tag mt-1 inline-flex items-center gap-1 text-moss">
+                            <ArrowDownRight size={12} strokeWidth={2.5} aria-hidden />
                             −{reduction.toFixed(0)}% MASS
                           </p>
                         </div>
@@ -285,7 +287,7 @@ export default function ImpactPage() {
       </section>
 
       {/* experiments */}
-      <section className="border-y border-[var(--line)] bg-[var(--paper-sunk)]">
+      <section id="trials" className="scroll-mt-24 border-y border-[var(--line)] bg-[var(--paper-sunk)]">
         <div className="shell section">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
             <Reveal>
@@ -331,7 +333,9 @@ export default function ImpactPage() {
                     </p>
                     <p className="text-[0.8125rem] text-ink-soft">{e.treatment}</p>
                     <p className="text-[0.8125rem] text-ink-soft">{e.control}</p>
-                    <p className="num text-right text-[0.875rem] font-medium text-moss">{e.height}</p>
+                    <p className="num text-right text-[0.875rem] font-medium">
+                      <Delta value={e.height} />
+                    </p>
                   </div>
                 ))}
                 <div className="flex items-center justify-between border-t border-[var(--line)] bg-[var(--paper-sunk)] px-5 py-3">

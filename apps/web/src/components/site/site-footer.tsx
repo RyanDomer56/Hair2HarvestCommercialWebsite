@@ -7,7 +7,7 @@ const columns = [
     items: [
       { label: "How it works", href: "/system" },
       { label: "Checking the hair", href: "/system#grading" },
-      { label: "What we have measured", href: "/impact" },
+      { label: "Our impact", href: "/impact" },
     ],
   },
   {
@@ -48,9 +48,9 @@ export function SiteFooter() {
               for planting beds nearby. We come to you.
             </p>
             <p className="mono-tag mt-6 text-ink-mute">
-              BALANGA · BATAAN · PHILIPPINES
+              BARANGAY NOVALICHES PROPER · PHILIPPINES
               <br />
-              14.6760° N, 120.5360° E
+              QUEZON CITY
             </p>
           </div>
 
@@ -76,12 +76,14 @@ export function SiteFooter() {
         <div className="mt-14 flex flex-col gap-4 border-t border-[var(--line)] pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="mono-tag text-ink-mute">
             © 2026 HAIR2HARVEST · A COLLECTION &amp; COMPOSTING SERVICE FOR BARBERSHOPS
+            <br />
+            CAPSTONE: AN IoT-BASED BARBERSHOP HAIR WASTE COLLECTION &amp; AUTOMATED COMPOSTING SYSTEM WITH WEB-BASED PROCESS CONTROL FOR BARANGAY NOVALICHES PROPER
           </p>
           <p className="mono-tag text-ink-mute/70">
-            Assistant avatar: “Mint Melody” by oktria.taranasta · CC BY · via Sketchfab
+            Chat mascot: Snip, the Hair2Harvest scissor (3D model supplied by the project)
           </p>
           <div className="flex items-center gap-5">
-            <span className="mono-tag text-ink-mute">BALANGA · BATAAN · PHILIPPINES</span>
+            <span className="mono-tag text-ink-mute">BARANGAY NOVALICHES PROPER · PHILIPPINES</span>
             <span className="flex items-center gap-1.5">
               <span className="live-dot size-1.5 rounded-full bg-moss" aria-hidden />
               <span className="mono-tag text-moss">NOW COLLECTING</span>

@@ -3,6 +3,8 @@ import { ArrowUpRight, ClipboardList, Recycle, Store, Truck, Users } from "lucid
 import { HairWeave } from "@/components/site/hair-weave";
 import { Ticker } from "@/components/site/ticker";
 import { Reveal } from "@/components/site/reveal";
+import { MachineFrame } from "@/components/site/machine-frame";
+import { CompostingDrum } from "@/components/site/composting-drum";
 import { SectionHead, Stat, Pill } from "@/components/site/ui-bits";
 import { shops, overviewStats } from "@/lib/data";
 
@@ -10,7 +12,7 @@ import { shops, overviewStats } from "@/lib/data";
 const faqs = [
   {
     q: "What is Hair2Harvest?",
-    a: "A free service for barbershops in Balanga, Bataan. We pick up the hair you sweep up and turn it into compost for planting beds in your own barangay.",
+    a: "A free collection service for barbershops in Barangay Novaliches Proper. We pick up the hair clippings you set aside and turn them into compost for planting beds in your own barangay.",
   },
   {
     q: "What do I need to do?",
@@ -29,9 +31,19 @@ const faqs = [
 const navCards = [
   { href: "/system", label: "How does it work?", desc: "See the five simple steps.", icon: Recycle },
   { href: "/partner", label: "Why become a partner?", desc: "What your shop gets back.", icon: Users },
-  { href: "/network", label: "Shop network", desc: "See the shops already with us.", icon: Store },
+  { href: "/network", label: "Shop Partners", desc: "See the shops already with us.", icon: Store },
   { href: "/system", label: "Collection process", desc: "From the chair to the soil.", icon: Truck },
   { href: "/partner", label: "Register your shop", desc: "Ask for a free visit.", icon: ClipboardList },
+];
+
+/* The machine, in five short steps — shown at the top so visitors see how it
+   works the moment they scroll. Taps through to the full process page. */
+const drumSteps = [
+  { n: "01", title: "We collect", body: "A labelled sack at your shop. We come to you." },
+  { n: "02", title: "We check", body: "Hair only is best; a little tissue is still fine." },
+  { n: "03", title: "We mix", body: "Hair + dry leaves, weighed and logged as one batch." },
+  { n: "04", title: "We cure", body: "About six weeks of resting, turning and checking." },
+  { n: "05", title: "Lab checks", body: "A laboratory approves it before we call it compost." },
 ];
 
 /* The answer to "what happens when I join?" — written to make joining feel welcoming. */
@@ -39,7 +51,7 @@ const joinSteps = [
   {
     n: "01",
     title: "We visit your shop",
-    body: "A staff member comes at a quiet hour, asks a few questions and leaves you a labelled sack. It takes almost none of your time.",
+    body: "A collection team member comes at a quiet hour, asks a few questions and leaves you a labelled sack. It takes almost none of your time.",
   },
   {
     n: "02",
@@ -83,7 +95,7 @@ export default function HomePage() {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   <span className="flex items-center gap-2">
                     <span className="live-dot size-1.5 rounded-full bg-moss" aria-hidden />
-                    <span className="eyebrow text-moss">Now collecting · Balanga, Bataan</span>
+                    <span className="eyebrow text-moss">Now collecting · Barangay Novaliches Proper</span>
                   </span>
                 </div>
               </Reveal>
@@ -115,6 +127,12 @@ export default function HomePage() {
                   How it works
                 </Link>
               </div>
+              <p className="text-[0.8125rem] leading-[1.7] text-ink-soft">
+                <strong className="font-medium text-ink">
+                  A capstone project with Barangay Novaliches Proper.
+                </strong>{" "}
+                We turn salon and barbershop hair waste into compost for local planting beds.
+              </p>
               <p className="mono-tag mt-5 text-ink-mute">
                 FREE TO JOIN · NO APP · NO LOGIN
                 <br />
@@ -125,7 +143,7 @@ export default function HomePage() {
 
           <Reveal delay={220} className="mt-12 lg:mt-14">
             <div className="grid grid-cols-3 gap-x-6 gap-y-5 border-t border-[var(--line)] pt-6">
-              <Stat value={String(shops.length)} label="Shops with us" note="Balanga, Bataan" />
+              <Stat value={String(shops.length)} label="Shops with us" note="Barangay Novaliches Proper" />
               <Stat
                 value={overviewStats.totalKg.toFixed(1)}
                 unit="kg"
@@ -139,6 +157,52 @@ export default function HomePage() {
       </section>
 
       <Ticker />
+
+      {/* ------------------------------- how it works (machine / drum, top) */}
+      <section className="section">
+        <div className="shell">
+          <Reveal>
+            <SectionHead
+              index="00"
+              label="How it works"
+              title={
+                <>
+                  The drum that turns
+                  <br />
+                  hair into <em>soil</em>.
+                </>
+              }
+              lede="One machine, five simple steps. We bring a sack to your shop, collect the hair, and let it rest into compost. Drag the drum to look around — then tap through for the full process."
+            />
+          </Reveal>
+
+          <Reveal delay={100}>
+            <MachineFrame>
+              <CompostingDrum />
+            </MachineFrame>
+          </Reveal>
+
+          <Reveal delay={140}>
+            <div className="mt-10 grid gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-5">
+              {drumSteps.map((s, i) => (
+                <div key={s.n} className="bg-paper p-5">
+                  <span className="mono-tag text-clay">{s.n}</span>
+                  <h3 className="mt-3 text-[0.9375rem] font-medium tracking-[-0.01em] text-ink">
+                    {s.title}
+                  </h3>
+                  <p className="mt-1.5 text-[0.8125rem] leading-[1.6] text-ink-soft">{s.body}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex flex-wrap gap-2.5">
+              <Link href="/system" className="btn btn-sm">
+                See the full process
+                <ArrowUpRight size={14} />
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
       {/* --------------------------------------------------- where to go */}
       <section className="section">
@@ -274,7 +338,7 @@ export default function HomePage() {
             <Reveal>
               <SectionHead
                 index="02"
-                label="Shop network"
+                label="Shop Partners"
                 title={
                   <>
                     Shops already
@@ -365,7 +429,7 @@ export default function HomePage() {
 
             <Reveal delay={120}>
               <p className="max-w-[42ch] text-[0.9375rem] leading-[1.7] text-ink-soft">
-                A staff member visits your shop, asks a few questions and leaves a labelled sack.
+                A collection team member visits your shop, asks a few questions and leaves a labelled sack.
                 It takes almost none of your time. No password, no dashboard, no new habit.
               </p>
               <div className="mt-6 flex flex-wrap gap-2.5">

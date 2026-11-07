@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import Link from "next/link";
-import { ArrowUpRight, CircleHelp, RefreshCw, Send, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowUpRight, CircleHelp, Send, Volume2, VolumeX, X } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { TalkingAvatar, type TalkingAvatarHandle } from "./talking-avatar";
-import type { AvatarVariant } from "./avatar-character";
+import type { AvatarDance } from "./avatar-3d";
 import {
   CONTACT,
   FALLBACK_ANSWER,
@@ -48,8 +48,57 @@ const nextId = () => `m${++seq}`;
 const WELCOME: Message = {
   id: "welcome",
   role: "assistant",
-  text: "Hi! Ask me in English or Tagalog — what we do, what happens when you join, and how hair becomes compost. I can also show you where to find things on the site. Tap the ? button for help.",
+  text: "Hi! I'm Snip, the Hair2Harvest helper. Ask me in English or Tagalog — what we do, what happens when you join, and how hair becomes compost. I can also show you where to find things on the site. Tap the ? button for help.",
 };
+
+// Short spoken greeting when the chat opens (separate from the on-screen WELCOME).
+const GREETING =
+  "Hi! I'm Snip, your Hair2Harvest guide. Ask me anything, or tap me to see my dances!";
+
+// --- playful sound effects (Web Audio, no assets) ----------------------
+function playScream() {
+  try {
+    const Ctx =
+      window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new Ctx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(900, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.5);
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.55);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.6);
+    osc.onended = () => ctx.close();
+  } catch {
+    /* audio not available */
+  }
+}
+
+function playSad() {
+  try {
+    const Ctx =
+      window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new Ctx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(330, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.7);
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.8);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.85);
+    osc.onended = () => ctx.close();
+  } catch {
+    /* audio not available */
+  }
+}
 
 export function SystemAssistant() {
   const [open, setOpen] = useState(false);
@@ -60,33 +109,56 @@ export function SystemAssistant() {
   const [view, setView] = useState<"chat" | "help">("chat");
   const [mode, setMode] = useState<"local" | "ai" | null>(null);
 
-  // --- talking avatar state (variant + mute, persisted) -----------------
-  const [avatarVariant, setAvatarVariant] = useState<AvatarVariant>("sprout");
+  // --- talking avatar state (mute, persisted) -----------------
   const [avatarMuted, setAvatarMuted] = useState(false);
   const headerAvatarRef = useRef<TalkingAvatarHandle>(null);
 
+  // --- playful avatar dance state ---------------------------------------
+  // manualDance: a dance the visitor picked by tapping Snip (null = use default).
+  const [manualDance, setManualDance] = useState<AvatarDance | null>(null);
+  const [speaking, setSpeaking] = useState(false);
+  const avatarClickTimer = useRef<number | null>(null);
+  const avatarClickCount = useRef(0);
+
+  // The dance Snip performs: a picked one if set, otherwise "cute" while the
+  // chat is open (so he's always dancing when you're talking to him), idle shut.
+  const avatarDance: AvatarDance = manualDance ?? (open ? "cute" : "idle");
+
+  // A tiny floating emoji that mirrors Snip's mood.
+  const emotion = speaking
+    ? "💬"
+    : manualDance === "scream"
+      ? "😱"
+      : manualDance === "sad"
+        ? "😢"
+        : null;
+
+  // Tap Snip to cycle: 1 = bounce, 2 = groove, 3 = scream, 4+ = sad.
+  const onAvatarTap = () => {
+    avatarClickCount.current += 1;
+    if (avatarClickTimer.current) window.clearTimeout(avatarClickTimer.current);
+    avatarClickTimer.current = window.setTimeout(() => {
+      const n = avatarClickCount.current;
+      avatarClickCount.current = 0;
+      if (n === 1) setManualDance("bounce");
+      else if (n === 2) setManualDance("groove");
+      else if (n === 3) {
+        setManualDance("scream");
+        playScream();
+      } else {
+        setManualDance("sad");
+        playSad();
+      }
+    }, 320);
+  };
+
   useEffect(() => {
     try {
-      const sv = localStorage.getItem("h2h-avatar-variant");
-      if (sv) setAvatarVariant(sv as AvatarVariant);
       setAvatarMuted(localStorage.getItem("h2h-avatar-muted") === "1");
     } catch {
       /* noop */
     }
   }, []);
-
-  const cycleVariant = () => {
-    setAvatarVariant((prev) => {
-      const order: AvatarVariant[] = ["sprout", "ember", "bloom"];
-      const next = order[(order.indexOf(prev) + 1) % order.length];
-      try {
-        localStorage.setItem("h2h-avatar-variant", next);
-      } catch {
-        /* noop */
-      }
-      return next;
-    });
-  };
 
   const toggleMute = () => {
     setAvatarMuted((m) => {
@@ -229,11 +301,23 @@ export function SystemAssistant() {
       movedRef.current = false;
       return;
     }
-    setOpen((v) => {
-      const nv = !v;
-      if (!nv && typeof window !== "undefined") window.speechSynthesis?.cancel();
-      return nv;
-    });
+    const willOpen = !open;
+    setOpen(willOpen);
+    if (willOpen) {
+      // Opening the chat: Snip greets out loud and dances.
+      setManualDance(null);
+      if (!avatarMuted) {
+        setSpeaking(true);
+        window.setTimeout(
+          () => headerAvatarRef.current?.speak(GREETING, () => setSpeaking(false)),
+          260,
+        );
+      }
+    } else {
+      if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+      setSpeaking(false);
+      setManualDance(null);
+    }
   };
 
   const scrollToBottom = useCallback(() => {
@@ -344,10 +428,15 @@ export function SystemAssistant() {
       setThinking(false);
       scrollToBottom();
       if (!open) setUnread(true);
-      // The avatar reads the reply aloud (Web Speech API) when not muted.
-      headerAvatarRef.current?.speak(reply.text);
+      // The avatar reads the reply aloud (Web Speech API) and bobs while speaking.
+      if (!avatarMuted) {
+        setSpeaking(true);
+        headerAvatarRef.current?.speak(reply.text, () => setSpeaking(false));
+      } else {
+        setSpeaking(false);
+      }
     },
-    [thinking, open, scrollToBottom],
+    [thinking, open, scrollToBottom, avatarMuted],
   );
 
   const lastMessage = messages[messages.length - 1];
@@ -389,11 +478,11 @@ export function SystemAssistant() {
           >
             <TalkingAvatar
               size={64}
-              variant={avatarVariant}
-              muted={avatarMuted}
-              talking={thinking}
-              modelSrc="/models/marshmallow-avatar.glb"
-              modelFallbackSrc="/models/mint-melody-avatar.glb"
+                           muted={avatarMuted}
+              talking={speaking}
+              dance={avatarDance}
+              modelSrc="/models/ScissorAvatarH2H.obj"
+              modelFallbackSrc="/models/ScissorAvatarH2H.obj"
               faceMode
             />
             {unread && (
@@ -424,20 +513,37 @@ export function SystemAssistant() {
       >
         {/* header */}
         <div className="flex items-center gap-3 border-b border-paper/10 bg-moss-deep px-4 py-3.5">
-          <span className="shrink-0">
-            <TalkingAvatar
-              ref={headerAvatarRef}
-              size={38}
-              variant={avatarVariant}
-              muted={avatarMuted}
-              talking={thinking}
-              modelSrc="/models/marshmallow-avatar.glb"
-              modelFallbackSrc="/models/mint-melody-avatar.glb"
-              faceMode
-            />
+          <span className="relative shrink-0">
+            {emotion && (
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 text-[1rem] drop-shadow"
+              >
+                {emotion}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={onAvatarTap}
+              title="Tap Snip: bounce · groove · scream · sad"
+              aria-label="Tap Snip to change his dance"
+              className="block cursor-pointer rounded-full transition-transform active:scale-90"
+            >
+              <TalkingAvatar
+                ref={headerAvatarRef}
+                size={42}
+                muted={avatarMuted}
+                talking={speaking}
+                dance={avatarDance}
+                modelSrc="/models/ScissorAvatarH2H.obj"
+                modelFallbackSrc="/models/ScissorAvatarH2H.obj"
+                faceMode
+              />
+            </button>
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[0.8125rem] font-semibold leading-tight">Hair2Harvest</p>
+            <p className="text-[0.8125rem] font-semibold leading-tight">Snip</p>
+            <p className="mt-0.5 text-[0.625rem] text-paper/45">Your Hair2Harvest guide</p>
             <p className="mt-1 flex items-center gap-1.5 text-[0.6875rem] text-paper/55">
               <span className="size-1.5 rounded-full bg-lime" aria-hidden />
               {thinking ? "Replying…" : mode === "ai" ? "AI assisted · checked answers" : "Online"}
@@ -458,14 +564,6 @@ export function SystemAssistant() {
               )}
             >
               <CircleHelp size={15} />
-            </button>
-            <button
-              type="button"
-              onClick={cycleVariant}
-              aria-label="Change avatar"
-              className="flex size-8 items-center justify-center rounded-full text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
-            >
-              <RefreshCw size={15} />
             </button>
             <button
               type="button"
@@ -622,7 +720,7 @@ export function SystemAssistant() {
           {thinking && (
             <div className="flex items-start gap-2">
               <span className="mt-1 shrink-0">
-                <TalkingAvatar size={28} variant={avatarVariant} muted talking modelSrc="/models/marshmallow-avatar.glb" modelFallbackSrc="/models/mint-melody-avatar.glb" faceMode />
+                <TalkingAvatar size={28} muted talking={thinking} dance={avatarDance} modelSrc="/models/ScissorAvatarH2H.obj" modelFallbackSrc="/models/ScissorAvatarH2H.obj" faceMode />
               </span>
               <div className="flex items-center gap-1 rounded-[14px] rounded-bl-[4px] border border-paper/10 bg-[#1c2114] px-3.5 py-3">
                 {[0, 1, 2].map((i) => (

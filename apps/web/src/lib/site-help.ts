@@ -98,12 +98,12 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "network",
-    title: "Shop network",
+    title: "Shop Partners",
     href: "/network",
     blurb: "The public list of shops — name, barangay and status only.",
     group: "Learn",
     keywords: [
-      "shop network", "shop list", "directory", "shops", "barbershops", "list of shops",
+      "shop network", "shop partners", "shop list", "directory", "shops", "barbershops", "list of shops",
       "enrolled", "candidate", "paused", "withdrawn", "status", "filter", "search",
       "listahan", "tindahan", "barbero", "barbershop", "hanapin", "katayuan",
     ],
@@ -168,12 +168,12 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "impact",
-    title: "Evidence / what we measured",
+    title: "Our impact",
     href: "/impact",
     blurb: "Weighed pickups, laboratory results and planting trials.",
     group: "Learn",
     keywords: [
-      "evidence", "impact", "results", "data", "lab", "laboratory", "n-p-k", "planting",
+      "evidence", "impact", "our impact", "results", "data", "lab", "laboratory", "n-p-k", "planting",
       "trials", "kilograms", "measured", "ebidensya", "resulta", "sinukat", "datos",
     ],
   },

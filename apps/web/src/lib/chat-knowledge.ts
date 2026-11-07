@@ -39,7 +39,7 @@ export const POINTER_ANSWER =
 
 /** Asked when someone requests private, per-shop operational details. */
 export const PRIVATE_INFO_ANSWER =
-  "I can't share that here. Pickup times, contact names, mobile numbers and access notes are private — only Hair2Harvest staff can see them. For your own shop's details, please call or message us: " +
+  "I can't share that here. Pickup times, contact names, mobile numbers and access notes are private — only the Hair2Harvest collection team can see them. For your own shop's details, please call or message us: " +
   `${CONTACT.phone} (${CONTACT.hours}), or ${CONTACT.email}.`;
 
 /**
@@ -61,7 +61,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "What is Hair2Harvest?",
     aliases: ["what is hair2harvest", "what does hair2harvest do", "about the project", "overview", "purpose", "idea", "concept", "explain the project", "elevator", "hair2harvest", "ano ito", "ano ang hair2harvest", "tungkol saan", "ano ang ginagawa"],
     answer:
-      "Hair2Harvest is a free service for barbershops in Balanga, Bataan. We pick up the hair you sweep up, mix it with dry leaves and other plant material, and turn it into compost for planting beds nearby. We come to your shop — there is no app, no login and no extra work for you.",
+      "Hair2Harvest is a free collection service for barbershops in our partner barangay. We pick up the hair clippings you set aside, mix them with dry leaves and other plant material, and turn them into compost for planting beds nearby. We come to your shop — there is no app, no login and no extra work for you.",
     source: "§1 What the system is",
     doc: "System design",
     related: ["no-accounts", "modules", "partner"],
@@ -72,7 +72,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "Do shops need an account or login?",
     aliases: ["login", "log in", "have to log", "need a login", "account", "password", "sign up", "signup", "supplier", "barbershop", "shop account", "user", "auth", "register themselves"],
     answer:
-      "No. A barbershop never signs up and never needs a password. A staff member visits, fills in a short form and leaves a labelled sack. You just keep cutting hair.",
+      "No. A barbershop never signs up and never needs a password. A collection team member visits, fills in a short form and leaves a labelled sack. You just keep cutting hair.",
     source: "§1 · core decision",
     doc: "System design",
     related: ["register", "shop-code", "roles"],
@@ -83,7 +83,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "How is a shop registered?",
     aliases: ["register", "registration", "enrol", "enroll", "onboard", "join", "form", "sign up", "magparehistro", "sumali", "paano sumali", "rehistro", "pormularyo", "magpatala", "paano magparehistro"],
     answer:
-      "A staff member visits your shop, asks a few simple questions and fills in the form for you. It takes almost none of your time. We leave a labelled sack and agree the pickup days with you then. There is no account to create and nothing for you to fill in online. To ask for a visit, use the 'Join the shops' form on this website or call us.",
+      "A collection team member visits your shop, asks a few simple questions and fills in the form for you. It takes almost none of your time. We leave a labelled sack and agree the pickup days with you then. There is no account to create and nothing for you to fill in online. To ask for a visit, use the 'Join the shops' form on this website or call us.",
     source: "§1.2 · Module 2",
     doc: "System design",
     related: ["shop-code", "pickup-rules", "status-shop"],
@@ -105,7 +105,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "How are pickup schedules decided?",
     aliases: ["schedule", "frequency", "days", "twice weekly", "pickup rule", "window", "peak", "timing", "when", "kailan kukunin", "oras ng kolekta", "iskedyul ng kuha", "kailan ang pickup"],
     answer:
-      "We agree the pickup days and time with each shop during our visit, so it fits the shop's own hours. We always come to you — you never need to travel. These details are private: only Hair2Harvest staff can see them. For the exact time for a particular shop, please call or message us.",
+      "We agree the pickup days and time with each shop during our visit, so it fits the shop's own hours. We always come to you — you never need to travel. These details are private: only the Hair2Harvest collection team can see them. For the exact time for a particular shop, please call or message us.",
     source: "§1.2 · §2 · Module 3",
     doc: "System design",
     related: ["collector", "map", "notifications"],
@@ -171,7 +171,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "What happens to treated hair?",
     aliases: ["treated", "chemical", "coloured", "colored", "rebonded", "hold", "unsure", "separate"],
     answer:
-      "If hair has been chemically treated, or we are not sure, we keep it aside. It does not go into compost until we are certain it is safe. We still collect it from the shop — nothing is refused. A staff member can explain more during the visit.",
+      "If hair has been chemically treated, or we are not sure, we keep it aside. It does not go into compost until we are certain it is safe. We still collect it from the shop — nothing is refused. A collection team member can explain more during the visit.",
     source: "§1.2 · §3.2 · §6",
     doc: "System design",
     related: ["batch-stock", "grades", "mixed"],
@@ -266,7 +266,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
   },
   {
     id: "lab",
-    topic: "Evidence",
+    topic: "Our impact",
     question: "What does the laboratory test?",
     aliases: ["lab", "laboratory", "test", "n-p-k", "npk", "ph", "moisture", "pathogens", "maturity", "sample"],
     answer:
@@ -277,7 +277,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
   },
   {
     id: "approval",
-    topic: "Evidence",
+    topic: "Our impact",
     question: "When can a batch be approved?",
     aliases: ["who can approve", "who approves", "approve a batch", "approve", "approval", "sign off", "gate", "blocked", "review", "supervised"],
     answer:
@@ -288,7 +288,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
   },
   {
     id: "evidence",
-    topic: "Evidence",
+    topic: "Our impact",
     question: "What evidence exists so far?",
     aliases: ["evidence", "impact", "results", "data", "kg collected", "planting", "trial", "n = 1", "preliminary"],
     answer:
@@ -358,7 +358,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "How are shops contacted?",
     aliases: ["notification", "sms", "messenger", "message", "paalala", "text message", "reminder"],
     answer:
-      "We send short messages about pickups — for example a reminder, a missed pickup, or a confirmation that a pickup was recorded. A staff member sends them. Your number is never shown on this website.",
+      "We send short messages about pickups — for example a reminder, a missed pickup, or a confirmation that a pickup was recorded. A collection team member sends them. Your number is never shown on this website.",
     source: "§4 · Module 11",
     doc: "System design",
     related: ["no-accounts", "pickup-rules", "status-pickup"],
@@ -415,7 +415,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     question: "How can a shop join?",
     aliases: ["partner", "join", "sign up", "apply", "interested", "shop owner", "get started", "saan magpaparehistro", "saan sumali", "paano makilahok", "gusto sumali"],
     answer:
-      "Use the 'Join the shops' form on this website, or call or message us. A staff member will visit your shop, explain the programme, fill in a short form and leave a labelled sack. It is free, it takes almost none of your time, and there is no account to create.",
+      "Use the 'Join the shops' form on this website, or call or message us. A collection team member will visit your shop, explain the programme, fill in a short form and leave a labelled sack. It is free, it takes almost none of your time, and there is no account to create.",
     source: "§1 · Web intake route",
     doc: "Data model",
     related: ["register", "no-accounts", "pickup-rules"],

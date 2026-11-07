@@ -7,7 +7,7 @@ import { Reveal } from "@/components/site/reveal";
 export const metadata: Metadata = {
   title: "About us · Hair2Harvest",
   description:
-    "Hair2Harvest is a student project in Balanga, Bataan. We collect hair clippings from barbershops and turn them into compost for local planting beds.",
+    "Hair2Harvest is a student capstone project with Barangay Novaliches Proper. We collect hair clippings from barbershops and turn them into compost for local planting beds.",
 };
 
 /* The 13-member roster, spelled exactly as supplied. Name + main
@@ -84,9 +84,9 @@ export default function AboutPage() {
             into <em className="text-moss">soil</em>.
           </>
         }
-        lede="Hair2Harvest is a student project in Balanga, Bataan. We pick up hair clippings from barbershops and turn them into compost for planting beds nearby. We come to the shop, and we share the results with you."
+        lede="Hair2Harvest is a student capstone project with Barangay Novaliches Proper. We pick up hair clippings from barbershops and turn them into compost for planting beds nearby. We come to the shop, and we share the results with you."
         meta={[
-          { k: "Based in", v: "Balanga" },
+          { k: "Partner", v: "Brgy. Novaliches Proper" },
           { k: "Team", v: "13 members" },
           { k: "Started", v: "2026" },
           { k: "Cost to join", v: "Free" },
@@ -127,6 +127,12 @@ export default function AboutPage() {
                   The shop gets a receipt and the lab result. The compost goes to planting beds in
                   the same barangay. No app, no login and no extra work for the people behind the
                   chair.
+                </p>
+                <p>
+                  Hair2Harvest is a capstone project built together with{" "}
+                  <strong>Barangay Novaliches Proper</strong>, who back the programme and help us
+                  reach the shops in the community. We are glad to return compost the barangay can
+                  use on its own planting beds.
                 </p>
               </Prose>
             </Reveal>
@@ -174,7 +180,7 @@ export default function AboutPage() {
       </section>
 
       {/* ------------------------------------------------------- values */}
-      <section className="section">
+      <section id="values" className="scroll-mt-24 section">
         <div className="shell">
           <Reveal>
             <div className="flex items-center gap-3">

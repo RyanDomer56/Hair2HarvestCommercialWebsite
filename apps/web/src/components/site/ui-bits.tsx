@@ -210,7 +210,7 @@ export function StatusLegend({ className }: { className?: string }) {
       )}
     >
       {items.map((it) => (
-        <div key={it.label} className="bg-paper p-4">
+        <div key={it.label} className="group bg-paper p-4" title={it.def}>
           <Pill tone={it.tone}>{it.label}</Pill>
           <p className="mt-2 text-[0.75rem] leading-snug text-ink-soft">{it.def}</p>
         </div>

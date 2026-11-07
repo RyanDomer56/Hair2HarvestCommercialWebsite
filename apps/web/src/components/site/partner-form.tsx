@@ -42,7 +42,7 @@ const fields: Field[] = [
     name: "barangay",
     label: "Barangay",
     type: "select",
-    options: ["Balanga · Poblacion", "Balanga · Cupang", "Balanga · Tuyo", "Abucay", "Samal", "Pilar", "Other"],
+    options: ["Novaliches Proper", "Nearby barangay", "Other"],
     required: true,
   },
   {
@@ -100,7 +100,7 @@ export function PartnerForm() {
         <div>
           <h3 className="text-[1.125rem] font-medium text-ink">Thank you!</h3>
           <p className="mt-2 max-w-[46ch] text-[0.875rem] leading-[1.7] text-ink-soft">
-            We will message you to agree on a visit. A staff member brings the labelled sack and
+            We will message you to agree on a visit. A collection team member brings the labelled sack and
             fills in the short form for you. It takes almost none of your time.
           </p>
         </div>
@@ -114,7 +114,7 @@ export function PartnerForm() {
   return (
     <form onSubmit={onSubmit} className="card-print p-6 sm:p-8">
       <p className="text-[0.9375rem] leading-[1.7] text-ink-soft">
-        Fill in these few details and we will get in touch. A staff member does the rest when we
+        Fill in these few details and we will get in touch. A collection team member does the rest when we
         visit.
       </p>
 
@@ -172,7 +172,7 @@ export function PartnerForm() {
             className="mt-0.5 size-4 accent-[var(--moss)]"
           />
           <span className="text-[0.8125rem] leading-[1.6] text-ink-soft">
-            I agree that Hair2Harvest can collect hair clippings from my shop. A staff member will
+            I agree that Hair2Harvest can collect hair clippings from my shop. A collection team member will
             explain the programme during the visit.
           </span>
         </label>

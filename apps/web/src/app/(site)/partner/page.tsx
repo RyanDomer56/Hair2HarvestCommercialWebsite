@@ -24,7 +24,7 @@ export default function PartnerPage() {
             You keep <em>cutting hair</em>.
           </>
         }
-        lede="A staff member visits your shop and fills in a short form for you. We leave a labelled sack and agree on a good time to collect. It takes almost none of your time."
+        lede="A collection team member visits your shop and fills in a short form for you. We leave a labelled sack and agree on a good time to collect. It takes almost none of your time."
         meta={[
           { k: "Your time", v: "Almost none" },
           { k: "Cost", v: "Free" },
@@ -120,7 +120,7 @@ export default function PartnerPage() {
                   {
                     icon: MapPin,
                     k: "We are in",
-                    v: "Balanga, Bataan",
+                    v: "Brgy. Novaliches Proper",
                     note: "We come to your shop",
                   },
                   {

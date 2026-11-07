@@ -205,7 +205,7 @@ export default function SystemPage() {
                     stay <em>private</em>.
                   </>
                 }
-                lede="We agree the pickup days and time with each shop when we visit. Those details, the contact person and how we reach the sack are for our staff only. This website never shows them."
+                lede="We agree the pickup days and time with each shop when we visit. Those details, the contact person and how we reach the sack are for our collection team only. This website never shows them."
               />
               <p className="mt-6 max-w-[46ch] text-[0.9375rem] leading-[1.7] text-ink-soft">
                 The public shop list shows just three things: the shop name, its barangay and its
@@ -243,7 +243,7 @@ export default function SystemPage() {
       </section>
 
       {/* --------------------------------------------------- 3D prototype */}
-      <section className="border-y border-[var(--line)] bg-[var(--paper-sunk)]">
+      <section id="machine" className="scroll-mt-24 border-y border-[var(--line)] bg-[var(--paper-sunk)]">
         <div className="shell section">
           <Reveal>
             <SectionHead

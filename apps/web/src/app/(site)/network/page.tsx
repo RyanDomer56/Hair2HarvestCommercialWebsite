@@ -8,9 +8,9 @@ import { SectionHead, Stat } from "@/components/site/ui-bits";
 import { shops } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Shop network",
+  title: "Shop Partners",
   description:
-    "See the barbershops that have joined Hair2Harvest in Balanga, Bataan. We show shop name, barangay and partnership status only — contact and pickup details stay private.",
+    "See the barbershops that have partnered with Hair2Harvest. We show shop name, barangay and partnership status only — contact and pickup details stay private.",
 };
 
 export default function NetworkPage() {
@@ -21,7 +21,7 @@ export default function NetworkPage() {
     <>
       <PageHero
         index="02"
-        label="Shop network"
+        label="Shop Partners"
         title={
           <>
             Shops already
@@ -29,7 +29,7 @@ export default function NetworkPage() {
             <em>with us</em>.
           </>
         }
-        lede="Real barbershops in Balanga, Bataan taking part in Hair2Harvest. To protect every owner, we show only the shop name, barangay and partnership status here."
+        lede="Real barbershops in Barangay Novaliches Proper taking part in Hair2Harvest. To protect every owner, we show only the shop name, barangay and partnership status here."
         cta={{ label: "Join the shops", href: "/partner" }}
         meta={[
           { k: "Shops joined", v: String(enrolled.length) },
@@ -85,7 +85,7 @@ export default function NetworkPage() {
                 lede="Every shop is different, so we agree the pickup days and time together during the visit. Some shops want us twice a week, others once. We always come to you."
               />
               <p className="mt-6 max-w-[46ch] text-[0.875rem] leading-[1.7] text-ink-soft">
-                These details are private. Only Hair2Harvest staff can see them, so no one else
+                These details are private. Only the Hair2Harvest collection team can see them, so no one else
                 knows when hair is collected or who to ask for.
               </p>
             </Reveal>
@@ -137,7 +137,7 @@ export default function NetworkPage() {
                     <em>steps</em>.
                   </>
                 }
-                lede="No counter to visit, no paperwork to fill in by yourself. A staff member comes to your shop and does it with you."
+                lede="No counter to visit, no paperwork to fill in by yourself. A collection team member comes to your shop and does it with you."
               />
             </Reveal>
             <Reveal delay={100}>
