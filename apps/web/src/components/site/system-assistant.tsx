@@ -22,6 +22,43 @@ import {
 } from "@/lib/chat-knowledge";
 import { HELP_GROUPS, HELP_PLACES, findInSystem } from "@/lib/site-help";
 
+/**
+ * Tiny SVG face that mirrors Snip's mood, replacing the old emoji badge.
+ * `happy` is the default (and while he's talking), plus `scream` and `sad`.
+ */
+function SnipMood({ mood }: { mood: "happy" | "scream" | "sad" }) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      className="drop-shadow"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="11" fill="#ffd84d" stroke="#caa400" strokeWidth="1.5" />
+      {mood === "sad" ? (
+        <>
+          <circle cx="8.5" cy="10" r="1.4" fill="#3a2f00" />
+          <circle cx="15.5" cy="10" r="1.4" fill="#3a2f00" />
+          <path d="M8 16 Q12 13 16 16" stroke="#3a2f00" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+        </>
+      ) : mood === "scream" ? (
+        <>
+          <circle cx="8.5" cy="9.5" r="1.6" fill="#3a2f00" />
+          <circle cx="15.5" cy="9.5" r="1.6" fill="#3a2f00" />
+          <ellipse cx="12" cy="16" rx="3" ry="3.4" fill="#3a2f00" />
+        </>
+      ) : (
+        <>
+          <circle cx="8.5" cy="10" r="1.5" fill="#3a2f00" />
+          <circle cx="15.5" cy="10" r="1.5" fill="#3a2f00" />
+          <path d="M7.5 14.5 Q12 19 16.5 14.5" stroke="#3a2f00" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 type ChatLink = { title: string; href: string; blurb: string };
 
 type ChatApiReply = {
@@ -50,10 +87,6 @@ const WELCOME: Message = {
   role: "assistant",
   text: "Hi! I'm Snip, the Hair2Harvest helper. Ask me in English or Tagalog — what we do, what happens when you join, and how hair becomes compost. I can also show you where to find things on the site. Tap the ? button for help.",
 };
-
-// Short spoken greeting when the chat opens (separate from the on-screen WELCOME).
-const GREETING =
-  "Hi! I'm Snip, your Hair2Harvest guide. Ask me anything, or tap me to see my dances!";
 
 // --- playful sound effects (Web Audio, no assets) ----------------------
 function playScream() {
@@ -124,13 +157,13 @@ export function SystemAssistant() {
   // chat is open (so he's always dancing when you're talking to him), idle shut.
   const avatarDance: AvatarDance = manualDance ?? (open ? "cute" : "idle");
 
-  // A tiny floating emoji that mirrors Snip's mood.
-  const emotion = speaking
-    ? "💬"
+  // A tiny SVG face that mirrors Snip's mood (shown only while active).
+  const mood: "happy" | "scream" | "sad" | null = speaking
+    ? "happy"
     : manualDance === "scream"
-      ? "😱"
+      ? "scream"
       : manualDance === "sad"
-        ? "😢"
+        ? "sad"
         : null;
 
   // Tap Snip to cycle: 1 = bounce, 2 = groove, 3 = scream, 4+ = sad.
@@ -304,15 +337,8 @@ export function SystemAssistant() {
     const willOpen = !open;
     setOpen(willOpen);
     if (willOpen) {
-      // Opening the chat: Snip greets out loud and dances.
+      // Opening the chat: Snip dances (no spoken greeting — focus on helping).
       setManualDance(null);
-      if (!avatarMuted) {
-        setSpeaking(true);
-        window.setTimeout(
-          () => headerAvatarRef.current?.speak(GREETING, () => setSpeaking(false)),
-          260,
-        );
-      }
     } else {
       if (typeof window !== "undefined") window.speechSynthesis?.cancel();
       setSpeaking(false);
@@ -514,12 +540,12 @@ export function SystemAssistant() {
         {/* header */}
         <div className="flex items-center gap-3 border-b border-paper/10 bg-moss-deep px-4 py-3.5">
           <span className="relative shrink-0">
-            {emotion && (
+            {mood && (
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 text-[1rem] drop-shadow"
+                className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2"
               >
-                {emotion}
+                <SnipMood mood={mood} />
               </span>
             )}
             <button

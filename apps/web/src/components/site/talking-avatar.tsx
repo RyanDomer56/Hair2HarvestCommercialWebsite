@@ -4,6 +4,19 @@ import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import Avatar3D, { type AvatarDance } from "./avatar-3d";
 import { AvatarScissor } from "./avatar-character";
 
+// Voices populate asynchronously on some browsers, so cache them and refresh
+// when they load. This lets us reliably pick a male English voice for Snip.
+let cachedVoices: SpeechSynthesisVoice[] = [];
+function refreshVoices() {
+  if (typeof window !== "undefined" && "speechSynthesis" in window) {
+    cachedVoices = window.speechSynthesis.getVoices();
+  }
+}
+if (typeof window !== "undefined" && "speechSynthesis" in window) {
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
+
 export type TalkingAvatarHandle = {
   speak: (text: string, onEnd?: () => void) => void;
 };
@@ -46,8 +59,11 @@ export const TalkingAvatar = forwardRef<
       }
       const u = new SpeechSynthesisUtterance(text);
       try {
-        const vs = window.speechSynthesis.getVoices();
+        const vs = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
+        // Prefer a male English voice; fall back to any English, then default.
         const pick =
+          vs.find((v) => /male/i.test(v.name) && /^en/i.test(v.lang)) ||
+          vs.find((v) => /male/i.test(v.name)) ||
           vs.find((v) => /en[-_]?US/i.test(v.lang)) ||
           vs.find((v) => /^en/i.test(v.lang)) ||
           vs[0];
@@ -56,7 +72,7 @@ export const TalkingAvatar = forwardRef<
         /* noop */
       }
       u.rate = 1.02;
-      u.pitch = 1;
+      u.pitch = 0.9;
       u.onstart = () => setSpeaking(true);
       u.onend = () => {
         setSpeaking(false);
