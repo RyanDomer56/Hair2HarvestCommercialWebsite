@@ -133,15 +133,18 @@ export default function Avatar3D({
               mesh.geometry.computeVertexNormals();
             }
             // The OBJ carries no materials and already has a sculpted face in
-            // its geometry. Give the whole scissor one slight-green, low-metal
-            // material so it reads clearly against a white background and the
-            // face shows through shading (no cartoon face overlaid).
+            // its geometry. Give the whole scissor a light, slightly-transparent
+            // green so it reads as a clean "plain scissor" with no solid fill or
+            // background block. The transparent canvas already shows whatever is
+            // behind it (see-through like a PNG cutout).
             mesh.material = new THREE.MeshStandardMaterial({
               color: 0x4faf63,
-              metalness: 0.15,
-              roughness: 0.55,
+              metalness: 0.0,
+              roughness: 0.45,
+              transparent: true,
+              opacity: 0.62,
+              side: THREE.DoubleSide,
             });
-            (mesh.material as THREE.MeshStandardMaterial).side = THREE.DoubleSide;
           }
         });
 

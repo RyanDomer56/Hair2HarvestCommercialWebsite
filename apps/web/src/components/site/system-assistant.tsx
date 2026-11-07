@@ -500,10 +500,10 @@ export function SystemAssistant() {
         <span className="relative inline-flex">
           <span
             ref={tiltRef}
-            className="relative inline-flex rounded-[40%] shadow-[0_14px_34px_rgba(20,26,8,.32)] ring-2 ring-paper/70 transition-transform duration-150 ease-out"
+            className="relative inline-flex rounded-[40%] transition-transform duration-150 ease-out"
           >
             <TalkingAvatar
-              size={96}
+              size={82}
                            muted={avatarMuted}
               talking={speaking}
               dance={avatarDance}
@@ -515,11 +515,6 @@ export function SystemAssistant() {
               <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-lime ring-2 ring-paper" />
             )}
           </span>
-          {/* contact shadow grounds the floating orb */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-[-16px] left-1/2 h-[10px] w-[58%] -translate-x-1/2 rounded-full bg-black/35 blur-md"
-          />
         </span>
       </button>
 
@@ -557,7 +552,7 @@ export function SystemAssistant() {
             >
               <TalkingAvatar
                 ref={headerAvatarRef}
-                size={76}
+                size={64}
                 muted={avatarMuted}
                 talking={speaking}
                 dance={avatarDance}
@@ -746,7 +741,7 @@ export function SystemAssistant() {
           {thinking && (
             <div className="flex items-start gap-2">
               <span className="mt-1 shrink-0">
-                <TalkingAvatar size={40} muted talking={thinking} dance={avatarDance} modelSrc="/models/ScissorAvatarH2H.obj" modelFallbackSrc="/models/ScissorAvatarH2H.obj" faceMode />
+                <TalkingAvatar size={34} muted talking={thinking} dance={avatarDance} modelSrc="/models/ScissorAvatarH2H.obj" modelFallbackSrc="/models/ScissorAvatarH2H.obj" faceMode />
               </span>
               <div className="flex items-center gap-1 rounded-[14px] rounded-bl-[4px] border border-paper/10 bg-[#1c2114] px-3.5 py-3">
                 {[0, 1, 2].map((i) => (
