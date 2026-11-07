@@ -47,44 +47,11 @@ const DANCES: Record<
   sad: { b: 0.05, s: 0.1, r: 0.03, w: 1.1, kind: "sad" },
 };
 
-// A friendly cartoon face (eyes + smile) placed on the flat front of the
-// scissor so "Snip" clearly reads as a character. Sized relative to the model
-// radius `R` and added to the same group as the body so it dances along.
-function makeFace(R: number): THREE.Group {
-  const g = new THREE.Group();
-  const eyeR = 0.17 * R;
-  const pupR = 0.085 * R;
-  const eyeY = 0.56 * R;
-  const eyeX = 0.3 * R;
-  const eyeZ = 0.16;
-  const white = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35, metalness: 0 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x161616, roughness: 0.5, metalness: 0 });
-
-  for (const sx of [-1, 1]) {
-    const eye = new THREE.Mesh(new THREE.SphereGeometry(eyeR, 24, 24), white);
-    eye.position.set(sx * eyeX, eyeY, eyeZ);
-    g.add(eye);
-    const pupil = new THREE.Mesh(new THREE.SphereGeometry(pupR, 16, 16), dark);
-    pupil.position.set(sx * eyeX, eyeY, eyeZ + eyeR * 0.7);
-    g.add(pupil);
-  }
-
-  // Smile: a half-torus rotated so the arc opens upward.
-  const smile = new THREE.Mesh(
-    new THREE.TorusGeometry(0.32 * R, 0.05 * R, 12, 36, Math.PI),
-    dark,
-  );
-  smile.position.set(0, -0.16 * R, eyeZ);
-  smile.rotation.z = Math.PI;
-  g.add(smile);
-
-  return g;
-}
-
 /**
  * Renders the scissor OBJ avatar with three.js and drives the procedural dance
- * system. Honors prefers-reduced-motion. Falls back to the SVG avatar via
- * `onError` when the file isn't available or WebGL is off.
+ * system. The OBJ already contains a sculpted face in its geometry, so we only
+ * light it, tint it, and frame it. Honors prefers-reduced-motion. Falls back to
+ * the SVG avatar via `onError` when the file isn't available or WebGL is off.
  */
 export default function Avatar3D({
   src = "/models/ScissorAvatarH2H.obj",
@@ -165,38 +132,29 @@ export default function Avatar3D({
             if (!(mesh.geometry as THREE.BufferGeometry).attributes?.normal) {
               mesh.geometry.computeVertexNormals();
             }
-            const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-            mats.forEach((m) => {
-              const sm = m as THREE.MeshStandardMaterial;
-              if (!sm || !("color" in sm) || !(sm as THREE.MeshStandardMaterial).color) {
-                mesh.material = new THREE.MeshStandardMaterial({
-                  color: 0xc9ced8,
-                  metalness: 0.55,
-                  roughness: 0.32,
-                });
-              } else {
-                // Give the scissor a friendly metallic sheen.
-                sm.metalness = 0.55;
-                sm.roughness = 0.32;
-              }
-              (mesh.material as THREE.MeshStandardMaterial).side = THREE.DoubleSide;
+            // The OBJ carries no materials and already has a sculpted face in
+            // its geometry. Give the whole scissor one slight-green, low-metal
+            // material so it reads clearly against a white background and the
+            // face shows through shading (no cartoon face overlaid).
+            mesh.material = new THREE.MeshStandardMaterial({
+              color: 0x4faf63,
+              metalness: 0.15,
+              roughness: 0.55,
             });
+            (mesh.material as THREE.MeshStandardMaterial).side = THREE.DoubleSide;
           }
         });
 
         root.add(obj);
 
-        // Frame the model by its bounding sphere, filling most of the view.
+        // Frame the model by its bounding sphere, zoomed in so the sculpted face
+        // (upper area) is clearly visible. faceMode biases the camera up a bit.
         const sphere = box.getBoundingSphere(new THREE.Sphere());
         modelRadius = sphere.radius * fit;
-        const dist = (modelRadius / Math.tan((fov / 2) * (Math.PI / 180))) * 1.12;
-        const up = faceMode ? modelRadius * 0.12 : 0;
+        const dist = (modelRadius / Math.tan((fov / 2) * (Math.PI / 180))) * 0.95;
+        const up = faceMode ? modelRadius * 0.18 : modelRadius * 0.05;
         camera.position.set(0, up, dist);
-        camera.lookAt(0, faceMode ? modelRadius * 0.08 : 0, 0);
-
-        // Add the cartoon face on the flat front of the scissor.
-        const face = makeFace(modelRadius);
-        root.add(face);
+        camera.lookAt(0, faceMode ? modelRadius * 0.12 : 0, 0);
       },
       undefined,
       () => onErrorRef.current?.(),
