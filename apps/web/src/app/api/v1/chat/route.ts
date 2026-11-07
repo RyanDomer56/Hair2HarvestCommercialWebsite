@@ -115,7 +115,10 @@ async function aiReply(message: string): Promise<ChatReply | null> {
       cache: "no-store",
     });
 
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error("[chat] aiReply upstream status", res.status);
+      return null;
+    }
     const data = (await res.json()) as {
       choices?: Array<{ message?: { content?: string } }>;
     };
@@ -128,8 +131,9 @@ async function aiReply(message: string): Promise<ChatReply | null> {
       fallback: false,
       links: linksFor(message),
     };
-  } catch {
+  } catch (e) {
     // Network failure, timeout or quota: fall back to the checked local answer.
+    console.error("[chat] aiReply error", e instanceof Error ? e.message : String(e));
     return null;
   }
 }

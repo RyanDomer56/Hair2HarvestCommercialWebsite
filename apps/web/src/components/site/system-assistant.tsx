@@ -477,7 +477,7 @@ export function SystemAssistant() {
             className="relative inline-flex rounded-[40%] shadow-[0_14px_34px_rgba(20,26,8,.32)] ring-2 ring-paper/70 transition-transform duration-150 ease-out"
           >
             <TalkingAvatar
-              size={64}
+              size={96}
                            muted={avatarMuted}
               talking={speaking}
               dance={avatarDance}
@@ -531,7 +531,7 @@ export function SystemAssistant() {
             >
               <TalkingAvatar
                 ref={headerAvatarRef}
-                size={42}
+                size={76}
                 muted={avatarMuted}
                 talking={speaking}
                 dance={avatarDance}
@@ -720,7 +720,7 @@ export function SystemAssistant() {
           {thinking && (
             <div className="flex items-start gap-2">
               <span className="mt-1 shrink-0">
-                <TalkingAvatar size={28} muted talking={thinking} dance={avatarDance} modelSrc="/models/ScissorAvatarH2H.obj" modelFallbackSrc="/models/ScissorAvatarH2H.obj" faceMode />
+                <TalkingAvatar size={40} muted talking={thinking} dance={avatarDance} modelSrc="/models/ScissorAvatarH2H.obj" modelFallbackSrc="/models/ScissorAvatarH2H.obj" faceMode />
               </span>
               <div className="flex items-center gap-1 rounded-[14px] rounded-bl-[4px] border border-paper/10 bg-[#1c2114] px-3.5 py-3">
                 {[0, 1, 2].map((i) => (
