@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n";
 
 export function SectionHead({
   index,
@@ -196,11 +199,12 @@ export function Pill({
 }
 
 export function StatusLegend({ className }: { className?: string }) {
-  const items: Array<{ tone: "moss" | "lime" | "clay" | "mute"; label: string; def: string }> = [
-    { tone: "moss", label: "Enrolled", def: "Active partner. We pick up hair regularly." },
-    { tone: "lime", label: "Candidate", def: "Interested or visited. Pickups have not started yet." },
-    { tone: "clay", label: "Paused", def: "Taking a break, but still part of the network." },
-    { tone: "mute", label: "Withdrawn", def: "No longer taking part." },
+  const { t } = useLanguage();
+  const items: Array<{ tone: "moss" | "lime" | "clay" | "mute"; labelKey: string }> = [
+    { tone: "moss", labelKey: "status.Enrolled" },
+    { tone: "lime", labelKey: "status.Candidate" },
+    { tone: "clay", labelKey: "status.Paused" },
+    { tone: "mute", labelKey: "status.Withdrawn" },
   ];
   return (
     <div
@@ -210,9 +214,9 @@ export function StatusLegend({ className }: { className?: string }) {
       )}
     >
       {items.map((it) => (
-        <div key={it.label} className="group bg-paper p-4" title={it.def}>
-          <Pill tone={it.tone}>{it.label}</Pill>
-          <p className="mt-2 text-[0.75rem] leading-snug text-ink-soft">{it.def}</p>
+        <div key={it.labelKey} className="group bg-paper p-4" title={t(`${it.labelKey}.def`)}>
+          <Pill tone={it.tone}>{t(it.labelKey)}</Pill>
+          <p className="mt-2 text-[0.75rem] leading-snug text-ink-soft">{t(`${it.labelKey}.def`)}</p>
         </div>
       ))}
     </div>

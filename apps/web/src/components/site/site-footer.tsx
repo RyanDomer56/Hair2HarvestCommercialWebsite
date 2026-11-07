@@ -1,34 +1,38 @@
+"use client";
+
 import Link from "next/link";
 import { BrandMark } from "./brand";
+import { useLanguage } from "@/lib/i18n";
 
 const columns = [
   {
-    title: "Learn",
+    titleKey: "footer.learn",
     items: [
-      { label: "How it works", href: "/system" },
-      { label: "Checking the hair", href: "/system#grading" },
-      { label: "Our impact", href: "/impact" },
+      { labelKey: "nav.how", href: "/system" },
+      { labelKey: "nav.how.grading", href: "/system#grading" },
+      { labelKey: "nav.impact", href: "/impact" },
     ],
   },
   {
-    title: "Shops",
+    titleKey: "footer.shops",
     items: [
-      { label: "Shop list", href: "/network" },
-      { label: "Pickups", href: "/network#rules" },
-      { label: "Join us", href: "/partner" },
+      { labelKey: "footer.shopList", href: "/network" },
+      { labelKey: "nav.network.rules", href: "/network#rules" },
+      { labelKey: "footer.joinUs", href: "/partner" },
     ],
   },
   {
-    title: "Company",
+    titleKey: "footer.company",
     items: [
-      { label: "About us", href: "/about" },
-      { label: "Our team", href: "/about#team" },
-      { label: "Contact us", href: "/partner#contact" },
+      { labelKey: "nav.about", href: "/about" },
+      { labelKey: "nav.about.team", href: "/about#team" },
+      { labelKey: "footer.contactUs", href: "/partner#contact" },
     ],
   },
 ];
 
 export function SiteFooter() {
+  const { t } = useLanguage();
   return (
     <footer className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--paper-sunk)]">
       <div className="shell pb-10 pt-16">
@@ -40,31 +44,30 @@ export function SiteFooter() {
                 <p className="text-[1.05rem] font-semibold tracking-[-0.03em] text-ink">
                   Hair2Harvest
                 </p>
-                <p className="mono-tag mt-1 text-ink-mute">SOIL FROM BARBERS</p>
+                <p className="mono-tag mt-1 text-ink-mute">{t("footer.soilFromBarbers")}</p>
               </div>
             </div>
             <p className="mt-5 max-w-[30ch] text-[0.875rem] leading-relaxed text-ink-soft">
-              A free service for barbershops. We collect hair clippings and turn them into compost
-              for planting beds nearby. We come to you.
+              {t("footer.tagline")}
             </p>
             <p className="mono-tag mt-6 text-ink-mute">
-              BARANGAY NOVALICHES PROPER · PHILIPPINES
+              {t("footer.barangay")}
               <br />
               QUEZON CITY
             </p>
           </div>
 
           {columns.map((col) => (
-            <div key={col.title}>
-              <p className="eyebrow">{col.title}</p>
+            <div key={col.titleKey}>
+              <p className="eyebrow">{t(col.titleKey)}</p>
               <ul className="mt-4 space-y-2.5">
                 {col.items.map((item) => (
-                  <li key={item.label}>
+                  <li key={item.href}>
                     <Link
                       href={item.href}
                       className="text-[0.875rem] text-ink-soft transition-colors hover:text-moss"
                     >
-                      {item.label}
+                      {t(item.labelKey)}
                     </Link>
                   </li>
                 ))}
@@ -75,18 +78,16 @@ export function SiteFooter() {
 
         <div className="mt-14 flex flex-col gap-4 border-t border-[var(--line)] pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="mono-tag text-ink-mute">
-            © 2026 HAIR2HARVEST · A COLLECTION &amp; COMPOSTING SERVICE FOR BARBERSHOPS
+            {t("footer.copyright")}
             <br />
-            CAPSTONE: AN IoT-BASED BARBERSHOP HAIR WASTE COLLECTION &amp; AUTOMATED COMPOSTING SYSTEM WITH WEB-BASED PROCESS CONTROL FOR BARANGAY NOVALICHES PROPER
+            {t("footer.capstone")}
           </p>
-          <p className="mono-tag text-ink-mute/70">
-            Chat mascot: Snip, the Hair2Harvest scissor (3D model supplied by the project)
-          </p>
+          <p className="mono-tag text-ink-mute/70">{t("footer.mascot")}</p>
           <div className="flex items-center gap-5">
-            <span className="mono-tag text-ink-mute">BARANGAY NOVALICHES PROPER · PHILIPPINES</span>
+            <span className="mono-tag text-ink-mute">{t("footer.barangay")}</span>
             <span className="flex items-center gap-1.5">
               <span className="live-dot size-1.5 rounded-full bg-moss" aria-hidden />
-              <span className="mono-tag text-moss">NOW COLLECTING</span>
+              <span className="mono-tag text-moss">{t("footer.nowCollecting")}</span>
             </span>
           </div>
         </div>

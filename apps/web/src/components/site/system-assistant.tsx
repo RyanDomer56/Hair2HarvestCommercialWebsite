@@ -21,6 +21,7 @@ import {
   type KnowledgeEntry,
 } from "@/lib/chat-knowledge";
 import { HELP_GROUPS, HELP_PLACES, findInSystem } from "@/lib/site-help";
+import { useLanguage } from "@/lib/i18n";
 
 /**
  * Tiny SVG face that mirrors Snip's mood, replacing the old emoji badge.
@@ -82,12 +83,6 @@ type Message = {
 let seq = 0;
 const nextId = () => `m${++seq}`;
 
-const WELCOME: Message = {
-  id: "welcome",
-  role: "assistant",
-  text: "Hi! I'm Snip, the Hair2Harvest helper. Ask me in English or Tagalog — what we do, what happens when you join, and how hair becomes compost. I can also show you where to find things on the site. Tap the ? button for help.",
-};
-
 // --- playful sound effects (Web Audio, no assets) ----------------------
 function playScream() {
   try {
@@ -134,8 +129,11 @@ function playSad() {
 }
 
 export function SystemAssistant() {
+  const { t, lang } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([WELCOME]);
+  const [messages, setMessages] = useState<Message[]>(() => [
+    { id: "welcome", role: "assistant", text: t("chat.welcome") },
+  ]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
   const [unread, setUnread] = useState(false);
@@ -469,7 +467,7 @@ export function SystemAssistant() {
   const suggestions: KnowledgeEntry[] = lastMessage?.entry
     ? getRelated(lastMessage.entry)
     : lastMessage?.fallback || lastMessage?.id === "welcome"
-      ? STARTER_QUESTIONS.map((q) => KNOWLEDGE.find((k) => k.question === q)!)
+      ? STARTER_QUESTIONS.map((id) => KNOWLEDGE.find((k) => k.id === id)!)
           .filter(Boolean)
           .slice(0, 4)
       : [];
@@ -486,7 +484,7 @@ export function SystemAssistant() {
         onPointerUp={onLauncherPointerUp}
         aria-expanded={open}
         aria-controls="system-assistant-panel"
-        aria-label={open ? "Close the chat" : "Chat with us — drag me anywhere"}
+        aria-label={open ? t("chat.aria.close") : t("chat.aria.open")}
         className={cn(
           "assistant-scope group fixed z-[70] flex items-center gap-3 transition-[opacity,transform] duration-300",
           pos ? "" : "bottom-5 right-5 sm:bottom-6 sm:right-6",
@@ -495,7 +493,7 @@ export function SystemAssistant() {
         style={pos ? { left: pos.x, top: pos.y } : undefined}
       >
         <span className="hidden rounded-full bg-moss-deep px-3.5 py-2 text-[0.75rem] font-medium text-paper opacity-0 shadow-lg transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 sm:block sm:translate-x-2">
-          Chat with us
+          {t("chat.tooltip")}
         </span>
         <span className="relative inline-flex">
           <span
@@ -504,7 +502,7 @@ export function SystemAssistant() {
           >
             <TalkingAvatar
               size={82}
-                           muted={avatarMuted}
+              muted={avatarMuted}
               talking={speaking}
               dance={avatarDance}
               modelSrc="/models/ScissorAvatarH2H.obj"
@@ -522,7 +520,7 @@ export function SystemAssistant() {
       <div
         id="system-assistant-panel"
         role="dialog"
-        aria-label="Hair2Harvest chat"
+        aria-label={t("chat.name")}
         aria-modal="false"
         className={cn(
           "assistant-scope fixed bottom-5 right-3 z-[71] flex w-[calc(100vw-1.5rem)] flex-col overflow-hidden rounded-[16px] border border-paper/10 bg-[#11150c] text-paper shadow-[0_24px_80px_rgba(8,12,4,.55)] transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] sm:bottom-6 sm:right-6 sm:w-[390px]",
@@ -546,8 +544,8 @@ export function SystemAssistant() {
             <button
               type="button"
               onClick={onAvatarTap}
-              title="Tap Snip: bounce · groove · scream · sad"
-              aria-label="Tap Snip to change his dance"
+              title={t("chat.tapSnip")}
+              aria-label={t("chat.tapSnip")}
               className="block cursor-pointer rounded-full transition-transform active:scale-90"
             >
               <TalkingAvatar
@@ -563,20 +561,20 @@ export function SystemAssistant() {
             </button>
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[0.8125rem] font-semibold leading-tight">Snip</p>
-            <p className="mt-0.5 text-[0.625rem] text-paper/45">Your Hair2Harvest guide</p>
+            <p className="text-[0.8125rem] font-semibold leading-tight">{t("chat.name")}</p>
+            <p className="mt-0.5 text-[0.625rem] text-paper/45">{t("chat.role")}</p>
             <p className="mt-1 flex items-center gap-1.5 text-[0.6875rem] text-paper/55">
               <span className="size-1.5 rounded-full bg-lime" aria-hidden />
-              {thinking ? "Replying…" : mode === "ai" ? "AI assisted · checked answers" : "Online"}
+              {thinking ? t("chat.replying") : mode === "ai" ? t("chat.aiAssisted") : t("chat.online")}
             </p>
           </div>
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => setView((v) => (v === "help" ? "chat" : "help"))}
-              aria-label={view === "help" ? "Back to chat" : "Help — find where things are"}
+              aria-label={t("chat.help.title")}
               aria-pressed={view === "help"}
-              title="Help — find where things are"
+              title={t("chat.help.title")}
               className={cn(
                 "flex size-8 items-center justify-center rounded-full transition-colors",
                 view === "help"
@@ -589,7 +587,7 @@ export function SystemAssistant() {
             <button
               type="button"
               onClick={toggleMute}
-              aria-label={avatarMuted ? "Unmute voice" : "Mute voice"}
+              aria-label={avatarMuted ? t("chat.unmute") : t("chat.mute")}
               aria-pressed={avatarMuted}
               className="flex size-8 items-center justify-center rounded-full text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
             >
@@ -601,7 +599,7 @@ export function SystemAssistant() {
                 if (typeof window !== "undefined") window.speechSynthesis?.cancel();
                 setOpen(false);
               }}
-              aria-label="Close"
+              aria-label={t("chat.aria.close")}
               className="flex size-8 items-center justify-center rounded-full text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
             >
               <X size={16} />
@@ -620,16 +618,15 @@ export function SystemAssistant() {
           {view === "help" ? (
             <div className="space-y-5">
               <div>
-                <p className="text-[0.875rem] font-medium text-paper">Where can I find it?</p>
+                <p className="text-[0.875rem] font-medium text-paper">{t("chat.help.title")}</p>
                 <p className="mt-1.5 text-[0.75rem] leading-[1.6] text-paper/60">
-                  Tap any place below and we will take you straight there. You can also just ask me
-                  in English or Tagalog.
+                  {t("chat.help.lede")}
                 </p>
               </div>
 
               {HELP_GROUPS.map((group) => (
                 <div key={group}>
-                  <p className="mono-tag uppercase text-lime/80">{group}</p>
+                  <p className="mono-tag uppercase text-lime/80">{t(`chat.group.${group.toLowerCase()}`)}</p>
                   <div className="mt-2 flex flex-col gap-1.5">
                     {HELP_PLACES.filter((p) => p.group === group).map((p) => (
                       <Link
@@ -656,13 +653,26 @@ export function SystemAssistant() {
                 </div>
               ))}
 
-              <div className="rounded-[10px] border border-paper/12 px-3 py-2.5">
-                <p className="mono-tag uppercase text-paper/40">Need a person instead?</p>
+              {/* QA #32: a real person is always reachable, not only the chatbot. */}
+              <div className="rounded-[10px] border border-lime/25 bg-lime/5 px-3 py-2.5">
+                <p className="text-[0.8125rem] font-medium text-lime">{t("chat.repTitle")}</p>
                 <p className="mt-1.5 text-[0.75rem] leading-[1.6] text-paper/70">
-                  {CONTACT.phone} ({CONTACT.hours})
-                  <br />
-                  {CONTACT.email}
+                  {t("chat.repBlurb")}
                 </p>
+                <div className="mt-2.5 flex flex-wrap gap-2">
+                  <a
+                    href={`tel:${CONTACT.phoneLink}`}
+                    className="rounded-full border border-lime/40 bg-lime/10 px-3 py-1.5 text-[0.6875rem] font-medium text-lime transition-colors hover:bg-lime/20"
+                  >
+                    {t("chat.callUs")}
+                  </a>
+                  <a
+                    href={`mailto:${CONTACT.email}`}
+                    className="rounded-full border border-paper/20 px-3 py-1.5 text-[0.6875rem] font-medium text-paper/75 transition-colors hover:border-paper/40"
+                  >
+                    {t("chat.emailUs")}
+                  </a>
+                </div>
               </div>
 
               <button
@@ -670,107 +680,107 @@ export function SystemAssistant() {
                 onClick={() => setView("chat")}
                 className="w-full rounded-full border border-paper/20 py-2 text-[0.75rem] font-medium text-paper/75 transition-colors hover:border-lime/40 hover:text-lime"
               >
-                Back to chat
+                {t("chat.help.back")}
               </button>
             </div>
           ) : (
             <>
-          {messages.map((m) => (
-            <div
-              key={m.id}
-              className={cn("flex flex-col", m.role === "user" ? "items-end" : "items-start")}
-            >
-              <div
-                className={cn(
-                  "max-w-[86%] rounded-[14px] px-3.5 py-2.5 text-[0.8125rem] leading-[1.65]",
-                  m.role === "user"
-                    ? "rounded-br-[4px] bg-lime font-medium text-[#242a12]"
-                    : "rounded-bl-[4px] border border-paper/10 bg-[#1c2114] text-paper/90",
-                )}
-              >
-                {m.text}
-              </div>
+              {messages.map((m) => (
+                <div
+                  key={m.id}
+                  className={cn("flex flex-col", m.role === "user" ? "items-end" : "items-start")}
+                >
+                  <div
+                    className={cn(
+                      "max-w-[86%] rounded-[14px] px-3.5 py-2.5 text-[0.8125rem] leading-[1.65]",
+                      m.role === "user"
+                        ? "rounded-br-[4px] bg-lime font-medium text-[#242a12]"
+                        : "rounded-bl-[4px] border border-paper/10 bg-[#1c2114] text-paper/90",
+                    )}
+                  >
+                    {m.text}
+                  </div>
 
-              {m.links && m.links.length > 0 && (
-                <div className="mt-2 w-full max-w-[86%]">
-                  <p className="mono-tag mb-1.5 uppercase text-paper/40">Find it here</p>
-                  <div className="flex flex-col gap-1.5">
-                    {m.links.map((l) => (
-                      <Link
-                        key={`${l.href}-${l.title}`}
-                        href={l.href}
-                        className="group flex items-start justify-between gap-2 rounded-[10px] border border-lime/25 bg-lime/5 px-3 py-2 transition-colors hover:bg-lime/15"
+                  {m.links && m.links.length > 0 && (
+                    <div className="mt-2 w-full max-w-[86%]">
+                      <p className="mono-tag mb-1.5 uppercase text-paper/40">{t("chat.findHere")}</p>
+                      <div className="flex flex-col gap-1.5">
+                        {m.links.map((l) => (
+                          <Link
+                            key={`${l.href}-${l.title}`}
+                            href={l.href}
+                            className="group flex items-start justify-between gap-2 rounded-[10px] border border-lime/25 bg-lime/5 px-3 py-2 transition-colors hover:bg-lime/15"
+                          >
+                            <span className="min-w-0">
+                              <span className="block text-[0.75rem] font-medium text-lime">
+                                {l.title}
+                              </span>
+                              <span className="mt-0.5 block text-[0.6875rem] leading-snug text-paper/55">
+                                {l.blurb}
+                              </span>
+                            </span>
+                            <ArrowUpRight
+                              size={13}
+                              className="mt-0.5 shrink-0 text-lime transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                            />
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {m.fallback && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <a
+                        href={`tel:${CONTACT.phoneLink}`}
+                        className="rounded-full border border-lime/40 bg-lime/10 px-3 py-1.5 text-[0.6875rem] font-medium text-lime transition-colors hover:bg-lime/20"
                       >
-                        <span className="min-w-0">
-                          <span className="block text-[0.75rem] font-medium text-lime">
-                            {l.title}
-                          </span>
-                          <span className="mt-0.5 block text-[0.6875rem] leading-snug text-paper/55">
-                            {l.blurb}
-                          </span>
-                        </span>
-                        <ArrowUpRight
-                          size={13}
-                          className="mt-0.5 shrink-0 text-lime transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                        />
-                      </Link>
+                        {t("chat.callUs")}
+                      </a>
+                      <a
+                        href={`mailto:${CONTACT.email}`}
+                        className="rounded-full border border-paper/20 px-3 py-1.5 text-[0.6875rem] font-medium text-paper/75 transition-colors hover:border-paper/40"
+                      >
+                        {t("chat.emailUs")}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {thinking && (
+                <div className="flex items-start gap-2">
+                  <span className="mt-1 shrink-0">
+                    <TalkingAvatar size={34} muted talking={thinking} dance={avatarDance} modelSrc="/models/ScissorAvatarH2H.obj" modelFallbackSrc="/models/ScissorAvatarH2H.obj" faceMode />
+                  </span>
+                  <div className="flex items-center gap-1 rounded-[14px] rounded-bl-[4px] border border-paper/10 bg-[#1c2114] px-3.5 py-3">
+                    {[0, 1, 2].map((i) => (
+                      <span
+                        key={i}
+                        className="size-1.5 rounded-full bg-lime/70"
+                        style={{ animation: `assistant-dot 1s ${i * 0.15}s infinite ease-in-out` }}
+                      />
                     ))}
                   </div>
                 </div>
               )}
 
-              {m.fallback && (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <a
-                    href={`tel:${CONTACT.phoneLink}`}
-                    className="rounded-full border border-lime/40 bg-lime/10 px-3 py-1.5 text-[0.6875rem] font-medium text-lime transition-colors hover:bg-lime/20"
-                  >
-                    Call us
-                  </a>
-                  <a
-                    href={`mailto:${CONTACT.email}`}
-                    className="rounded-full border border-paper/20 px-3 py-1.5 text-[0.6875rem] font-medium text-paper/75 transition-colors hover:border-paper/40"
-                  >
-                    Email us
-                  </a>
+              {!thinking && suggestions.length > 0 && (
+                <div className="pt-1">
+                  <div className="flex flex-wrap gap-1.5">
+                    {suggestions.map((k) => (
+                      <button
+                        key={k.id}
+                        type="button"
+                        onClick={() => send(k.question)}
+                        className="rounded-full border border-paper/15 px-2.5 py-1.5 text-left text-[0.6875rem] leading-snug text-paper/75 transition-colors hover:border-lime/45 hover:bg-lime/10 hover:text-lime"
+                      >
+                        {lang === "tl" ? (k.promptTL ?? k.question) : k.question}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
-            </div>
-          ))}
-
-          {thinking && (
-            <div className="flex items-start gap-2">
-              <span className="mt-1 shrink-0">
-                <TalkingAvatar size={34} muted talking={thinking} dance={avatarDance} modelSrc="/models/ScissorAvatarH2H.obj" modelFallbackSrc="/models/ScissorAvatarH2H.obj" faceMode />
-              </span>
-              <div className="flex items-center gap-1 rounded-[14px] rounded-bl-[4px] border border-paper/10 bg-[#1c2114] px-3.5 py-3">
-                {[0, 1, 2].map((i) => (
-                  <span
-                    key={i}
-                    className="size-1.5 rounded-full bg-lime/70"
-                    style={{ animation: `assistant-dot 1s ${i * 0.15}s infinite ease-in-out` }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {!thinking && suggestions.length > 0 && (
-            <div className="pt-1">
-              <div className="flex flex-wrap gap-1.5">
-                {suggestions.map((k) => (
-                  <button
-                    key={k.id}
-                    type="button"
-                    onClick={() => send(k.question)}
-                    className="rounded-full border border-paper/15 px-2.5 py-1.5 text-left text-[0.6875rem] leading-snug text-paper/75 transition-colors hover:border-lime/45 hover:bg-lime/10 hover:text-lime"
-                  >
-                    {k.question}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
             </>
           )}
         </div>
@@ -780,10 +790,10 @@ export function SystemAssistant() {
           <button
             type="button"
             onClick={() => setView("help")}
-            className="mb-2.5 flex w-full items-center justify-center gap-1.5 rounded-full border border-paper/12 py-1.5 text-[0.6875rem] font-medium text-paper/60 transition-colors hover:border-lime/40 hover:text-lime"
+            className="mb-2.5 flex w-full items-center justify-center gap-1.5 rounded-full border border-lime/25 py-1.5 text-[0.6875rem] font-medium text-lime transition-colors hover:bg-lime/10"
           >
             <CircleHelp size={12} />
-            Where can I find it? Browse the site
+            {t("chat.talkToRep")}
           </button>
           <form
             onSubmit={(e) => {
@@ -796,14 +806,14 @@ export function SystemAssistant() {
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Write a message…"
-              aria-label="Your message"
+              placeholder={t("chat.placeholder")}
+              aria-label={t("chat.yourMessage")}
               className="min-w-0 flex-1 bg-transparent text-[0.8125rem] text-paper outline-none placeholder:text-paper/35"
             />
             <button
               type="submit"
               disabled={!input.trim() || thinking}
-              aria-label="Send message"
+              aria-label={t("chat.send")}
               className="flex size-8 shrink-0 items-center justify-center rounded-full bg-lime text-[#242a12] transition-opacity disabled:opacity-30"
             >
               <Send size={14} />

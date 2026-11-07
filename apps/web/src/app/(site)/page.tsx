@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowUpRight, ClipboardList, Recycle, Store, Truck, Users } from "lucide-react";
 import { HairWeave } from "@/components/site/hair-weave";
@@ -7,77 +9,46 @@ import { MachineFrame } from "@/components/site/machine-frame";
 import { CompostingDrum } from "@/components/site/composting-drum";
 import { SectionHead, Stat, Pill } from "@/components/site/ui-bits";
 import { shops, overviewStats } from "@/lib/data";
-
-/* The four questions a shop owner asks first — answered in plain words. */
-const faqs = [
-  {
-    q: "What is Hair2Harvest?",
-    a: "A free collection service for barbershops in Barangay Novaliches Proper. We pick up the hair clippings you set aside and turn them into compost for planting beds in your own barangay.",
-  },
-  {
-    q: "What do I need to do?",
-    a: "Almost nothing. Put the hair clippings in the sack we give you. We visit, we collect, we do the paperwork. There is no app and no account.",
-  },
-  {
-    q: "What will happen to my hair clippings?",
-    a: "We weigh them, mix them with dry leaves and other plant material, and let them rest for about six weeks. A laboratory checks the compost before it is used.",
-  },
-  {
-    q: "What do I get from participating?",
-    a: "A receipt for every pickup, the lab result, and compost for your barangay's planting beds. Your shop is also named in our network as a contributor.",
-  },
-];
-
-const navCards = [
-  { href: "/system", label: "How does it work?", desc: "See the five simple steps.", icon: Recycle },
-  { href: "/partner", label: "Why become a partner?", desc: "What your shop gets back.", icon: Users },
-  { href: "/network", label: "Shop Partners", desc: "See the shops already with us.", icon: Store },
-  { href: "/system", label: "Collection process", desc: "From the chair to the soil.", icon: Truck },
-  { href: "/partner", label: "Register your shop", desc: "Ask for a free visit.", icon: ClipboardList },
-];
-
-/* The machine, in five short steps — shown at the top so visitors see how it
-   works the moment they scroll. Taps through to the full process page. */
-const drumSteps = [
-  { n: "01", title: "We collect", body: "A labelled sack at your shop. We come to you." },
-  { n: "02", title: "We check", body: "Hair only is best; a little tissue is still fine." },
-  { n: "03", title: "We mix", body: "Hair + dry leaves, weighed and logged as one batch." },
-  { n: "04", title: "We cure", body: "About six weeks of resting, turning and checking." },
-  { n: "05", title: "Lab checks", body: "A laboratory approves it before we call it compost." },
-];
-
-/* The answer to "what happens when I join?" — written to make joining feel welcoming. */
-const joinSteps = [
-  {
-    n: "01",
-    title: "We visit your shop",
-    body: "A collection team member comes at a quiet hour, asks a few questions and leaves you a labelled sack. It takes almost none of your time.",
-  },
-  {
-    n: "02",
-    title: "You keep cutting hair",
-    body: "Put the hair clippings into the sack. Nothing else in your day changes. No app, no login, no new habit.",
-  },
-  {
-    n: "03",
-    title: "We pick it up",
-    body: "We come back on the days that suit you. You never need to travel anywhere or wait at a counter.",
-  },
-  {
-    n: "04",
-    title: "We make compost",
-    body: "We weigh the hair, mix it with dry leaves and other plant material, and let it rest. A laboratory checks every batch.",
-  },
-  {
-    n: "05",
-    title: "Your town gets the soil",
-    body: "You get a receipt and the lab result. The compost goes to planting beds in your barangay.",
-  },
-];
+import { useLanguage } from "@/lib/i18n";
 
 export default function HomePage() {
+  const { t } = useLanguage();
   const enrolled = shops.filter((s) => s.status === "Enrolled");
   const preview = shops.filter((s) => s.status === "Enrolled" || s.status === "Candidate").slice(0, 5);
+
+  /* The four questions a shop owner asks first — answered in plain words. */
+  const faqs = [
+    { qKey: "home.faq.q1", aKey: "home.faq.a1" },
+    { qKey: "home.faq.q2", aKey: "home.faq.a2" },
+    { qKey: "home.faq.q3", aKey: "home.faq.a3" },
+    { qKey: "home.faq.q4", aKey: "home.faq.a4" },
+  ];
+
+  const navCards = [
+    { href: "/system", labelKey: "home.navCards.howWork.label", descKey: "home.navCards.howWork.desc", icon: Recycle },
+    { href: "/partner", labelKey: "home.navCards.whyPartner.label", descKey: "home.navCards.whyPartner.desc", icon: Users },
+    { href: "/network", labelKey: "home.navCards.shopPartners.label", descKey: "home.navCards.shopPartners.desc", icon: Store },
+    { href: "/system", labelKey: "home.navCards.collection.label", descKey: "home.navCards.collection.desc", icon: Truck },
+    { href: "/partner", labelKey: "home.navCards.register.label", descKey: "home.navCards.register.desc", icon: ClipboardList },
+  ];
+
+  /* The machine, in five short steps. */
+  const drumSteps = [
+    { n: "01", titleKey: "home.drumSteps.collect.title", bodyKey: "home.drumSteps.collect.body" },
+    { n: "02", titleKey: "home.drumSteps.check.title", bodyKey: "home.drumSteps.check.body" },
+    { n: "03", titleKey: "home.drumSteps.mix.title", bodyKey: "home.drumSteps.mix.body" },
+    { n: "04", titleKey: "home.drumSteps.cure.title", bodyKey: "home.drumSteps.cure.body" },
+    { n: "05", titleKey: "home.drumSteps.lab.title", bodyKey: "home.drumSteps.lab.body" },
+  ];
+
+  /* What happens when you join? */
+  const joinSteps = [
+    { n: "01", titleKey: "home.join.step1.title", bodyKey: "home.join.step1.body" },
+    { n: "02", titleKey: "home.join.step2.title", bodyKey: "home.join.step2.body" },
+    { n: "03", titleKey: "home.join.step3.title", bodyKey: "home.join.step3.body" },
+    { n: "04", titleKey: "home.join.step4.title", bodyKey: "home.join.step4.body" },
+    { n: "05", titleKey: "home.join.step5.title", bodyKey: "home.join.step5.body" },
+  ];
 
   return (
     <>
@@ -95,62 +66,58 @@ export default function HomePage() {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   <span className="flex items-center gap-2">
                     <span className="live-dot size-1.5 rounded-full bg-moss" aria-hidden />
-                    <span className="eyebrow text-moss">Now collecting · Barangay Novaliches Proper</span>
+                    <span className="eyebrow text-moss">{t("home.hero.eyebrow")}</span>
                   </span>
                 </div>
               </Reveal>
 
               <Reveal delay={80}>
                 <h1 className="display mt-7 text-[clamp(2.4rem,6.2vw,5.4rem)] text-ink">
-                  Hair clippings
+                  {t("home.hero.title1")}
                   <br />
-                  become <em className="text-moss">soil</em>
+                  {t("home.hero.title2")} <em className="text-moss">{t("home.hero.title3")}</em>
                   <br />
-                  for your barangay.
+                  {t("home.hero.title4")}
                 </h1>
               </Reveal>
             </div>
 
             <Reveal delay={160} className="lg:pb-3">
               <p className="text-[0.9375rem] leading-[1.7] text-ink-soft">
-                <strong className="font-medium text-ink">Hair2Harvest is a free collection service
-                for barbershops.</strong> We pick up the hair you sweep up and turn it into compost
-                for planting beds nearby. We come to you — there is no app, no login and no extra
-                work for your shop.
+                <strong className="font-medium text-ink">{t("home.hero.para1a")}</strong>{" "}
+                {t("home.hero.para1b")}
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-2.5">
                 <Link href="/partner" className="btn btn-sm">
-                  Join the shops
+                  {t("cta.joinShops")}
                   <ArrowUpRight size={14} />
                 </Link>
                 <Link href="/system" className="btn btn-ghost btn-sm">
-                  How it works
+                  {t("nav.how")}
                 </Link>
               </div>
               <p className="text-[0.8125rem] leading-[1.7] text-ink-soft">
-                <strong className="font-medium text-ink">
-                  A capstone project with Barangay Novaliches Proper.
-                </strong>{" "}
-                We turn salon and barbershop hair waste into compost for local planting beds.
+                <strong className="font-medium text-ink">{t("home.hero.capstone1")}</strong>{" "}
+                {t("home.hero.capstone2")}
               </p>
               <p className="mono-tag mt-5 text-ink-mute">
-                FREE TO JOIN · NO APP · NO LOGIN
+                {t("home.hero.free1")}
                 <br />
-                WE COME TO YOUR SHOP
+                {t("home.hero.free2")}
               </p>
             </Reveal>
           </div>
 
           <Reveal delay={220} className="mt-12 lg:mt-14">
             <div className="grid grid-cols-3 gap-x-6 gap-y-5 border-t border-[var(--line)] pt-6">
-              <Stat value={String(shops.length)} label="Shops with us" note="Barangay Novaliches Proper" />
+              <Stat value={String(shops.length)} label={t("home.stat.shops")} note={t("footer.barangayShort")} />
               <Stat
                 value={overviewStats.totalKg.toFixed(1)}
                 unit="kg"
-                label="Hair collected"
-                note="Weighed, not guessed"
+                label={t("home.stat.hair")}
+                note={t("home.stat.hairNote")}
               />
-              <Stat value="0" label="Passwords to remember" note="No account needed" />
+              <Stat value="0" label={t("home.stat.passwords")} note={t("home.stat.passwordsNote")} />
             </div>
           </Reveal>
         </div>
@@ -164,15 +131,15 @@ export default function HomePage() {
           <Reveal>
             <SectionHead
               index="00"
-              label="How it works"
+              label={t("home.section.how.label")}
               title={
                 <>
-                  The drum that turns
+                  {t("home.section.how.title1")} <em className="text-moss">{t("home.section.how.title3")}</em>
                   <br />
-                  hair into <em>soil</em>.
+                  {t("home.section.how.title2")} {t("home.section.how.title3")}
                 </>
               }
-              lede="One machine, five simple steps. We bring a sack to your shop, collect the hair, and let it rest into compost. Drag the drum to look around — then tap through for the full process."
+              lede={t("home.section.how.lede")}
             />
           </Reveal>
 
@@ -184,19 +151,19 @@ export default function HomePage() {
 
           <Reveal delay={140}>
             <div className="mt-10 grid gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-5">
-              {drumSteps.map((s, i) => (
+              {drumSteps.map((s) => (
                 <div key={s.n} className="bg-paper p-5">
                   <span className="mono-tag text-clay">{s.n}</span>
                   <h3 className="mt-3 text-[0.9375rem] font-medium tracking-[-0.01em] text-ink">
-                    {s.title}
+                    {t(s.titleKey)}
                   </h3>
-                  <p className="mt-1.5 text-[0.8125rem] leading-[1.6] text-ink-soft">{s.body}</p>
+                  <p className="mt-1.5 text-[0.8125rem] leading-[1.6] text-ink-soft">{t(s.bodyKey)}</p>
                 </div>
               ))}
             </div>
             <div className="mt-8 flex flex-wrap gap-2.5">
               <Link href="/system" className="btn btn-sm">
-                See the full process
+                {t("cta.seeFullProcess")}
                 <ArrowUpRight size={14} />
               </Link>
             </div>
@@ -210,13 +177,9 @@ export default function HomePage() {
           <Reveal>
             <SectionHead
               index="00"
-              label="Where to next"
-              title={
-                <>
-                  Find what you <em>need</em>.
-                </>
-              }
-              lede="Everything is one tap away. You do not have to read the whole page."
+              label={t("home.section.where.label")}
+              title={<em className="text-moss">{t("home.section.where.title")}</em>}
+              lede={t("home.section.where.lede")}
             />
           </Reveal>
 
@@ -224,18 +187,18 @@ export default function HomePage() {
             {navCards.map((c, i) => {
               const Icon = c.icon;
               return (
-                <Reveal key={c.label} delay={i * 60}>
+                <Reveal key={c.labelKey} delay={i * 60}>
                   <Link
                     href={c.href}
                     className="group flex h-full flex-col rounded-[4px] border border-[var(--line)] bg-paper p-5 transition-colors hover:border-moss/40 hover:bg-[color-mix(in_oklab,var(--moss)_6%,transparent)]"
                   >
                     <Icon size={20} className="text-moss" aria-hidden />
                     <p className="mt-4 text-[0.9375rem] font-medium tracking-[-0.01em] text-ink">
-                      {c.label}
+                      {t(c.labelKey)}
                     </p>
-                    <p className="mt-1.5 text-[0.75rem] leading-snug text-ink-soft">{c.desc}</p>
+                    <p className="mt-1.5 text-[0.75rem] leading-snug text-ink-soft">{t(c.descKey)}</p>
                     <span className="mt-4 inline-flex items-center gap-1 text-[0.6875rem] font-medium text-moss">
-                      Open
+                      {t("common.open")}
                       <ArrowUpRight
                         size={12}
                         className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -253,14 +216,12 @@ export default function HomePage() {
       <section className="relative overflow-hidden border-y border-[var(--line)] bg-moss-deep text-paper">
         <div className="shell section">
           <Reveal>
-            <p className="eyebrow text-lime">What happens when you join?</p>
+            <p className="eyebrow text-lime">{t("home.join.label")}</p>
             <h2 className="display mt-5 max-w-[30ch] text-[clamp(1.9rem,4.2vw,3.4rem)] text-paper">
-              You become one of the shops <em className="text-lime">making soil</em> for your own
-              town.
+              {t("home.join.title")}
             </h2>
             <p className="mt-5 max-w-[58ch] text-[0.9375rem] leading-[1.7] text-paper/75">
-              Joining is simple. There is no long form to fill in, no app and no account. Here is
-              everything that happens, in five easy steps.
+              {t("home.join.lede")}
             </p>
           </Reveal>
 
@@ -270,9 +231,9 @@ export default function HomePage() {
                 <div className="h-full bg-moss-deep p-5">
                   <span className="mono-tag text-lime">{s.n}</span>
                   <h3 className="mt-5 text-[0.9375rem] font-medium tracking-[-0.01em] text-paper">
-                    {s.title}
+                    {t(s.titleKey)}
                   </h3>
-                  <p className="mt-2 text-[0.8125rem] leading-[1.65] text-paper/70">{s.body}</p>
+                  <p className="mt-2 text-[0.8125rem] leading-[1.65] text-paper/70">{t(s.bodyKey)}</p>
                 </div>
               </Reveal>
             ))}
@@ -281,11 +242,10 @@ export default function HomePage() {
           <Reveal delay={200}>
             <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t border-paper/12 pt-8">
               <p className="max-w-[52ch] text-[0.9375rem] leading-[1.7] text-paper/80">
-                Your shop&rsquo;s name is listed in our network as a <strong className="font-medium text-paper">contributor</strong>.
-                You keep cutting hair — we do the rest.
+                {t("home.join.note")}
               </p>
               <Link href="/partner" className="btn btn-lime">
-                Yes, count me in
+                {t("cta.yesCountMeIn")}
                 <ArrowUpRight size={15} />
               </Link>
             </div>
@@ -299,28 +259,24 @@ export default function HomePage() {
           <Reveal>
             <SectionHead
               index="01"
-              label="Four quick answers"
-              title={
-                <>
-                  Before you <em>decide</em>.
-                </>
-              }
-              lede="Short, plain answers. No technical words."
+              label={t("home.faq.label")}
+              title={<em className="text-moss">{t("home.faq.title")}</em>}
+              lede={t("home.faq.lede")}
             />
           </Reveal>
 
           <div className="mt-10 grid gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2">
             {faqs.map((f, i) => (
-              <Reveal key={f.q} delay={i * 70} className="bg-paper">
+              <Reveal key={f.qKey} delay={i * 70} className="bg-paper">
                 <div className="h-full bg-paper p-6">
                   <div className="flex items-start gap-4">
                     <span className="mono-tag pt-1 text-clay">0{i + 1}</span>
                     <div>
                       <h3 className="text-[1.0625rem] font-medium tracking-[-0.02em] text-ink">
-                        {f.q}
+                        {t(f.qKey)}
                       </h3>
                       <p className="mt-2.5 max-w-[52ch] text-[0.875rem] leading-[1.7] text-ink-soft">
-                        {f.a}
+                        {t(f.aKey)}
                       </p>
                     </div>
                   </div>
@@ -338,21 +294,19 @@ export default function HomePage() {
             <Reveal>
               <SectionHead
                 index="02"
-                label="Shop Partners"
+                label={t("home.network.label")}
                 title={
                   <>
-                    Shops already
-                    <br />
-                    <em>with us</em>.
+                    {t("home.network.title")}
                   </>
                 }
-                lede="These are real barbershops in Bataan. We show only the shop name, barangay and partnership status — contact and pickup details stay private."
+                lede={t("home.network.lede")}
               />
               <Link
                 href="/network"
                 className="group mt-7 inline-flex items-center gap-2 text-[0.8125rem] font-medium text-moss"
               >
-                See all shops
+                {t("home.network.seeAll")}
                 <ArrowUpRight
                   size={14}
                   className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
@@ -363,7 +317,7 @@ export default function HomePage() {
             <Reveal delay={100}>
               <div className="card-print overflow-hidden">
                 <div className="hidden grid-cols-[1fr_1fr_96px] gap-4 border-b border-[var(--line)] px-5 py-3 sm:grid">
-                  {["Shop", "Barangay", "Status"].map((h, i) => (
+                  {[t("home.network.header.shop"), t("home.network.header.barangay"), t("home.network.header.status")].map((h, i) => (
                     <span
                       key={h}
                       className={`mono-tag uppercase text-ink-mute ${i === 2 ? "text-right" : ""}`}
@@ -396,15 +350,19 @@ export default function HomePage() {
                                   : "mute"
                           }
                         >
-                          {s.status}
+                          {t(`status.${s.status}`)}
                         </Pill>
                       </span>
                     </li>
                   ))}
                 </ul>
                 <div className="flex items-center justify-between border-t border-[var(--line)] bg-[var(--paper-sunk)] px-5 py-3">
-                  <span className="mono-tag text-ink-mute">SHOWING {preview.length} OF {shops.length}</span>
-                  <span className="mono-tag text-moss">{enrolled.length} ENROLLED</span>
+                  <span className="mono-tag text-ink-mute">
+                    {t("common.showing")} {preview.length} {t("common.of")} {shops.length}
+                  </span>
+                  <span className="mono-tag text-moss">
+                    {enrolled.length} {t("home.network.enrolled")}
+                  </span>
                 </div>
               </div>
             </Reveal>
@@ -417,33 +375,28 @@ export default function HomePage() {
         <div className="shell">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-end lg:gap-16">
             <Reveal>
-              <p className="eyebrow">Ready when you are</p>
+              <p className="eyebrow">{t("home.cta.label")}</p>
               <h2 className="display mt-6 text-[clamp(2.2rem,5.6vw,4.6rem)] text-ink">
-                Give us your hair.
+                {t("home.cta.title1")}
                 <br />
-                We&rsquo;ll give you
-                <br />
-                the <em className="text-moss">receipt</em>.
+                {t("home.cta.title2")} <em className="text-moss">{t("home.cta.title3")}</em>
               </h2>
             </Reveal>
 
             <Reveal delay={120}>
               <p className="max-w-[42ch] text-[0.9375rem] leading-[1.7] text-ink-soft">
-                A collection team member visits your shop, asks a few questions and leaves a labelled sack.
-                It takes almost none of your time. No password, no dashboard, no new habit.
+                {t("home.cta.para")}
               </p>
               <div className="mt-6 flex flex-wrap gap-2.5">
                 <Link href="/partner" className="btn">
-                  Join the shops
+                  {t("cta.joinShops")}
                   <ArrowUpRight size={15} />
                 </Link>
                 <Link href="/network" className="btn btn-ghost">
-                  See the shops
+                  {t("cta.seeShops")}
                 </Link>
               </div>
-              <p className="mono-tag mt-6 text-ink-mute">
-                QUESTIONS? CALL OR MESSAGE US — A REAL PERSON ANSWERS.
-              </p>
+              <p className="mono-tag mt-6 text-ink-mute">{t("home.cta.questions")}</p>
             </Reveal>
           </div>
         </div>

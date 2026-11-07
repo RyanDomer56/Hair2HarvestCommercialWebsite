@@ -1,55 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n";
 
-type Field = {
-  name: string;
-  label: string;
-  type?: "text" | "tel" | "select";
-  placeholder?: string;
-  options?: string[];
-  required?: boolean;
-  hint?: string;
-  span?: 1 | 2;
-};
+const countryCodes = ["+63", "+1", "+44", "+61", "+65", "+852", "+81", "Other"];
 
-/* Keep it short: only what we truly need to arrange the first visit. */
-const fields: Field[] = [
-  {
-    name: "name",
-    label: "Shop name",
-    placeholder: "e.g. Barako Brothers Grooming",
-    required: true,
-    span: 2,
-  },
-  {
-    name: "contact",
-    label: "Contact person",
-    placeholder: "Who should we ask for?",
-    required: true,
-  },
-  {
-    name: "mobile",
-    label: "Mobile number",
-    type: "tel",
-    placeholder: "0917 402 1188",
-    required: true,
-    hint: "Numbers only, up to 11 digits.",
-  },
+const selectFields = [
   {
     name: "barangay",
-    label: "Barangay",
-    type: "select",
-    options: ["Novaliches Proper", "Nearby barangay", "Other"],
+    labelKey: "form.barangay",
+    options: ["form.barangayOpt1", "form.barangayOpt2", "form.barangayOpt3"],
     required: true,
   },
   {
     name: "visit",
-    label: "Best time to visit",
-    type: "select",
-    options: ["Any time is fine", "Morning · 9–11 AM", "Afternoon · 2–4 PM", "After closing · 8–9 PM"],
+    labelKey: "form.visit",
+    options: ["form.visitOpt1", "form.visitOpt2", "form.visitOpt3", "form.visitOpt4"],
+    required: false,
   },
 ];
 
@@ -60,13 +29,24 @@ function sanitizeTel(e: React.ChangeEvent<HTMLInputElement>) {
 }
 
 export function PartnerForm() {
+  const { t } = useLanguage();
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [countryCode, setCountryCode] = useState("+63");
+  const [mobileError, setMobileError] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
+
+    // QA #27 — a mobile number is required; block submit and show a red flag.
+    if (!String(data.mobile ?? "").trim()) {
+      setMobileError(true);
+      form.querySelector<HTMLInputElement>("input[name='mobile']")?.focus();
+      return;
+    }
+    setMobileError(false);
     setState("sending");
     setMessage("");
 
@@ -76,6 +56,7 @@ export function PartnerForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
+          countryCode,
           consent: data.consent === "on",
         }),
       });
@@ -85,9 +66,7 @@ export function PartnerForm() {
       setState("done");
     } catch {
       setState("error");
-      setMessage(
-        "We could not send your request. Please call or message 0917 000 0000 and we will help you join on the visit.",
-      );
+      setMessage(t("form.errorMsg"));
     }
   }
 
@@ -98,67 +77,130 @@ export function PartnerForm() {
           <Check size={18} />
         </span>
         <div>
-          <h3 className="text-[1.125rem] font-medium text-ink">Thank you!</h3>
+          <h3 className="text-[1.125rem] font-medium text-ink">{t("form.thanks")}</h3>
           <p className="mt-2 max-w-[46ch] text-[0.875rem] leading-[1.7] text-ink-soft">
-            We will message you to agree on a visit. A collection team member brings the labelled sack and
-            fills in the short form for you. It takes almost none of your time.
+            {t("form.thanksBody")}
           </p>
         </div>
-        <p className="mono-tag text-ink-mute">
-          NO ACCOUNT NEEDED · WE WILL MESSAGE YOU
-        </p>
+        <p className="mono-tag text-ink-mute">{t("form.thanksNote")}</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} className="card-print p-6 sm:p-8">
-      <p className="text-[0.9375rem] leading-[1.7] text-ink-soft">
-        Fill in these few details and we will get in touch. A collection team member does the rest when we
-        visit.
+    <form onSubmit={onSubmit} className="card-print p-6 sm:p-8" noValidate>
+      <p className="text-[0.9375rem] leading-[1.7] text-ink-soft">{t("form.intro")}</p>
+
+      <p className="mt-4 rounded-[3px] border border-[var(--line)] bg-[var(--paper-sunk)] px-3 py-2 text-[0.75rem] leading-[1.5] text-ink-soft">
+        {t("form.requestOnly")}
       </p>
 
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
-        {fields.map((f) => (
+        {/* Shop name */}
+        <label className="flex flex-col gap-1.5 sm:col-span-2">
+          <span className="mono-tag uppercase text-ink-mute">
+            {t("form.shopName")}
+            <span className="ml-1 text-clay">*</span>
+          </span>
+          <input
+            name="name"
+            type="text"
+            required
+            placeholder={t("form.shopNamePh")}
+            className="h-11 rounded-[3px] border border-[var(--line)] bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors placeholder:text-ink-mute/60 focus:border-moss"
+          />
+        </label>
+
+        {/* Contact person */}
+        <label className="flex flex-col gap-1.5">
+          <span className="mono-tag uppercase text-ink-mute">
+            {t("form.contactPerson")}
+            <span className="ml-1 text-clay">*</span>
+          </span>
+          <input
+            name="contact"
+            type="text"
+            required
+            placeholder={t("form.contactPersonPh")}
+            className="h-11 rounded-[3px] border border-[var(--line)] bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors placeholder:text-ink-mute/60 focus:border-moss"
+          />
+        </label>
+
+        {/* Mobile with country code (QA #27) */}
+        <label className="flex flex-col gap-1.5">
+          <span className="mono-tag uppercase text-ink-mute">
+            {t("form.mobile")}
+            <span className="ml-1 text-clay">*</span>
+          </span>
+          <div className="flex gap-2">
+            <select
+              name="countryCode"
+              aria-label={t("form.countryCode")}
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value)}
+              className="h-11 w-[5.5rem] shrink-0 rounded-[3px] border border-[var(--line)] bg-paper-raised px-2 text-[0.875rem] text-ink outline-none transition-colors focus:border-moss"
+            >
+              {countryCodes.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            <input
+              name="mobile"
+              type="tel"
+              required
+              inputMode="numeric"
+              maxLength={11}
+              placeholder={t("form.mobilePh")}
+              onChange={sanitizeTel}
+              aria-invalid={mobileError}
+              aria-describedby={mobileError ? "mobile-error" : undefined}
+              className={cn(
+                "h-11 flex-1 rounded-[3px] border bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors placeholder:text-ink-mute/60 focus:border-moss",
+                mobileError ? "border-rust" : "border-[var(--line)]",
+              )}
+            />
+          </div>
+          {mobileError ? (
+            <span
+              id="mobile-error"
+              className="flex items-center gap-1 text-[0.6875rem] font-medium text-rust"
+            >
+              <AlertCircle size={12} aria-hidden />
+              {t("form.mobileInvalid")}
+            </span>
+          ) : (
+            <span className="text-[0.6875rem] text-ink-mute">{t("form.mobileHint")}</span>
+          )}
+        </label>
+
+        {/* Select fields (barangay, visit) */}
+        {selectFields.map((f) => (
           <label
             key={f.name}
-            className={cn("flex flex-col gap-1.5", f.span === 2 && "sm:col-span-2")}
+            className={cn("flex flex-col gap-1.5", f.name === "barangay" && "sm:col-span-2")}
           >
             <span className="mono-tag uppercase text-ink-mute">
-              {f.label}
+              {t(f.labelKey)}
               {f.required ? (
                 <span className="ml-1 text-clay">*</span>
               ) : (
-                <span className="ml-1 text-ink-mute">(Optional)</span>
+                <span className="ml-1 text-ink-mute">{t("form.optional")}</span>
               )}
             </span>
-            {f.type === "select" ? (
-              <select
-                name={f.name}
-                required={f.required}
-                defaultValue={f.options?.[0]}
-                className="h-11 rounded-[3px] border border-[var(--line)] bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors focus:border-moss"
-              >
-                {f.options?.map((o) => (
-                  <option key={o} value={o}>
-                    {o}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                name={f.name}
-                type={f.type ?? "text"}
-                required={f.required}
-                placeholder={f.placeholder}
-                inputMode={f.type === "tel" ? "numeric" : undefined}
-                maxLength={f.type === "tel" ? 11 : undefined}
-                pattern={f.type === "tel" ? "[0-9]{0,11}" : undefined}
-                onChange={f.type === "tel" ? sanitizeTel : undefined}
-                className="h-11 rounded-[3px] border border-[var(--line)] bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors placeholder:text-ink-mute/60 focus:border-moss"
-              />
-            )}
-            {f.hint && <span className="text-[0.6875rem] text-ink-mute">{f.hint}</span>}
+            <select
+              name={f.name}
+              required={f.required}
+              defaultValue={f.options?.[0]}
+              className="h-11 rounded-[3px] border border-[var(--line)] bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors focus:border-moss"
+            >
+              {f.options.map((o) => (
+                <option key={o} value={t(o)}>
+                  {t(o)}
+                </option>
+              ))}
+            </select>
           </label>
         ))}
       </div>
@@ -171,12 +213,13 @@ export function PartnerForm() {
             required
             className="mt-0.5 size-4 accent-[var(--moss)]"
           />
-          <span className="text-[0.8125rem] leading-[1.6] text-ink-soft">
-            I agree that Hair2Harvest can collect hair clippings from my shop. A collection team member will
-            explain the programme during the visit.
-          </span>
+          <span className="text-[0.8125rem] leading-[1.6] text-ink-soft">{t("form.consent")}</span>
         </label>
       </div>
+
+      <p className="mt-5 rounded-[3px] border border-[var(--line)] bg-[var(--paper-sunk)] px-3 py-2.5 text-[0.75rem] leading-[1.6] text-ink-soft">
+        {t("form.privacy")}
+      </p>
 
       {state === "error" && (
         <p className="mt-5 rounded-[3px] border border-rust/30 bg-rust/8 p-3 text-[0.8125rem] leading-relaxed text-rust">
@@ -185,17 +228,15 @@ export function PartnerForm() {
       )}
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="mono-tag max-w-[32ch] leading-relaxed text-ink-mute">
-          FREE TO JOIN · NO PASSWORD · NO APP
-        </p>
+        <p className="mono-tag max-w-[32ch] leading-relaxed text-ink-mute">{t("form.requestNote")}</p>
         <button type="submit" disabled={state === "sending"} className="btn btn-sm sm:w-auto">
           {state === "sending" ? (
             <>
               <Loader2 size={14} className="animate-spin" />
-              Sending
+              {t("form.sending")}
             </>
           ) : (
-            "Ask for a visit"
+            t("form.submit")
           )}
         </button>
       </div>

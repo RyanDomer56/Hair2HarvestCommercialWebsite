@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n";
 
 export function BrandMark({
   size = 40,
@@ -30,6 +31,7 @@ export function Wordmark({
   className?: string;
   tone?: "ink" | "paper";
 }) {
+  const { t } = useLanguage();
   return (
     <div className={cn("flex items-center gap-2.5", className)} aria-label="Hair2Harvest">
       <BrandMark size={34} priority />
@@ -48,7 +50,7 @@ export function Wordmark({
             tone === "ink" ? "text-ink-mute" : "text-paper/50",
           )}
         >
-          soil from barbers
+          {t("footer.soilFromBarbers")}
         </span>
       </span>
     </div>

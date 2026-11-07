@@ -5,43 +5,51 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, ChevronDown, Home, Menu, X } from "lucide-react";
 import { Wordmark } from "./brand";
+import { LanguageToggle } from "./language-toggle";
+import { useLanguage } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-const links = [
+type NavItem = {
+  href: string;
+  labelKey: string;
+  menu: { href: string; labelKey: string }[];
+};
+
+const links: NavItem[] = [
   {
     href: "/about",
-    label: "About",
+    labelKey: "nav.about",
     menu: [
-      { href: "/about", label: "Our story" },
-      { href: "/about#team", label: "Our team" },
-      { href: "/about#values", label: "What we believe" },
+      { href: "/about", labelKey: "nav.about.story" },
+      { href: "/about#team", labelKey: "nav.about.team" },
+      { href: "/about#values", labelKey: "nav.about.values" },
     ],
   },
   {
     href: "/system",
-    label: "How it works",
+    labelKey: "nav.how",
     menu: [
-      { href: "/system", label: "The five steps" },
-      { href: "/system#grading", label: "Checking the hair" },
-      { href: "/system#machine", label: "The machine" },
+      { href: "/system", labelKey: "nav.how.steps" },
+      { href: "/system#grading", labelKey: "nav.how.grading" },
+      { href: "/system#machine", labelKey: "nav.how.machine" },
     ],
   },
   {
     href: "/network",
-    label: "Shop Partners",
+    labelKey: "nav.network",
     menu: [
-      { href: "/network", label: "Directory" },
-      { href: "/network#rules", label: "Pickups & privacy" },
-      { href: "/partner", label: "Join a shop" },
+      { href: "/network", labelKey: "nav.network.directory" },
+      { href: "/network#rules", labelKey: "nav.network.rules" },
+      { href: "/partner", labelKey: "nav.network.join" },
     ],
   },
   {
     href: "/impact",
-    label: "Our impact",
+    labelKey: "nav.impact",
     menu: [
-      { href: "/impact#collection", label: "Collection" },
-      { href: "/impact#lab", label: "Laboratory" },
-      { href: "/impact#trials", label: "Planting trials" },
+      { href: "/impact#collection", labelKey: "nav.impact.collection" },
+      { href: "/impact#lab", labelKey: "nav.impact.lab" },
+      { href: "/impact#trials", labelKey: "nav.impact.trials" },
     ],
   },
 ];
@@ -52,6 +60,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const onHome = pathname === "/";
+  const { t } = useLanguage();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -99,7 +108,7 @@ export function SiteHeader() {
               )}
             >
               <Home size={13} strokeWidth={2} aria-hidden />
-              Introduction
+              {t("nav.introduction")}
             </Link>
             {links.map((l) => {
               const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
@@ -122,7 +131,7 @@ export function SiteHeader() {
                       active ? "text-ink" : "text-ink-soft hover:text-ink",
                     )}
                   >
-                    {l.label}
+                    {t(l.labelKey)}
                     {l.menu && (
                       <ChevronDown
                         size={13}
@@ -144,7 +153,7 @@ export function SiteHeader() {
                             href={m.href}
                             className="group flex items-center justify-between gap-2 rounded-[4px] px-3 py-2 text-[0.8125rem] text-ink-soft transition-colors hover:bg-[var(--paper-sunk)] hover:text-ink"
                           >
-                            {m.label}
+                            {t(m.labelKey)}
                             <ArrowUpRight
                               size={13}
                               className="text-ink-mute opacity-0 transition-opacity group-hover:opacity-100"
@@ -161,8 +170,9 @@ export function SiteHeader() {
           </nav>
 
           <div className="hidden items-center gap-2 md:flex">
+            <LanguageToggle />
             <Link href="/partner" className="btn btn-sm">
-              Partner a shop
+              {t("cta.partner")}
               <ArrowUpRight size={14} strokeWidth={2} />
             </Link>
           </div>
@@ -170,7 +180,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? t("aria.closeMenu") : t("aria.openMenu")}
             aria-expanded={open}
             className="flex size-10 items-center justify-center rounded-full border border-[var(--line)] text-ink md:hidden"
           >
@@ -188,8 +198,8 @@ export function SiteHeader() {
               className="mb-2 flex items-center gap-2.5 rounded-full border border-moss bg-moss px-4 py-3 text-paper"
             >
               <Home size={16} aria-hidden />
-              <span className="display text-[1.5rem]">Introduction</span>
-              <span className="mono-tag ml-auto text-paper/60">HOME</span>
+              <span className="display text-[1.5rem]">{t("nav.introduction")}</span>
+              <span className="mono-tag ml-auto text-paper/60">{t("common.home")}</span>
             </Link>
             {links.map((l, i) => (
               <div key={l.href} className="border-b border-[var(--line)]">
@@ -197,7 +207,7 @@ export function SiteHeader() {
                   href={l.href}
                   className="flex items-baseline justify-between py-5"
                 >
-                  <span className="display text-[2rem] text-ink">{l.label}</span>
+                  <span className="display text-[2rem] text-ink">{t(l.labelKey)}</span>
                   <span className="mono-tag text-ink-mute">0{i + 1}</span>
                 </Link>
                 {l.menu && (
@@ -209,7 +219,7 @@ export function SiteHeader() {
                         className="flex items-center gap-2 rounded-[6px] bg-[var(--paper-sunk)] px-3 py-2 text-[0.875rem] text-ink-soft"
                       >
                         <ArrowUpRight size={13} className="text-ink-mute" aria-hidden />
-                        {m.label}
+                        {t(m.labelKey)}
                       </Link>
                     ))}
                   </div>
@@ -219,11 +229,12 @@ export function SiteHeader() {
           </nav>
           <div className="shell mt-8 flex flex-col gap-3">
             <Link href="/partner" className="btn w-full">
-              Partner a shop
+              {t("cta.partner")}
             </Link>
+            <LanguageToggle className="self-start" />
           </div>
           <div className="shell mt-auto pb-8">
-            <p className="eyebrow">Barangay Novaliches Proper · Philippines</p>
+            <p className="eyebrow">{t("footer.barangayShort")}</p>
           </div>
         </div>
       )}

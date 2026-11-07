@@ -6,7 +6,8 @@
  * this app, so a suggestion is always a working link.
  *
  * Keywords include plain English and common Tagalog/Taglish words because the
- * shop owners who use the site mix both.
+ * shop owners who use the site mix both. The titles and blurbs are shown in the
+ * chatbot help panel and are written in Tagalog (the site default language).
  */
 
 export type HelpPlace = {
@@ -21,9 +22,9 @@ export type HelpPlace = {
 export const HELP_PLACES: HelpPlace[] = [
   {
     id: "intro",
-    title: "Introduction",
+    title: "Panimula",
     href: "/",
-    blurb: "What Hair2Harvest is, the four quick answers, and what happens when you join.",
+    blurb: "Kung ano ang Hair2Harvest, ang apat na mabilis na sagot, at kung ano ang mangyayari kapag sumali ka.",
     group: "Learn",
     keywords: [
       "introduction", "intro", "home", "homepage", "start", "what is", "about the service",
@@ -32,9 +33,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "faq",
-    title: "Four quick answers",
+    title: "Apat na mabilis na sagot",
     href: "/",
-    blurb: "What is it, what do I do, what happens to the hair, what do I get.",
+    blurb: "Ano ito, ano ang gagawin ko, ano ang mangyayari sa buhok, ano ang makukuha ko.",
     group: "Learn",
     keywords: [
       "faq", "questions", "what do i get", "benefit", "what do i need to do",
@@ -43,9 +44,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "join-story",
-    title: "What happens when you join",
+    title: "Ano ang mangyayari kapag sumali",
     href: "/",
-    blurb: "The five easy steps from our first visit to compost for your barangay.",
+    blurb: "Ang limang madaling hakbang mula sa unang bisita hanggang sa kompost para sa inyong barangay.",
     group: "Join",
     keywords: [
       "what happens when i join", "what happens when you join", "steps", "process of joining",
@@ -54,9 +55,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "system",
-    title: "How it works",
+    title: "Paano ito gumagana",
     href: "/system",
-    blurb: "The five steps, explained in plain words, plus notes for researchers.",
+    blurb: "Ang limang hakbang, ipinaliwanag sa simpleng salita, pati na rin ang mga nota para sa mga researcher.",
     group: "Learn",
     keywords: [
       "how it works", "how does it work", "system", "the system", "process", "collection process",
@@ -65,9 +66,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "grading",
-    title: "Checking the hair",
+    title: "Pagsusuri sa buhok",
     href: "/system#grading",
-    blurb: "Clean, a little mixed, or not usable — and why no shop gets in trouble.",
+    blurb: "Malinis, bahagyang halo, o hindi magamit — at kung bakit walang tindahang mapapahamak.",
     group: "Learn",
     keywords: [
       "grading", "grade", "clean", "minor", "mixed", "contamination", "quality", "sort",
@@ -76,9 +77,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "batch",
-    title: "Every batch & your privacy",
+    title: "Bawat batch at ang inyong privasiya",
     href: "/system#batch",
-    blurb: "Why we write batches down, and which shop details stay private.",
+    blurb: "Kung bakit isinusulat namin ang mga batch, at kung aling detalye ng tindahan ang nananatiling pribado.",
     group: "Learn",
     keywords: [
       "batch", "curing", "composting", "privacy", "private", "data", "chain of custody",
@@ -87,9 +88,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "machine",
-    title: "The drum / 3D machine",
+    title: "Ang tambol / 3D na makina",
     href: "/system",
-    blurb: "The only machine we use. Drag to turn it, tap a part to see its name.",
+    blurb: "Ang tanging makinang ginagamit namin. Ihila para paikutin, pindutin ang bahagi para makita ang pangalan.",
     group: "Learn",
     keywords: [
       "machine", "drum", "rotary", "3d", "model", "prototype", "mch-01", "motor", "equipment",
@@ -98,9 +99,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "network",
-    title: "Shop Partners",
+    title: "Mga Tindahang Partner",
     href: "/network",
-    blurb: "The public list of shops — name, barangay and status only.",
+    blurb: "Ang pampublikong listahan ng mga tindahan — pangalan, barangay, at katayuan lang.",
     group: "Learn",
     keywords: [
       "shop network", "shop partners", "shop list", "directory", "shops", "barbershops", "list of shops",
@@ -110,9 +111,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "pickups",
-    title: "Pickups & what stays private",
+    title: "Pagkolekta at kung ano ang pribado",
     href: "/network#rules",
-    blurb: "How we agree pickup days, and the details we never publish.",
+    blurb: "Paano namin ina-agree ang araw ng pagkolekta, at ang mga detalyeng hindi namin inilalathala.",
     group: "Learn",
     keywords: [
       "pickup", "schedule", "collection", "days", "time", "window", "frequency", "access notes",
@@ -122,21 +123,21 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "partner",
-    title: "Join / register a shop",
+    title: "Sumali / rehistro ng tindahan",
     href: "/partner",
-    blurb: "The short form and the four easy steps to joining.",
+    blurb: "Ang maikling form at ang apat na madaling hakbang sa pagpasok.",
     group: "Join",
     keywords: [
-      "register", "registration", "join", "sign up", "enroll", "enrol", "partner", "form",
+      "register", "registration", "join", "sign up", "enrol", "enroll", "partner", "form",
       "apply", "get started", "request a visit", "magparehistro", "sumali", "rehistro",
       "pormularyo", "form", "magpatala", "paano sumali",
     ],
   },
   {
     id: "contact",
-    title: "Contact us",
+    title: "Makipag-ugnayan",
     href: "/partner#contact",
-    blurb: "Phone number, email and where we are — a real person answers.",
+    blurb: "Numero ng telepono, email, at kung nasaan kami — may totoong taong sasagot.",
     group: "Join",
     keywords: [
       "contact", "phone", "mobile", "email", "call", "message", "talk to a person", "support",
@@ -146,9 +147,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "about",
-    title: "About us",
+    title: "Tungkol sa amin",
     href: "/about",
-    blurb: "Who we are, our story and what we believe.",
+    blurb: "Kung sino kami, ang aming kwento, at ang aming paniniwala.",
     group: "Learn",
     keywords: [
       "about", "about us", "who we are", "story", "team", "students", "group", "capstone",
@@ -157,9 +158,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "team",
-    title: "Our team",
+    title: "Ang aming koponan",
     href: "/about#team",
-    blurb: "The 13 members and what each one looks after.",
+    blurb: "Ang 13 miyembro at kung ano ang ginagawa ng bawat isa.",
     group: "Learn",
     keywords: [
       "team", "members", "names", "developers", "documentation", "quality assurance",
@@ -168,9 +169,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "impact",
-    title: "Our impact",
+    title: "Mga Resulta ng Pagkolekta",
     href: "/impact",
-    blurb: "Weighed pickups, laboratory results and planting trials.",
+    blurb: "Tinimbang na pagkolekta, resulta ng laboratoryo, at mga planting trial.",
     group: "Learn",
     keywords: [
       "evidence", "impact", "our impact", "results", "data", "lab", "laboratory", "n-p-k", "planting",
@@ -179,9 +180,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "staff-shops",
-    title: "Staff: shop registry",
+    title: "Staff: rehistro ng tindahan",
     href: "/dashboard/shops",
-    blurb: "Full shop details, contact info and access notes — staff only.",
+    blurb: "Buong detalye ng tindahan, contact info, at access notes — para lang sa staff.",
     group: "For staff",
     keywords: [
       "staff", "admin", "dashboard", "shop registry", "full details", "internal", "records",
@@ -190,9 +191,9 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "staff-pickups",
-    title: "Staff: pickups",
+    title: "Staff: pagkolekta",
     href: "/dashboard/pickups",
-    blurb: "Pickup log, sack counts and the collector route.",
+    blurb: "Log ng pagkolekta, bilang ng sako, at route ng collector.",
     group: "For staff",
     keywords: [
       "pickup log", "collector route", "route", "sacks", "weighed", "staff pickups",
@@ -201,25 +202,25 @@ export const HELP_PLACES: HelpPlace[] = [
   },
   {
     id: "staff-batches",
-    title: "Staff: batches",
+    title: "Staff: mga batch",
     href: "/dashboard/batches",
-    blurb: "Batch stages, recipes and curing progress.",
+    blurb: "Yugto ng batch, recipe, at progreso ng pagpapatagal.",
     group: "For staff",
     keywords: ["batch stage", "batch list", "curing progress", "staff batches", "lista ng batch"],
   },
   {
     id: "staff-lab",
-    title: "Staff: laboratory",
+    title: "Staff: laboratoryo",
     href: "/dashboard/lab",
-    blurb: "Lab reports and approval decisions.",
+    blurb: "Mga ulat ng lab at desisyon sa approval.",
     group: "For staff",
     keywords: ["lab report", "approval", "verdict", "staff lab", "ulat ng laboratoryo"],
   },
   {
     id: "staff-machine",
-    title: "Staff: machine",
+    title: "Staff: makina",
     href: "/dashboard/machine",
-    blurb: "Machine status and session logs.",
+    blurb: "Katayuan ng makina at session logs.",
     group: "For staff",
     keywords: ["machine status", "session log", "telemetry", "staff machine", "katayuan ng makina"],
   },

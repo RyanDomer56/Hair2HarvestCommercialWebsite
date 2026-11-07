@@ -5,6 +5,11 @@
  * docs/02-design-system.md or docs/03-data-model.md. Nothing here is
  * generated or guessed — the assistant is a retrieval UI over the
  * specification, not a generative model. Each answer carries its source.
+ *
+ * `question` stays in English (it is the canonical lookup key and the text the
+ * suggestion chips actually send), while `promptTL` is the Tagalog label shown
+ * to visitors on the Tagalog-default site. `answer` is translated to Tagalog so
+ * the local fallback — and the grounding sent to any AI — is also Tagalog.
  */
 
 export type ChatSource = "System design" | "Data model" | "Design system";
@@ -14,6 +19,7 @@ export type KnowledgeEntry = {
   topic: string;
   question: string;
   aliases: string[];
+  promptTL?: string;
   answer: string;
   source: string;
   doc: ChatSource;
@@ -29,18 +35,18 @@ export const CONTACT = {
 };
 
 export const FALLBACK_ANSWER =
-  "I don't have a checked answer for that, and I don't want to guess — especially about pickup times or joining. Please call or message us and a real person will help: " +
-  `${CONTACT.phone} (${CONTACT.hours}), or ${CONTACT.email}. You can also tap one of the questions below.`;
+  "Wala akong na-check na sagot diyan, at ayaw kong hulaan — lalo na ang oras ng pagkolekta o kung paano sumali. Pakitawag o mag-text sa amin at may totoong taong sasagot: " +
+  `${CONTACT.phone} (${CONTACT.hours}), o ${CONTACT.email}. Pwede rin kayong pumindot sa mga tanong sa ibaba.`;
 
 /** When we cannot verify an answer but we do know where the topic lives. */
 export const POINTER_ANSWER =
-  "I don't have a checked answer for that, but I can show you where to find it on this site — use the link below. If you still need help, a real person can answer: " +
-  `${CONTACT.phone} (${CONTACT.hours}), or ${CONTACT.email}.`;
+  "Wala akong na-check na sagot diyan, pero pwede kong ipakita kung saan ito mahanap sa site na ito — gamitin ang link sa ibaba. Kung kailangan ninyo pa rin ng tulong, may totoong taong sasagot: " +
+  `${CONTACT.phone} (${CONTACT.hours}), o ${CONTACT.email}.`;
 
 /** Asked when someone requests private, per-shop operational details. */
 export const PRIVATE_INFO_ANSWER =
-  "I can't share that here. Pickup times, contact names, mobile numbers and access notes are private — only the Hair2Harvest collection team can see them. For your own shop's details, please call or message us: " +
-  `${CONTACT.phone} (${CONTACT.hours}), or ${CONTACT.email}.`;
+  "Hindi ko pwedeng ibigay iyan dito. Ang oras ng pagkolekta, pangalan ng contact, numero ng mobile, at nota kung saan nakalagay ang sako ay pribado — tanging ang Hair2Harvest collection team lang ang nakakakita nito. Para sa detalye ng inyong sariling tindahan, pakitawag o mag-text sa amin: " +
+  `${CONTACT.phone} (${CONTACT.hours}), o ${CONTACT.email}.`;
 
 /**
  * True only for requests for a SPECIFIC private detail (an exact time, a named
@@ -60,8 +66,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Overview",
     question: "What is Hair2Harvest?",
     aliases: ["what is hair2harvest", "what does hair2harvest do", "about the project", "overview", "purpose", "idea", "concept", "explain the project", "elevator", "hair2harvest", "ano ito", "ano ang hair2harvest", "tungkol saan", "ano ang ginagawa"],
+    promptTL: "Ano ang Hair2Harvest?",
     answer:
-      "Hair2Harvest is a free collection service for barbershops in our partner barangay. We pick up the hair clippings you set aside, mix them with dry leaves and other plant material, and turn them into compost for planting beds nearby. We come to your shop — there is no app, no login and no extra work for you.",
+      "Ang Hair2Harvest ay isang libreng serbisyo ng pagkolekta para sa mga barbero sa aming partner na barangay. Kinokolekta namin ang mga gupit na buhok na inyong itabi, hinalo sa tuyong dahon at iba pang halaman, at ginagawang kompost para sa mga taniman malapit dito. Kami ang pupunta sa inyong tindahan — walang app, walang login, at walang dagdag na trabaho para sa inyo.",
     source: "§1 What the system is",
     doc: "System design",
     related: ["no-accounts", "modules", "partner"],
@@ -71,8 +78,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Shops",
     question: "Do shops need an account or login?",
     aliases: ["login", "log in", "have to log", "need a login", "account", "password", "sign up", "signup", "supplier", "barbershop", "shop account", "user", "auth", "register themselves"],
+    promptTL: "Kailangan ba ng account o login ang tindahan?",
     answer:
-      "No. A barbershop never signs up and never needs a password. A collection team member visits, fills in a short form and leaves a labelled sack. You just keep cutting hair.",
+      "Hindi. Ang isang barbero ay hindi kailanman nagre-register at hindi kailanman kailangan ng password. Ang miyembro ng collection team ang bibisita, pipuno ng maikling form, at iiwan ang may tatak na sako. Tuloy lang kayong paggupit.",
     source: "§1 · core decision",
     doc: "System design",
     related: ["register", "shop-code", "roles"],
@@ -82,8 +90,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Shops",
     question: "How is a shop registered?",
     aliases: ["register", "registration", "enrol", "enroll", "onboard", "join", "form", "sign up", "magparehistro", "sumali", "paano sumali", "rehistro", "pormularyo", "magpatala", "paano magparehistro"],
+    promptTL: "Paano nagpaparehistro ang tindahan?",
     answer:
-      "A collection team member visits your shop, asks a few simple questions and fills in the form for you. It takes almost none of your time. We leave a labelled sack and agree the pickup days with you then. There is no account to create and nothing for you to fill in online. To ask for a visit, use the 'Join the shops' form on this website or call us.",
+      "Ang miyembro ng collection team ang bibisita sa inyong tindahan, magtatanong ng ilang simpleng bagay, at pipuno ng form para sa inyo. Halos wala itong ginugugol na oras ninyo. Iiwan namin ang may tatak na sako at aagree ang araw ng pagkolekta kasama ninyo. Walang account na gagawin at walang kailangang punan ninyo online. Para humiling ng bisita, gamitin ang form na 'Sumali sa mga tindahan' sa website na ito o tawagan kami.",
     source: "§1.2 · Module 2",
     doc: "System design",
     related: ["shop-code", "pickup-rules", "status-shop"],
@@ -93,8 +102,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Shops",
     question: "What is a shop code?",
     aliases: ["code", "hb-", "sack", "identifier", "id", "label"],
+    promptTL: "Ano ang shop code?",
     answer:
-      "The code written on a shop's hair sack — HB-001, HB-002, … It is the shop's identity across the registry, pickup log, batch lots and reports. There is no account behind it.",
+      "Ang code na nakasulat sa sako ng buhok ng tindahan — HB-001, HB-002, … Ito ang pagkakakilanlan ng tindahan sa buong rehistro, log ng pagkolekta, batch lots, at mga ulat. Walang account na nasa likod nito.",
     source: "§1.2 · Shops model",
     doc: "System design",
     related: ["register", "weighing", "status-shop"],
@@ -104,8 +114,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Collection",
     question: "How are pickup schedules decided?",
     aliases: ["schedule", "frequency", "days", "twice weekly", "pickup rule", "window", "peak", "timing", "when", "kailan kukunin", "oras ng kolekta", "iskedyul ng kuha", "kailan ang pickup"],
+    promptTL: "Paano napagdedesisyunan ang oras ng pagkolekta?",
     answer:
-      "We agree the pickup days and time with each shop during our visit, so it fits the shop's own hours. We always come to you — you never need to travel. These details are private: only the Hair2Harvest collection team can see them. For the exact time for a particular shop, please call or message us.",
+      "Ina-agree namin ang araw at oras ng pagkolekta sa bawat tindahan sa aming pagbisita, para bagay sa sariling oras ng tindahan. Kami ay laging pupunta sa inyo — hindi ninyo kailangang magpunta kahit saan. Ang mga detalyeng ito ay pribado: tanging ang Hair2Harvest collection team lang ang nakakakita. Para sa eksaktong oras ng isang partikular na tindahan, pakitawag o mag-text sa amin.",
     source: "§1.2 · §2 · Module 3",
     doc: "System design",
     related: ["collector", "map", "notifications"],
@@ -115,8 +126,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Collection",
     question: "Do shops drop the hair off?",
     aliases: ["drop off", "dropoff", "collect", "collector", "travel", "come to", "deliver", "who picks"],
+    promptTL: "Baon ba ng tindahan ang buhok?",
     answer:
-      "No drop-off flow. The collector goes to the shop — shops with shift work will not travel to a barangay office. The phone-first route list works offline for mall back rooms with no signal.",
+      "Walang drop-off. Ang collector ang pupunta sa tindahan — ang mga tindahang may shift work ay hindi magbibiyahe papunta sa hall ng barangay. Ang phone-first na route list ay gumagana offline para sa mga back room ng mall na walang signal.",
     source: "§1.2 · §2",
     doc: "System design",
     related: ["pickup-rules", "offline", "notifications"],
@@ -126,8 +138,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Collection",
     question: "How is hair weighed?",
     aliases: ["weigh", "weight", "kilograms", "kg", "net", "gross", "sacks", "measure", "sack"],
+    promptTL: "Paano tinimbang ang buhok?",
     answer:
-      "Each pickup records the number of sacks, gross kilograms and a standard sack tare. Net kg is derived in a pre-validate hook as gross − tare, so a client cannot post a net weight that disagrees. Net kg can never be negative.",
+      "Ang bawat pagkolekta ay itinatala ang bilang ng sako, gross na kilograms, at isang standard na sack tare. Ang net kg ay kuwenta sa isang pre-validate hook bilang gross − tare, kaya hindi pwedeng mag-post ang client ng net weight na hindi tugma. Ang net kg ay hindi pwedeng maging negatibo.",
     source: "§5 · Pickups model",
     doc: "Data model",
     related: ["tare", "grades", "shop-code"],
@@ -137,8 +150,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Collection",
     question: "What sack tare do you use?",
     aliases: ["tare", "0.18", "assumption", "sack weight", "configured"],
+    promptTL: "Anong sack tare ang ginagamit ninyo?",
     answer:
-      "We subtract a small standard weight for the empty sack (0.18 kg) from the total, so the number we record is the hair alone. This keeps our weights fair and consistent.",
+      "Binabawasan namin ng maliit na standard na bigat para sa walang laman na sako (0.18 kg) ang kabuuan, kaya ang itinatalang numero ay ang buhok lang. Ipinanatili nito na ang aming timbang ay patas at pare-pareho.",
     source: "§6 open items · Pickups model",
     doc: "System design",
     related: ["weighing", "grades"],
@@ -148,8 +162,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Quality",
     question: "What are the contamination grades?",
     aliases: ["grade", "clean", "minor", "mixed", "contamination", "quality", "grading", "sort"],
+    promptTL: "Ano ang mga grado ng contamination?",
     answer:
-      "Three grades recorded at the door: Clean, Minor and Mixed. Mixed triggers a coaching note, never a rejection. Only Clean and Minor stock can enter a batch.",
+      "Tatlong grado na itinala sa pintuan: Clean, Minor, at Mixed. Ang Mixed ay nagdudulot ng coaching note, hindi pagtanggi. Tanging Clean at Minor na stock lang ang pwedeng mapasok sa isang batch.",
     source: "§1.2 · §3.2",
     doc: "System design",
     related: ["treated", "mixed", "batch-stock"],
@@ -159,8 +174,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Quality",
     question: "Are mixed sacks rejected?",
     aliases: ["reject", "rejection", "mixed", "coaching", "contaminated", "waste", "plastic"],
+    promptTL: "Ba't tinatanggihan ang halo na sako?",
     answer:
-      "No. Mixed grade triggers a coaching note, not a rejection. The container is the intervention: hair arrives mixed with tissue and sachets only when no container exists for it, so the programme brings one.",
+      "Hindi. Ang Mixed grade ay nagdudulot ng coaching note, hindi pagtanggi. Ang lalagyan ang interbensyon: ang buhok ay dumadating na halo ang tisyu at sachet lang kapag walang lalagyan para dito, kaya ang programa ang nagdadala nito.",
     source: "§1.2",
     doc: "System design",
     related: ["grades", "treated", "register"],
@@ -170,8 +186,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Quality",
     question: "What happens to treated hair?",
     aliases: ["treated", "chemical", "coloured", "colored", "rebonded", "hold", "unsure", "separate"],
+    promptTL: "Ano ang nangyayari sa treated na buhok?",
     answer:
-      "If hair has been chemically treated, or we are not sure, we keep it aside. It does not go into compost until we are certain it is safe. We still collect it from the shop — nothing is refused. A collection team member can explain more during the visit.",
+      "Kung ang buhok ay chemically treated, o hindi kami sigurado, inilalayo muna namin ito. Hindi ito mapapasok sa kompost hangga't hindi kami sigurado na ligtas ito. Kinokolekta pa rin namin ito sa tindahan — walang tinatanggihan. Maaaring ipaliwanag ng miyembro ng collection team ang higit pa sa pagbisita.",
     source: "§1.2 · §3.2 · §6",
     doc: "System design",
     related: ["batch-stock", "grades", "mixed"],
@@ -181,8 +198,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Status",
     question: "What are the shop statuses?",
     aliases: ["status", "candidate", "enrolled", "paused", "withdrawn", "lifecycle", "state", "katayuan", "ano ang enrolled", "ibig sabihin ng enrolled", "kahulugan ng status"],
+    promptTL: "Ano ang mga katayuan ng tindahan?",
     answer:
-      "Enrolled means an active partner — we pick up hair regularly. Candidate means the shop is interested or has been visited, but pickups have not started yet. Paused means the shop is taking a break but is still part of the network. Withdrawn means the shop no longer takes part. Only Enrolled shops are being collected from.",
+      "Ang Enrolled ay aktibong partner — regular kaming kumokolekta ng buhok. Ang Candidate ay ang tindahan ay interesado o nabisita na, pero hindi pa nagsisimula ang pagkolekta. Ang Paused ay ang tindahan ay nagpapahinga sandali pero parte pa rin ng network. Ang Withdrawn ay ang tindahan ay hindi na lalahok. Tanging ang mga Enrolled na tindahan ang kinokolektahan.",
     source: "§3.2 · Shops route",
     doc: "System design",
     related: ["register", "status-pickup", "status-batch"],
@@ -192,8 +210,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Status",
     question: "What are the pickup statuses?",
     aliases: ["pickup status", "scheduled", "collected", "weighed", "skipped", "rescheduled", "stock lot"],
+    promptTL: "Ano ang mga katayuan ng pagkolekta?",
     answer:
-      "Scheduled → Collected → Weighed → In Stock. A pickup can also be Skipped (shop closed or sack not full — explicitly not a shop failure) or Rescheduled, which requires a reason.",
+      "Scheduled → Collected → Weighed → In Stock. Ang isang pickup ay pwedeng Skipped (sarado ang tindahan o hindi puno ang sako — hindi ito pagkabigong ng tindahan) o Rescheduled, na nangangailangan ng dahilan.",
     source: "§3.2",
     doc: "System design",
     related: ["status-batch", "weighing", "status-shop"],
@@ -203,8 +222,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Status",
     question: "What are the batch stages?",
     aliases: ["batch status", "stage", "preparing", "composting", "curing", "sampling", "pending", "on hold", "approved"],
+    promptTL: "Ano ang mga yugto ng batch?",
     answer:
-      "Preparing → Composting → Curing → Sampling → Pending, then On Hold, Rejected, or Approved for Supervised Testing. Approval is blocked server-side until lab results are reviewed.",
+      "Preparing → Composting → Curing → Sampling → Pending, pagkatapos ay On Hold, Rejected, o Approved for Supervised Testing. Ang approval ay naka-block sa server side hangga't hindi pa na-re-review ang lab results.",
     source: "§3.2 · §5",
     doc: "System design",
     related: ["approval", "curing", "lab"],
@@ -214,8 +234,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Batching",
     question: "Which hair can enter a batch?",
     aliases: ["batch", "eligible", "stock", "lots", "409", "insufficient", "available", "input"],
+    promptTL: "Anong buhok ang pwedeng mapasok sa batch?",
     answer:
-      "Only Clean or Minor, untreated, Weighed stock. POST /batches sums eligible net kg and returns 409 with availableKg when the requested input exceeds it. A batch can never exceed available stock.",
+      "Tanging Clean o Minor, untreated, at Weighed na stock lang. Ang POST /batches ay nagti-tally ng eligible net kg at nagbabalik ng 409 kasama ang availableKg kapag ang hiniling na input ay lalampas dito. Ang isang batch ay hindi pwedeng lampasin ang available na stock.",
     source: "§5 · Batches route",
     doc: "Data model",
     related: ["status-batch", "recipe", "approval"],
@@ -225,8 +246,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Batching",
     question: "What is the compost recipe?",
     aliases: ["recipe", "v3", "ratio", "hair 45", "carbon", "greens", "mix", "formula", "ingredients"],
+    promptTL: "Ano ang recipe ng kompost?",
     answer:
-      "Recipes are versioned against each batch. The active BATCH-2603 uses v3.3 — hair 45 / carbon 30 / greens 25. Earlier batches used v3.2 (40 / 35 / 25) and v3.1 (35 / 40 / 25).",
+      "Ang mga recipe ay may version bawat batch. Ang aktibong BATCH-2603 ay gumagamit ng v3.3 — hair 45 / carbon 30 / greens 25. Ang mga naunang batch ay gumamit ng v3.2 (40 / 35 / 25) at v3.1 (35 / 40 / 25).",
     source: "Batches model · pilot data",
     doc: "Data model",
     related: ["curing", "batch-stock", "machine"],
@@ -236,8 +258,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Batching",
     question: "How long does composting take?",
     aliases: ["how long", "how long does", "how many days", "curing stage", "45 days", "forty", "curing", "days", "duration", "maturity", "reheat"],
+    promptTL: "Gaano katagal ang pagkobposto?",
     answer:
-      "35–45 days to cured compost, and the stage cannot be skipped. A pile that reheats is not mature. BATCH-2512 is the verified example: 22.0 kg in, 12.9 kg out after 45 days — a 41.4% mass reduction.",
+      "35–45 araw hanggang maging cured na kompost, at hindi pwedeng laktawin ang yugto. Ang bunton na umiinit muli ay hindi pa matured. Ang BATCH-2512 ang verified na halimbawa: 22.0 kg pasok, 12.9 kg labas pagkatapos ng 45 araw — isang 41.4% na pagbawas ng masa.",
     source: "§3.2 · pilot data",
     doc: "System design",
     related: ["recipe", "lab", "evidence"],
@@ -247,8 +270,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Machine",
     question: "What does the MCH-01 machine do?",
     aliases: ["machine", "mch-01", "motor", "drum", "rpm", "composting drum", "3d", "telemetry", "probe", "belt"],
+    promptTL: "Ano ang ginagawa ng makinang MCH-01?",
     answer:
-      "A finned motor and gearbox drive a belt around the drum shaft at 8 rpm. Helical paddles turn the mix inside a cutaway barrel; hair enters through a hopper, cured compost leaves the chute, and a core probe logs temperature and moisture. It is the machine described by Modules 5 and 6.",
+      "Ang finned motor at gearbox ay nagpapaikot ng belt sa shaft ng drum sa 8 rpm. Ang helical paddles ay naghahalo ng mix sa loob ng cutaway barrel; pumapasok ang buhok sa hopper, lumalabas ang cured na kompost sa chute, at isang core probe ang naglo-log ng temperatura at halumigmig. Ito ang makinang inilalarawan ng Modules 5 at 6.",
     source: "§3 Modules 5–6 · 3D diagram",
     doc: "System design",
     related: ["safety", "recipe", "3d"],
@@ -258,8 +282,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Machine",
     question: "Can the web panel control the machine?",
     aliases: ["control", "e-stop", "estop", "safety", "hardware", "start", "stop", "interlock", "remote", "shutoff"],
+    promptTL: "Kaya bang kontrolin ng web panel ang makina?",
     answer:
-      "Only authorised start/stop on an approved cycle. Emergency stop, lid interlock and motor shutoff stay in local hardware — the web never replaces the safety circuit. That boundary is drawn in rust on the control cabinet.",
+      "Tanging awtorisadong start/stop sa isang aprubadong cycle. Ang emergency stop, lid interlock, at motor shutoff ay nananatili sa local na hardware — ang web ay hindi pumapalit sa safety circuit. Ang boundary na ito ay nakadrowing sa rust sa control cabinet.",
     source: "§1.1 · Module 6",
     doc: "System design",
     related: ["machine", "modules", "audit"],
@@ -269,8 +294,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Our impact",
     question: "What does the laboratory test?",
     aliases: ["lab", "laboratory", "test", "n-p-k", "npk", "ph", "moisture", "pathogens", "maturity", "sample"],
+    promptTL: "Ano ang sine-scheck ng laboratoryo?",
     answer:
-      "N-P-K, pH, moisture, maturity and pathogens, with the report attached. Re-tests append a new version — lab results are never overwritten. BATCH-2512 passed at N 1.42, P 0.86, K 1.19, pH 7.1, mature, pathogens absent.",
+      "N-P-K, pH, moisture, maturity, at pathogens, kasama ang ulat na nakalakip. Ang mga re-test ay nagdaragdag ng bagong version — ang mga lab result ay hindi kailanman na-o-overwrite. Ang BATCH-2512 ay pumasa sa N 1.42, P 0.86, K 1.19, pH 7.1, mature, walang pathogens.",
     source: "§3 Module 7 · LabResults model",
     doc: "System design",
     related: ["approval", "evidence", "status-batch"],
@@ -280,8 +306,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Our impact",
     question: "When can a batch be approved?",
     aliases: ["who can approve", "who approves", "approve a batch", "approve", "approval", "sign off", "gate", "blocked", "review", "supervised"],
+    promptTL: "Kailan pwedeng aprubahan ang batch?",
     answer:
-      "Not until lab results are reviewed. The approval gate is enforced server-side, not in the UI: PATCH /batches/:code/stage returns 409 when stage is Approved and no passing, reviewed lab result exists.",
+      "Hindi hangga't hindi pa na-re-review ang lab results. Ang approval gate ay ipinapatupad sa server side, hindi sa UI: ang PATCH /batches/:code/stage ay nagbabalik ng 409 kapag ang stage ay Approved at walang passing, na-review na lab result.",
     source: "§1.1 · §5 · Batches route",
     doc: "System design",
     related: ["lab", "status-batch", "evidence"],
@@ -291,8 +318,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Our impact",
     question: "What evidence exists so far?",
     aliases: ["evidence", "impact", "results", "data", "kg collected", "planting", "trial", "n = 1", "preliminary"],
+    promptTL: "Anong ebidensya ang mayroon hanggang ngayon?",
     answer:
-      "A verified lab report for BATCH-2512, a batch mass-balance register, a collection trend, and planting trials. The trials are n = 1 per treatment and are marked preliminary — the interface says so rather than rounding the evidence up.",
+      "Isang verified na lab report para sa BATCH-2512, isang batch mass-balance register, isang collection trend, at mga planting trial. Ang mga trial ay n = 1 bawat treatment at minarkahan bilang preliminary — sinasabi iyon ng interface sa halip na bilugan pataas ang ebidensya.",
     source: "§8 Copy · §6 open items",
     doc: "Design system",
     related: ["lab", "open", "curing"],
@@ -302,8 +330,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Access",
     question: "What are the four roles?",
     aliases: ["role", "admin", "staff", "operator", "researcher", "permission", "rbac", "access", "who can"],
+    promptTL: "Ano ang apat na roles?",
     answer:
-      "Admin, Staff, Operator and Researcher. Admin approves quality rules and sees the full audit trail; Staff register shops and record pickups; Operator runs batches and the machine; Researcher enters lab results and manages planting experiments. The Supplier role was deleted.",
+      "Admin, Staff, Operator, at Researcher. Ang Admin ay nag-aapruba ng quality rules at nakakakita ng buong audit trail; ang Staff ay nagre-rehistro ng mga tindahan at nagre-record ng pagkolekta; ang Operator ay nagpapatakbo ng mga batch at ng makina; ang Researcher ay naglalagay ng lab results at namamahala ng planting experiments. Ang Supplier role ay tinanggal.",
     source: "§4 Roles and permissions",
     doc: "System design",
     related: ["no-accounts", "modules", "audit"],
@@ -313,8 +342,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Architecture",
     question: "How many modules are there?",
     aliases: ["module", "13", "thirteen", "list", "components", "functions", "features"],
+    promptTL: "Ilang modules ang mayroon?",
     answer:
-      "Thirteen: Auth & Access, Shop Registration, Collection & Inventory, Shop Map (optional), Batch & Composting, Machine Monitoring, Lab Results, Quality & Approval, Planting Experiments, Reports & Export, Notifications, Audit Trail and Dashboard.",
+      "Labintatlo: Auth & Access, Shop Registration, Collection & Inventory, Shop Map (optional), Batch & Composting, Machine Monitoring, Lab Results, Quality & Approval, Planting Experiments, Reports & Export, Notifications, Audit Trail, at Dashboard.",
     source: "§3 Modules",
     doc: "System design",
     related: ["roles", "stack", "what-is"],
@@ -324,8 +354,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Architecture",
     question: "How does offline collection work?",
     aliases: ["offline", "indexeddb", "signal", "sync", "idempotent", "clientid", "retry", "reconnect", "phone"],
+    promptTL: "Paano gumagana ang offline na pagkolekta?",
     answer:
-      "The pickup form writes to IndexedDB first and queues a mutation with a client-generated clientId. POST /pickups is idempotent on that key, so a retry after reconnection returns 200 with the original document instead of double-counting sacks or kilograms.",
+      "Ang pickup form ay nagsusulat muna sa IndexedDB at nag-queue ng mutation na may client-generated na clientId. Ang POST /pickups ay idempotent sa key na iyon, kaya ang retry pagkatapos ng reconnection ay nagbabalik ng 200 kasama ang original na document sa halip na dobleng bilang ng mga sako o kilograms.",
     source: "§2 · Pickups route",
     doc: "System design",
     related: ["collector", "audit", "stack"],
@@ -335,8 +366,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Architecture",
     question: "What is the audit trail?",
     aliases: ["audit", "audit log", "logs", "immutable", "history", "before", "after", "traceability", "correction"],
+    promptTL: "Ano ang audit trail?",
     answer:
-      "Every status transition writes an immutable AuditLog entry with actor, action, entity, before, after, remark and IP. Entries are never updated or deleted — a correction is a new entry that references the previous one.",
+      "Ang bawat status transition ay nagsusulat ng immutable na AuditLog entry na may actor, action, entity, before, after, remark, at IP. Ang mga entry ay hindi kailanman ina-update o dinidelete — ang isang correction ay isang bagong entry na tinutukoy ang nauna.",
     source: "§5 · AuditLogs model",
     doc: "Data model",
     related: ["roles", "offline", "api"],
@@ -346,8 +378,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Architecture",
     question: "Is there GPS tracking or routing?",
     aliases: ["map", "gps", "gis", "routing", "route", "pins", "tracking", "location"],
+    promptTL: "May GPS tracking o routing ba?",
     answer:
-      "No GIS, no routing, no live GPS. The shop list is the primary view; an optional static map is just a projection of the same records. The collector uses an ordered route list sorted by time window then barangay.",
+      "Walang GIS, walang routing, walang live GPS. Ang listahan ng tindahan ang pangunahing view; ang isang optional na static map ay simpleng projection lamang ng parehong records. Ang collector ay gumagamit ng ordered route list na naka-sort ayon sa time window pagkatapos ay barangay.",
     source: "§1.1 · Module 4",
     doc: "System design",
     related: ["pickup-rules", "collector", "offline"],
@@ -357,8 +390,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Communication",
     question: "How are shops contacted?",
     aliases: ["notification", "sms", "messenger", "message", "paalala", "text message", "reminder"],
+    promptTL: "Paano nakakontak ang mga tindahan?",
     answer:
-      "We send short messages about pickups — for example a reminder, a missed pickup, or a confirmation that a pickup was recorded. A collection team member sends them. Your number is never shown on this website.",
+      "Nagpapadala kami ng mga maikling mensahe tungkol sa pagkolekta — halimbawa isang paalala, isang namiss na pickup, o isang kumpirmasyong na-record na ang pickup. Isang miyembro ng collection team ang nagpapadala nito. Ang inyong numero ay hindi ipinapakita sa website na ito.",
     source: "§4 · Module 11",
     doc: "System design",
     related: ["no-accounts", "pickup-rules", "status-pickup"],
@@ -368,8 +402,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Technical",
     question: "What is the tech stack?",
     aliases: ["stack", "technology", "mern", "next", "express", "mongodb", "react", "node", "typescript", "build", "framework"],
+    promptTL: "Ano ang tech stack?",
     answer:
-      "MongoDB (Mongoose 9) · Express 5 · React 19 on Next.js 16 App Router · Node.js · TypeScript · Tailwind v4 · three.js for the procedural machine. The web app and the API are separate npm workspaces.",
+      "MongoDB (Mongoose 9) · Express 5 · React 19 sa Next.js 16 App Router · Node.js · TypeScript · Tailwind v4 · three.js para sa procedural na makina. Ang web app at ang API ay magkahiwalay na npm workspaces.",
     source: "Architecture · README",
     doc: "System design",
     related: ["api", "offline", "design"],
@@ -379,8 +414,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Technical",
     question: "What does the API expose?",
     aliases: ["api", "endpoint", "rest", "route", "health", "overview", "json", "backend", "server", "database"],
+    promptTL: "Ano ang inilalabas ng API?",
     answer:
-      "Express 5 under /api/v1: shops, pickups (plus /route), batches, lab, overview and health. Six collections back it. On the deployed site the read routes proxy to Express when API_URL is set, otherwise they serve typed fixtures — /api/v1/health reports which source is live.",
+      "Ang Express 5 sa ilalim ng /api/v1: shops, pickups (kasama ang /route), batches, lab, overview, at health. Anim na collections ang nasa likod nito. Sa deployed na site, ang read routes ay nag-proxy sa Express kapag naka-set ang API_URL, kung hindi ay nagse-serve ng typed fixtures — ang /api/v1/health ay nagre-report kung aling source ang live.",
     source: "§2 · §2 Endpoints",
     doc: "Data model",
     related: ["stack", "offline", "audit"],
@@ -390,8 +426,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Design",
     question: "What is the design system?",
     aliases: ["design", "font", "poppins", "montserrat", "colour", "color", "palette", "cream", "lime", "type", "brand"],
+    promptTL: "Ano ang design system?",
     answer:
-      "'Soil Ledger'. Two registers — editorial for the commercial site (cream #F6F2E6, olive ink #242A12, hairline rules, almost-square corners) and instrument for the workspace (pale lime sidebar, white cards, 14px radii). Exactly two typefaces: Montserrat for display, Poppins for everything else. One accent, #D9F26B, under 4% of any screen.",
+      "'Soil Ledger'. Dalawang register — ang editorial para sa commercial site (cream #F6F2E6, olive ink #242A12, hairline rules, halos-square na sulok) at ang instrument para sa workspace (pale lime na sidebar, white na cards, 14px na radii). Eksaktong dalawang typeface: Montserrat para sa display, Poppins para sa lahat ng iba. Isang accent lang, #D9F26B, sa ilalim ng 4% ng anumang screen.",
     source: "§1–§3",
     doc: "Design system",
     related: ["3d", "stack", "what-is"],
@@ -401,8 +438,9 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Design",
     question: "What is the 3D diagram?",
     aliases: ["3d", "three", "diagram", "model", "scene", "cutaway", "assembly", "camera", "webgl", "animation"],
+    promptTL: "Ano ang 3D diagram?",
     answer:
-      "MCH-01, a procedural three.js cutaway of the rotary composter: motor, belt, drum with paddles, intake hopper, discharge chute, probe and control cabinet. Six clickable assemblies, four modes, five cameras. It inherits the site font, freezes under prefers-reduced-motion and shows a labelled fallback without WebGL.",
+      "Ang MCH-01, isang procedural na three.js cutaway ng rotary composter: motor, belt, drum na may paddles, intake hopper, discharge chute, probe, at control cabinet. Anim na clickable na assembly, apat na mode, limang camera. Ito ay humahawak sa font ng site, humahinto sa ilalim ng prefers-reduced-motion, at nagpapakita ng labelled na fallback nang walang WebGL.",
     source: "§9 The 3D machine diagram",
     doc: "Design system",
     related: ["machine", "design", "safety"],
@@ -414,21 +452,25 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     topic: "Shops",
     question: "How can a shop join?",
     aliases: ["partner", "join", "sign up", "apply", "interested", "shop owner", "get started", "saan magpaparehistro", "saan sumali", "paano makilahok", "gusto sumali"],
+    promptTL: "Paano makilahok ang isang tindahan?",
     answer:
-      "Use the 'Join the shops' form on this website, or call or message us. A collection team member will visit your shop, explain the programme, fill in a short form and leave a labelled sack. It is free, it takes almost none of your time, and there is no account to create.",
+      "Gamitin ang form na 'Sumali sa mga tindahan' sa website na ito, o tawagan o mag-text kami. Ang miyembro ng collection team ang bibisita sa inyong tindahan, ipapaliwanag ang programa, pipuno ng maikling form, at iiwan ang may tatak na sako. Libre ito, halos wala itong ginugugol na oras ninyo, at walang account na gagawin.",
     source: "§1 · Web intake route",
     doc: "Data model",
     related: ["register", "no-accounts", "pickup-rules"],
   },
 ];
 
-export const STARTER_QUESTIONS = [
-  "What is Hair2Harvest?",
-  "How can a shop join?",
-  "Do shops need an account or login?",
-  "How is a shop registered?",
-  "How are pickup schedules decided?",
-  "What does the laboratory test?",
+/* The starter prompts shown to a first-time visitor. These are entry IDs so the
+   chip can display the Tagalog `promptTL` while sending the English canonical
+   `question` (which resolves exactly). */
+export const STARTER_QUESTIONS: string[] = [
+  "what-is",
+  "partner",
+  "no-accounts",
+  "register",
+  "pickup-rules",
+  "lab",
 ];
 
 export const TOPICS = Array.from(new Set(KNOWLEDGE.map((k) => k.topic)));
@@ -486,7 +528,7 @@ export function getRelated(entry: KnowledgeEntry, count = 3): KnowledgeEntry[] {
   if (picked.length >= count) return picked.slice(0, count);
   return [
     ...picked,
-    ...STARTER_QUESTIONS.map((q) => KNOWLEDGE.find((k) => k.question === q)!).filter(
+    ...STARTER_QUESTIONS.map((id) => KNOWLEDGE.find((k) => k.id === id)!).filter(
       (k) => k && k.id !== entry.id && !picked.includes(k),
     ),
   ].slice(0, count);
