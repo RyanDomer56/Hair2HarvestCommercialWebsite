@@ -178,73 +178,17 @@ export const HELP_PLACES: HelpPlace[] = [
       "trials", "kilograms", "measured", "ebidensya", "resulta", "sinukat", "datos",
     ],
   },
-  {
-    id: "staff-shops",
-    title: "Staff: rehistro ng tindahan",
-    href: "/dashboard/shops",
-    blurb: "Buong detalye ng tindahan, contact info, at access notes — para lang sa staff.",
-    group: "For staff",
-    keywords: [
-      "staff", "admin", "dashboard", "shop registry", "full details", "internal", "records",
-      "export csv", "staff directory", "empleyado", "rehistro ng tindahan",
-    ],
-  },
-  {
-    id: "staff-pickups",
-    title: "Staff: pagkolekta",
-    href: "/dashboard/pickups",
-    blurb: "Log ng pagkolekta, bilang ng sako, at route ng collector.",
-    group: "For staff",
-    keywords: [
-      "pickup log", "collector route", "route", "sacks", "weighed", "staff pickups",
-      "ruta", "log ng kolekta",
-    ],
-  },
-  {
-    id: "staff-batches",
-    title: "Staff: mga batch",
-    href: "/dashboard/batches",
-    blurb: "Yugto ng batch, recipe, at progreso ng pagpapatagal.",
-    group: "For staff",
-    keywords: ["batch stage", "batch list", "curing progress", "staff batches", "lista ng batch"],
-  },
-  {
-    id: "staff-lab",
-    title: "Staff: laboratoryo",
-    href: "/dashboard/lab",
-    blurb: "Mga ulat ng lab at desisyon sa approval.",
-    group: "For staff",
-    keywords: ["lab report", "approval", "verdict", "staff lab", "ulat ng laboratoryo"],
-  },
-  {
-    id: "staff-machine",
-    title: "Staff: makina",
-    href: "/dashboard/machine",
-    blurb: "Katayuan ng makina at session logs.",
-    group: "For staff",
-    keywords: ["machine status", "session log", "telemetry", "staff machine", "katayuan ng makina"],
-  },
 ];
 
 const norm = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9\s-]/g, " ").replace(/\s+/g, " ").trim();
-
-/** Staff-only pages should never be the first thing shown to a public visitor. */
-const STAFF_WORDS = [
-  "staff", "admin", "dashboard", "internal", "workspace", "operator", "registry view",
-  "empleyado", "loob ng sistema",
-];
 
 /** Rank the places that best match a free-text question. */
 export function findInSystem(input: string, limit = 3): HelpPlace[] {
   const text = norm(input);
   if (!text) return [];
   const tokens = new Set(text.split(" ").filter((t) => t.length > 1));
-  const asksForStaff = STAFF_WORDS.some((w) => text.includes(norm(w)));
-
-  const scored = HELP_PLACES.filter(
-    (place) => asksForStaff || place.group !== "For staff",
-  ).map((place) => {
+  const scored = HELP_PLACES.map((place) => {
     let score = 0;
     for (const kw of place.keywords) {
       const k = norm(kw);
@@ -269,4 +213,4 @@ export function findInSystem(input: string, limit = 3): HelpPlace[] {
   return scored.map((x) => x.place);
 }
 
-export const HELP_GROUPS: Array<HelpPlace["group"]> = ["Learn", "Join", "For staff"];
+export const HELP_GROUPS: Array<HelpPlace["group"]> = ["Learn", "Join"];
