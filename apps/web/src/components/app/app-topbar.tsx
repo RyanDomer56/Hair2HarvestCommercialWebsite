@@ -1,11 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Bell, ChevronDown, Moon, Search, Sun, Upload, Menu, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function AppTopbar({ onMenu }: { onMenu?: () => void }) {
+  const router = useRouter();
   const [dark, setDark] = useState(false);
+
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+    router.replace("/login");
+  }
 
   useEffect(() => {
     const root = document.documentElement;
@@ -70,8 +77,10 @@ export function AppTopbar({ onMenu }: { onMenu?: () => void }) {
 
           <button
             type="button"
+            onClick={logout}
             className="ml-0.5 flex items-center gap-2 rounded-full p-0.5 pr-1 transition-colors hover:bg-[#f5f7ea] sm:pr-2"
-            aria-label="Account menu"
+            aria-label="Sign out"
+            title="Sign out"
           >
             <span className="flex size-8 items-center justify-center rounded-full bg-[#eef4d6] text-[0.6875rem] font-semibold text-[#4b5226]">
               RC
