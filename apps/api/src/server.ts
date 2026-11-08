@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { connect, isConnected } from "./lib/db.js";
 import { shopsRouter } from "./routes/shops.js";
+import { suppliersRouter } from "./routes/suppliers.js";
 import { pickupsRouter } from "./routes/pickups.js";
 import { batchesRouter, labRouter } from "./routes/batches.js";
 import { overviewRouter } from "./routes/overview.js";
@@ -23,6 +24,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/v1/shops", shopsRouter);
+app.use("/api/v1/suppliers", suppliersRouter);
 app.use("/api/v1/pickups", pickupsRouter);
 app.use("/api/v1/batches", batchesRouter);
 app.use("/api/v1/lab", labRouter);

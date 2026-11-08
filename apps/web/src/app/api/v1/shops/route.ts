@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { readResource } from "@/lib/read-resource";
 import { shops } from "@/lib/data";
+import { connectMongo } from "@/lib/mongo";
+import { createSupplierFromRegistration } from "@/lib/supplier-model";
+
+// Mongoose needs the Node.js runtime, not the Edge runtime.
+export const runtime = "nodejs";
 
 const API_URL = process.env.API_URL;
 
@@ -13,9 +18,9 @@ export async function GET() {
  * Partner registration intake.
  *
  * The public site is a static marketing surface; the operations API lives
- * separately. When API_URL is configured the request is forwarded there and
- * the shop is created as a Candidate. Without it, the request is accepted and
- * logged so the form never fails silently for a shop owner.
+ * separately. When API_URL is configured the request is forwarded to
+ * /api/v1/suppliers where a Supplier is created (status: pending). Without it,
+ * the request is accepted and logged so the form never fails silently.
  */
 export async function POST(request: Request) {
   let payload: Record<string, unknown>;
@@ -43,9 +48,16 @@ export async function POST(request: Request) {
     );
   }
 
+  if (!payload.consent) {
+    return NextResponse.json(
+      { error: "Consent is required to register" },
+      { status: 422 },
+    );
+  }
+
   if (API_URL) {
     try {
-      const upstream = await fetch(`${API_URL.replace(/\/$/, "")}/api/v1/shops`, {
+      const upstream = await fetch(`${API_URL.replace(/\/$/, "")}/api/v1/suppliers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -61,7 +73,27 @@ export async function POST(request: Request) {
     }
   }
 
-  const reference = `REQ-${Date.now().toString(36).toUpperCase().slice(-6)}`;
-  console.info("[partner] registration queued", { reference, name: payload.name });
-  return NextResponse.json({ data: { reference, status: "queued" } }, { status: 202 });
+  // No upstream API configured — persist directly to MongoDB so the form never
+  // fails silently. Partner self-registrations land as pending Suppliers.
+  try {
+    await connectMongo();
+    const supplier = await createSupplierFromRegistration({
+      name: String(payload.name),
+      contact: String(payload.contact),
+      mobile,
+      countryCode: payload.countryCode ? String(payload.countryCode) : "+63",
+      barangay: String(payload.barangay),
+      visit: payload.visit ? String(payload.visit) : undefined,
+      consent: true,
+    });
+    return NextResponse.json(
+      { data: { reference: supplier.code, status: "received" } },
+      { status: 201 },
+    );
+  } catch {
+    return NextResponse.json(
+      { error: "Registration service unavailable. Call 0917 000 0000." },
+      { status: 503 },
+    );
+  }
 }

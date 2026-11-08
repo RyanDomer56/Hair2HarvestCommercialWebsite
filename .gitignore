@@ -28,3 +28,7 @@ coverage/
 # vercel
 .vercel
 .env.local
+
+# local deploy copy (generated, never committed) + sandbox test helpers
+.workbuddy-ai/deploy/
+/scripts/
