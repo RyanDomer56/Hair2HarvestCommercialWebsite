@@ -12,27 +12,37 @@ const registerSchema = z.object({
   mobile: z.string().regex(/^\d{7,15}$/, "Mobile must be 7–15 digits"),
   countryCode: z.string().min(1).default("+63"),
   barangay: z.string().min(2, "Barangay is required"),
-  visit: z.string().optional(),
+  street: z.string().optional(),
+  unit: z.string().optional(),
+  frequency: z.enum(["Weekly", "Twice a Week", "Nightly"]).optional(),
+  startTime: z.string().optional(),
+  endTime: z.string().optional(),
   consent: z.boolean(),
 });
 
 /**
- * Best-effort mapping of the "best time to visit" preference onto an
- * operating-hours window. The select sends a localized label, so we match on
- * stable substrings rather than exact text.
+ * Map the partner's pickup rules onto the stored operating-hours window and a
+ * normalized pickup frequency.
  */
-function operatingHoursFromVisit(visit?: string): { days: string; open: string; close: string } {
-  const v = (visit ?? "").toLowerCase();
-  if (v.includes("9") && v.includes("11") && (v.includes("morning") || v.includes("umaga"))) {
-    return { days: "Mon-Sat", open: "09:00", close: "11:00" };
+function operatingHoursFromPickup(
+  frequency?: string,
+  start?: string,
+  end?: string,
+): { days: string; open: string; close: string; pickupFrequency: string } {
+  const f = (frequency ?? "").trim();
+  let pickupFrequency = "weekly";
+  let days = "";
+  if (/nightly/i.test(f)) {
+    pickupFrequency = "nightly";
+    days = "Mon-Sat (night)";
+  } else if (/twice/i.test(f)) {
+    pickupFrequency = "twice-weekly";
+    days = "Mon-Sat (2x)";
+  } else if (/weekly/i.test(f)) {
+    pickupFrequency = "weekly";
+    days = "Mon-Sat";
   }
-  if (v.includes("2") && v.includes("4") && (v.includes("afternoon") || v.includes("hapon"))) {
-    return { days: "Mon-Sat", open: "14:00", close: "16:00" };
-  }
-  if (v.includes("8") && v.includes("9") && (v.includes("closing") || v.includes("magsara"))) {
-    return { days: "Mon-Sat", open: "20:00", close: "21:00" };
-  }
-  return { days: "Mon-Sat", open: "", close: "" };
+  return { days, open: (start ?? "").trim(), close: (end ?? "").trim(), pickupFrequency };
 }
 
 async function nextCodes() {
@@ -69,6 +79,11 @@ suppliersRouter.post("/", async (req, res) => {
   const { code, shopCode } = await nextCodes();
   const phone = `${b.countryCode}${b.mobile}`.replace(/\s+/g, "");
   const now = new Date();
+  const { days, open, close, pickupFrequency } = operatingHoursFromPickup(
+    b.frequency,
+    b.startTime,
+    b.endTime,
+  );
 
   const supplier = await Supplier.create({
     code,
@@ -78,9 +93,9 @@ suppliersRouter.post("/", async (req, res) => {
     phone,
     email: "",
     barangay: b.barangay,
-    street: "",
-    operatingHours: operatingHoursFromVisit(b.visit),
-    pickupFrequency: "weekly",
+    street: b.street ?? "",
+    operatingHours: { days, open, close },
+    pickupFrequency,
     weeklyVolumeKg: 0,
     status: "pending",
     registrationSource: "web",
@@ -91,7 +106,7 @@ suppliersRouter.post("/", async (req, res) => {
       version: "v1.0-2025-01",
       document: "",
     },
-    unit: null,
+    unit: b.unit ?? null,
   });
 
   await record({

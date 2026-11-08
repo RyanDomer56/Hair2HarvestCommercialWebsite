@@ -57,27 +57,39 @@ export interface RegistrationInput {
   mobile: string;
   countryCode?: string;
   barangay: string;
-  visit?: string;
+  street?: string;
+  unit?: string;
+  frequency?: string;
+  startTime?: string;
+  endTime?: string;
   consent: boolean;
 }
 
-/** Best-effort mapping of the localized "best time to visit" label. */
-function operatingHoursFromVisit(visit?: string): {
-  days: string;
-  open: string;
-  close: string;
-} {
-  const v = (visit ?? "").toLowerCase();
-  if (v.includes("9") && v.includes("11") && (v.includes("morning") || v.includes("umaga"))) {
-    return { days: "Mon-Sat", open: "09:00", close: "11:00" };
+/**
+ * Map the partner's pickup rules onto the stored `operatingHours` window and a
+ * normalized `pickupFrequency`. The form sends a readable frequency label
+ * ("Weekly" / "Twice a Week" / "Nightly"); we normalize it to a stable key and
+ * derive a friendly `days` summary.
+ */
+function operatingHoursFromPickup(
+  frequency?: string,
+  start?: string,
+  end?: string,
+): { days: string; open: string; close: string; pickupFrequency: string } {
+  const f = (frequency ?? "").trim();
+  let pickupFrequency = "weekly";
+  let days = "";
+  if (/nightly/i.test(f)) {
+    pickupFrequency = "nightly";
+    days = "Mon-Sat (night)";
+  } else if (/twice/i.test(f)) {
+    pickupFrequency = "twice-weekly";
+    days = "Mon-Sat (2x)";
+  } else if (/weekly/i.test(f)) {
+    pickupFrequency = "weekly";
+    days = "Mon-Sat";
   }
-  if (v.includes("2") && v.includes("4") && (v.includes("afternoon") || v.includes("hapon"))) {
-    return { days: "Mon-Sat", open: "14:00", close: "16:00" };
-  }
-  if (v.includes("8") && v.includes("9") && (v.includes("closing") || v.includes("magsara"))) {
-    return { days: "Mon-Sat", open: "20:00", close: "21:00" };
-  }
-  return { days: "Mon-Sat", open: "", close: "" };
+  return { days, open: (start ?? "").trim(), close: (end ?? "").trim(), pickupFrequency };
 }
 
 /** Create a Supplier from a partner-registration payload (status: pending). */
@@ -87,6 +99,11 @@ export async function createSupplierFromRegistration(b: RegistrationInput) {
   const pad = String(n).padStart(2, "0");
   const phone = `${b.countryCode ?? "+63"}${b.mobile}`.replace(/\s+/g, "");
   const now = new Date();
+  const { days, open, close, pickupFrequency } = operatingHoursFromPickup(
+    b.frequency,
+    b.startTime,
+    b.endTime,
+  );
 
   return Supplier.create({
     code: `S-${pad}`,
@@ -96,9 +113,9 @@ export async function createSupplierFromRegistration(b: RegistrationInput) {
     phone,
     email: "",
     barangay: b.barangay,
-    street: "",
-    operatingHours: operatingHoursFromVisit(b.visit),
-    pickupFrequency: "weekly",
+    street: b.street ?? "",
+    operatingHours: { days, open, close },
+    pickupFrequency,
     weeklyVolumeKg: 0,
     status: "pending",
     registrationSource: "web",
@@ -109,6 +126,6 @@ export async function createSupplierFromRegistration(b: RegistrationInput) {
       version: "v1.0-2025-01",
       document: "",
     },
-    unit: null,
+    unit: b.unit ? b.unit : null,
   });
 }

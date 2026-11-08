@@ -83,7 +83,11 @@ export async function POST(request: Request) {
       mobile,
       countryCode: payload.countryCode ? String(payload.countryCode) : "+63",
       barangay: String(payload.barangay),
-      visit: payload.visit ? String(payload.visit) : undefined,
+      street: payload.street ? String(payload.street) : undefined,
+      unit: payload.unit ? String(payload.unit) : undefined,
+      frequency: payload.frequency ? String(payload.frequency) : undefined,
+      startTime: payload.startTime ? String(payload.startTime) : undefined,
+      endTime: payload.endTime ? String(payload.endTime) : undefined,
       consent: true,
     });
     return NextResponse.json(
