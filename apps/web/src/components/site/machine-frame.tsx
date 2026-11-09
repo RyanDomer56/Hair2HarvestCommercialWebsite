@@ -101,7 +101,7 @@ export function MachineFrame({ children }: { children: React.ReactNode }) {
         <span className="mono-tag text-paper/35">
           E-STOP · LID INTERLOCK · MOTOR SHUTOFF ARE LOCAL HARDWARE
         </span>
-        <span className="mono-tag text-lime/80">BALANGA · PHILIPPINES</span>
+        <span className="mono-tag text-lime/80">NOVA PROPER · PHILIPPINES</span>
       </div>
     </div>
   );

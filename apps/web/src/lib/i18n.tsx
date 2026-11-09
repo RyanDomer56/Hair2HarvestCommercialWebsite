@@ -5,13 +5,20 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 /* ------------------------------------------------------------------ *
  * Hair2Harvest i18n
  *
- * Tagalog (tl) is the DEFAULT language. English (en) is the toggle.
- * The dictionary maps a stable key to { en, tl } so the same source
- * code renders either language. Any key missing from the dictionary
- * falls back to its English text (the key itself) so the UI never breaks.
+ * Three languages, selectable from the header toggle:
+ *   - tg  Taglish  (DEFAULT) — Tagalog mixed with English, the way most
+ *                             Filipinos speak day to day.
+ *   - en  English
+ *   - tl  Tagalog  (pure Filipino register)
+ *
+ * The dictionary maps a stable key to { en, tl }. Taglish (tg) renders
+ * the curated TaglishOverride map where one exists, and otherwise falls
+ * back to the Tagalog (tl) text — which already reads as natural Filipino.
+ * Any key missing everywhere falls back to its English text (the key
+ * itself) so the UI never breaks.
  * ------------------------------------------------------------------ */
 
-export type Lang = "tl" | "en";
+export type Lang = "tg" | "en" | "tl";
 
 export type TranslationEntry = { en: string; tl: string };
 
@@ -117,12 +124,12 @@ export const dict: Record<string, TranslationEntry> = {
   "home.stat.passwordsNote": { en: "No account needed", tl: "Walang account na kailangan" },
 
   "home.section.how.label": { en: "How it works", tl: "Paano ito gumagana" },
-  "home.section.how.title1": { en: "The drum that turns", tl: "Ang tambol na nagpapaging" },
+  "home.section.how.title1": { en: "The drum that turns", tl: "Ang bariles na nagpapaging" },
   "home.section.how.title2": { en: "hair into", tl: "ng buhok sa" },
   "home.section.how.title3": { en: "soil.", tl: "lupa." },
   "home.section.how.lede": {
     en: "One machine, five simple steps. We bring a sack to your shop, collect the hair, and let it rest into compost. Drag the drum to look around — then tap through for the full process.",
-    tl: "Isang makina, limang simpleng hakbang. Nagdadala kami ng sako sa inyong tindahan, kinokolekta ang buhok, at pinatatagal ito hanggang maging kompost. Ihila ang tambol para tumingin — tapos pindutin para sa buong proseso.",
+    tl: "Isang makina, limang simpleng hakbang. Nagdadala kami ng sako sa inyong tindahan, kinokolekta ang buhok, at pinatatagal ito hanggang maging kompost. Ihila ang bariles para tumingin — tapos pindutin para sa buong proseso.",
   },
 
   "home.drumSteps.collect.title": { en: "We collect", tl: "Kumokolekta kami" },
@@ -371,7 +378,7 @@ export const dict: Record<string, TranslationEntry> = {
   "sys.batch.aboutSixWeeks": { en: "About six weeks", tl: "Mga anim na linggo" },
 
   "sys.machine.label": { en: "The machine", tl: "Ang makina" },
-  "sys.machine.title1": { en: "The drum that", tl: "Ang tambol na" },
+  "sys.machine.title1": { en: "The drum that", tl: "Ang bariles na" },
   "sys.machine.title2": { en: "turns the", tl: "nagpapaging" },
   "sys.machine.title3": { en: "mix.", tl: "halo." },
   "sys.machine.lede": {
@@ -850,6 +857,130 @@ export const dict: Record<string, TranslationEntry> = {
   "grade.Mixed": { en: "Mixed", tl: "Halo" },
 };
 
+/* ------------------------------------------------------------------ *
+ * Taglish override
+ *
+ * Taglish (tg) is the DEFAULT language. These are the most visible
+ * strings rendered as natural Tagalog-English mix — the way Filipinos
+ * actually talk. Any key not listed here falls back to its Tagalog (tl)
+ * text, so the whole site still reads as Filipino by default.
+ * ------------------------------------------------------------------ */
+const TaglishOverride: Record<string, string> = {
+  /* nav */
+  "nav.introduction": "Intro",
+  "nav.about": "About",
+  "nav.about.story": "Our story",
+  "nav.about.team": "Our team",
+  "nav.about.values": "What we believe",
+  "nav.how": "Paano 'to works",
+  "nav.how.steps": "The 5 steps",
+  "nav.how.grading": "Checking the hair",
+  "nav.how.machine": "The machine",
+  "nav.network": "Shop Partners",
+  "nav.network.directory": "Directory",
+  "nav.network.rules": "Pickup & privacy",
+  "nav.network.join": "Be a partner",
+  "nav.impact": "Our impact",
+  "nav.impact.collection": "Collection",
+  "nav.impact.lab": "Laboratory",
+  "nav.impact.trials": "Planting trials",
+
+  /* calls to action */
+  "cta.partner": "Be a partner shop",
+  "cta.joinShops": "Join the shops",
+  "cta.seeShops": "See the shops",
+  "cta.seeAllShops": "See all shops",
+
+  /* hero */
+  "home.hero.capstone1": "Isang capstone project with Barangay Novaliches Proper.",
+  "home.hero.capstone2": "We turn salon at barbershop hair waste into compost for local planting beds.",
+  "home.hero.free1": "FREE TO JOIN · NO APP · NO LOGIN",
+  "home.hero.free2": "KAMI ANG PUPUNTA SA INYONG SHOP",
+  "home.stat.shops": "Shops with us",
+  "home.stat.hair": "Hair collected",
+  "home.stat.hairNote": "Weighed, not guessed",
+  "home.stat.passwords": "Passwords to remember",
+  "home.stat.passwordsNote": "No account needed",
+
+  /* how-it-works / drum */
+  "home.section.how.label": "How it works",
+  "home.section.how.title1": "Ang drum na nagpapaging",
+  "home.section.how.title2": "that turns hair into",
+  "home.section.how.title3": "soil.",
+  "home.section.how.lede":
+    "Isang machine, limang simple steps. Nagdadala kami ng sack sa inyong shop, kinokolekta ang hair, at pinatatagal hanggang maging compost. Drag the drum para tumingin — then tap para sa buong process.",
+  "home.drumSteps.collect.title": "We collect",
+  "home.drumSteps.collect.body": "Isang may tatak na sack sa inyong shop. Kami ang pupunta sa inyo.",
+  "home.drumSteps.check.title": "We check",
+  "home.drumSteps.check.body": "Hair lang ang best; kaunting tissue ay okay pa rin.",
+  "home.drumSteps.mix.title": "We mix",
+  "home.drumSteps.mix.body": "Hair + tuyong leaves, tinimbang at logged as isang batch.",
+  "home.drumSteps.cure.title": "We cure",
+  "home.drumSteps.cure.body": "Mga 6 weeks ng resting, turning at checking.",
+  "home.drumSteps.lab.title": "Lab checks",
+  "home.drumSteps.lab.body": "A laboratory ang nag-a-approve bago namin tawaging compost.",
+
+  /* where-to-next cards */
+  "home.section.where.label": "Where to next",
+  "home.section.where.title": "Find what you need.",
+  "home.section.where.lede": "Lahat nasa isang tap lang. Hindi ninyo kailangang basahin ang buong page.",
+  "home.navCards.howWork.label": "Paano 'to works?",
+  "home.navCards.howWork.desc": "See the 5 simple steps.",
+  "home.navCards.whyPartner.label": "Why be a partner?",
+  "home.navCards.whyPartner.desc": "What your shop gets back.",
+  "home.navCards.shopPartners.label": "Shop Partners",
+  "home.navCards.shopPartners.desc": "See the shops na kasama na namin.",
+  "home.navCards.collection.label": "Collection process",
+  "home.navCards.collection.desc": "From the chair to the soil.",
+  "home.navCards.register.label": "Register your shop",
+  "home.navCards.register.desc": "Ask for a free visit.",
+
+  /* join steps */
+  "home.join.label": "Ano ang mangyayari pag sumali ka?",
+  "home.join.title": "You become isa sa mga shops na gumagawa ng soil para sa inyong sariling town.",
+  "home.join.lede":
+    "Madali lang sumali. Walang mahabang form, walang app, at walang account. Narito lahat ng mangyayari, sa limang easy steps.",
+  "home.join.step1.title": "We visit your shop",
+  "home.join.step1.body":
+    "Darating ang miyembro ng collection team sa quiet hour, magtatanong ng ilang bagay, at iiwan ang may tatak na sack. Halos wala itong ginugugol na oras ninyo.",
+  "home.join.step2.title": "Tuloy lang ang paggupit ninyo",
+  "home.join.step2.body":
+    "Ilagay ang mga gupit na hair sa sack. Wala nang ibang magbabago sa inyong day. Walang app, walang login, walang bagong habit.",
+  "home.join.step3.title": "We pick it up",
+  "home.join.step3.body":
+    "Babalik kami sa days na bagay sa inyo. Hindi ninyo kailangang pumunta kahit saan o maghintay sa counter.",
+  "home.join.step4.title": "Gagawin namin ang compost",
+  "home.join.step4.body":
+    "Tinimbang namin ang hair, hinalo sa tuyong leaves at iba pang plant material, at pinatagal. Sinusuri ng lab ang bawat batch.",
+  "home.join.step5.title": "Ang inyong town ang makakakuha ng soil",
+  "home.join.step5.body":
+    "Makakakuha kayo ng receipt at lab result. Ang compost mapupunta sa mga taniman sa inyong barangay.",
+  "home.join.note":
+    "Ang pangalan ng inyong shop nasa aming network bilang isang contributor. Tuloy lang ang paggupit ninyo — kami na ang bahala sa iba.",
+
+  /* faq */
+  "home.faq.label": "Four quick answers",
+  "home.faq.title": "Bago ka mag-decide.",
+  "home.faq.lede": "Maikli at simple sagot. Walang technical words.",
+  "home.faq.q1": "Ano ang Hair2Harvest?",
+  "home.faq.a1":
+    "Isang libreng collection service para sa mga barbershop sa Barangay Novaliches Proper. Kinokolekta namin ang mga gupit na hair na itabi ninyo at ginagawang compost para sa mga taniman sa inyong sariling barangay.",
+  "home.faq.q2": "Ano ang kailangan kong gawin?",
+  "home.faq.a2":
+    "Halos wala. Ilagay ang mga gupit na hair sa sack na ibinigay namin. Kami ang bibisita, kukolekta, at aayos ng papers. Walang app at walang account.",
+  "home.faq.q3": "Ano ang mangyayari sa aking mga gupit na hair?",
+  "home.faq.a3":
+    "Tinimbang namin, hinalo sa tuyong leaves at iba pang plant material, at pinatagal ng mga 6 weeks. Sinusuri ng lab ang compost bago gamitin.",
+
+  /* machine */
+  "sys.machine.label": "The machine",
+  "sys.machine.title1": "Ang drum na",
+  "sys.machine.title2": "that turns the",
+  "sys.machine.title3": "mix.",
+  "sys.machine.lede":
+    "Ito lang ang machine na ginagamit namin. Drag para paikutin, o tap ang part para makita ang pangalan nito. Hinalo nito ang hair sa plant material habang pinatatagal ang compost.",
+};
+
 const STORAGE_KEY = "h2h-lang";
 
 type LangContextValue = {
@@ -861,13 +992,13 @@ type LangContextValue = {
 const LangContext = createContext<LangContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("tl");
+  const [lang, setLangState] = useState<Lang>("tg");
 
-  // Restore a saved preference once on mount (default is Tagalog).
+  // Restore a saved preference once on mount (default is Taglish).
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved === "en" || saved === "tl") setLangState(saved);
+      if (saved === "en" || saved === "tl" || saved === "tg") setLangState(saved);
     } catch {
       /* no-op */
     }
@@ -884,7 +1015,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [lang]);
 
   const setLang = (l: Lang) => setLangState(l);
-  const t = (key: string) => dict[key]?.[lang] ?? key;
+  const t = (key: string) => {
+    if (lang === "tg") return TaglishOverride[key] ?? dict[key]?.tl ?? key;
+    return dict[key]?.[lang] ?? key;
+  };
 
   return <LangContext.Provider value={{ lang, setLang, t }}>{children}</LangContext.Provider>;
 }

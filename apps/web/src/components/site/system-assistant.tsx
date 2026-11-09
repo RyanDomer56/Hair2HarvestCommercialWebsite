@@ -775,7 +775,7 @@ export function SystemAssistant() {
                         onClick={() => send(k.question)}
                         className="rounded-full border border-paper/15 px-2.5 py-1.5 text-left text-[0.6875rem] leading-snug text-paper/75 transition-colors hover:border-lime/45 hover:bg-lime/10 hover:text-lime"
                       >
-                        {lang === "tl" ? (k.promptTL ?? k.question) : k.question}
+                        {lang === "tl" || lang === "tg" ? (k.promptTL ?? k.question) : k.question}
                       </button>
                     ))}
                   </div>

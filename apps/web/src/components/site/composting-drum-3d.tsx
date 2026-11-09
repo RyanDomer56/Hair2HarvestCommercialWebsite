@@ -100,7 +100,7 @@ export default function CompostingDrum3D({
       <div className="scene-heading debug-ui">
         Hair in · compost out <span className="index">MODULE 5 / MODULE 6</span>
       </div>
-      <div className="coordinates debug-ui">MCH-01 — BALANGA LINE</div>
+      <div className="coordinates debug-ui">MCH-01 — NOVA PROPER LINE</div>
       <div id="journey" className="debug-ui">
         <div className="journey-icon">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
