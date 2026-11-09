@@ -5,7 +5,7 @@
  * instead of only describing it in words. Every href below is a real route in
  * this app, so a suggestion is always a working link.
  *
- * Keywords include plain English and common Tagalog/Taglish words because the
+ * Keywords include plain English and common Tagalog words because the
  * shop owners who use the site mix both. The titles and blurbs are shown in the
  * chatbot help panel and are written in Tagalog (the site default language).
  */
