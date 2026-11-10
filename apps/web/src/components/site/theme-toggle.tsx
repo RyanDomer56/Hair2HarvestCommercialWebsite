@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 const STORAGE_KEY = "h2h-theme";
 
 /**
- * Candle light/dark toggle.
+ * Candle light/dark toggle, drawn as precise line-art in the brand's ink to
+ * match the editorial "Soil Ledger" system (lucide-style strokes, clay accent
+ * flame). Lit in light mode, delicate smoke in dark mode.
  *
- * The visible state (lit flame vs. rising smoke) is driven entirely by the
- * `html.dark` class via CSS, so the server and client render the exact same
- * DOM. This component only flips that class and persists the choice — the
- * no-flash script in layout.tsx sets it before first paint.
+ * The visible state is driven entirely by the `html.dark` class via CSS, so the
+ * server and client render identical DOM — no hydration mismatch, no flash.
  */
 export function ThemeToggle({ className }: { className?: string }) {
   const [isDark, setIsDark] = useState(false);
@@ -44,22 +44,30 @@ export function ThemeToggle({ className }: { className?: string }) {
     >
       <span className="ct-stage" aria-hidden="true">
         <span className="ct-scene">
-          <span className="ct-candle">
-            <span className="ct-wick" />
-            <span className="ct-flame" />
-            <span className="ct-smoke">
-              <svg viewBox="0 0 26 28" width="26" height="28">
-                <path
-                  className="ct-smoke-haze"
-                  d="M13 26 C 9 22, 17 18, 13 14 C 9 10, 17 6, 13 2"
-                />
-                <path
-                  className="ct-smoke-thread"
-                  d="M13 26 C 10 22, 16 18, 13 14 C 10 10, 16 6, 13 2"
-                />
-              </svg>
-            </span>
-          </span>
+          <svg
+            className="ct-mark"
+            viewBox="0 0 24 24"
+            width="22"
+            height="22"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {/* candle body + wick */}
+            <rect x="9" y="12" width="6" height="8" rx="1.5" />
+            <line x1="12" y1="12" x2="12" y2="10" />
+            {/* flame — lit, clay accent (light mode) */}
+            <g className="ct-flame">
+              <path d="M12 10 C 13.4 8.2 13.2 6 12 4.4 C 10.8 6 10.6 8.2 12 10 Z" />
+            </g>
+            {/* smoke — extinguished (dark mode) */}
+            <g className="ct-smoke">
+              <path d="M12 10 C 10.6 8.4 13.4 7.2 12 5.6 C 10.8 4.4 13 3.4 12 2" />
+              <path d="M12 10 C 13.2 8.9 10.8 7.7 12 6.3" />
+            </g>
+          </svg>
         </span>
         <span className="ct-fix" />
       </span>
