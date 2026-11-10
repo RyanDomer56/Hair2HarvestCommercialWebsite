@@ -53,7 +53,17 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tl">
+    <html lang="tl" suppressHydrationWarning>
+      <head>
+        {/* No-flash theme: decide dark/light before paint using a stored
+            preference, falling back to the OS setting. Keeps the candle toggle
+            and the whole palette consistent on first render. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('h2h-theme');var d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body>
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
