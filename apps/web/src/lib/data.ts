@@ -86,7 +86,7 @@ export const shops: Shop[] = [
   {
     code: "HB-001",
     name: "Barako Brothers Grooming",
-    barangay: "Novaliches Proper",
+    barangay: "Nova Proper",
     contact: "Ruel Santos",
     mobile: "+63 917 402 1188",
     channel: "SMS",
@@ -106,7 +106,7 @@ export const shops: Shop[] = [
   {
     code: "HB-002",
     name: "Corte Manila Barbershop",
-    barangay: "Novaliches Proper",
+    barangay: "Nova Proper",
     contact: "Jomar Dela Cruz",
     mobile: "+63 916 220 7741",
     channel: "Messenger",
@@ -126,7 +126,7 @@ export const shops: Shop[] = [
   {
     code: "HB-003",
     name: "The Cutting Room",
-    barangay: "Novaliches Proper",
+    barangay: "Nova Proper",
     contact: "Ana Villamor",
     mobile: "+63 927 118 3390",
     channel: "Viber",
@@ -146,7 +146,7 @@ export const shops: Shop[] = [
   {
     code: "HB-004",
     name: "Fade District",
-    barangay: "Novaliches Proper",
+    barangay: "Nova Proper",
     contact: "Nikko Reyes",
     mobile: "+63 905 771 2264",
     channel: "SMS",
@@ -166,7 +166,7 @@ export const shops: Shop[] = [
   {
     code: "HB-005",
     name: "Gupit ni Tatay",
-    barangay: "Novaliches Proper",
+    barangay: "Nova Proper",
     contact: "Efren Bautista",
     mobile: "+63 918 664 0021",
     channel: "Call",
@@ -186,7 +186,7 @@ export const shops: Shop[] = [
   {
     code: "HB-006",
     name: "Sharp & Co.",
-    barangay: "Novaliches Proper",
+    barangay: "Nova Proper",
     contact: "Migs Aquino",
     mobile: "+63 939 220 1187",
     channel: "Messenger",
@@ -206,7 +206,7 @@ export const shops: Shop[] = [
   {
     code: "HB-007",
     name: "Bente Singko Barber Studio",
-    barangay: "Novaliches Proper",
+    barangay: "Nova Proper",
     contact: "Dennis Ocampo",
     mobile: "+63 917 883 5512",
     channel: "SMS",
@@ -226,7 +226,7 @@ export const shops: Shop[] = [
   {
     code: "HB-008",
     name: "Heneral Gupit",
-    barangay: "Novaliches Proper",
+    barangay: "Nova Proper",
     contact: "Lito Marasigan",
     mobile: "+63 921 447 0093",
     channel: "Viber",

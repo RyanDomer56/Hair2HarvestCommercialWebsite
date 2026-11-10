@@ -62,20 +62,20 @@ export const dict: Record<string, TranslationEntry> = {
   },
   "footer.soilFromBarbers": { en: "SOIL FROM BARBERS", tl: "LUPA MULA SA MGA BARBERO" },
   "footer.barangay": {
-    en: "BARANGAY NOVALICHES PROPER · PHILIPPINES",
-    tl: "BARANGAY NOVALICHES PROPER · PILIPINAS",
+    en: "BARANGAY NOVA PROPER · PHILIPPINES",
+    tl: "BARANGAY NOVA PROPER · PILIPINAS",
   },
   "footer.barangayShort": {
-    en: "Barangay Novaliches Proper · Philippines",
-    tl: "Barangay Novaliches Proper · Pilipinas",
+    en: "Barangay Nova Proper · Philippines",
+    tl: "Barangay Nova Proper · Pilipinas",
   },
   "footer.copyright": {
     en: "© 2026 HAIR2HARVEST · A COLLECTION & COMPOSTING SERVICE FOR BARBERSHOPS",
     tl: "© 2026 HAIR2HARVEST · SERBISYO NG PAGKOLEKTA AT PAGKOMPOSTA PARA SA MGA BARBERO",
   },
   "footer.capstone": {
-    en: "CAPSTONE: AN IoT-BASED BARBERSHOP HAIR WASTE COLLECTION & AUTOMATED COMPOSTING SYSTEM WITH WEB-BASED PROCESS CONTROL FOR BARANGAY NOVALICHES PROPER",
-    tl: "CAPSTONE: ISANG IoT NA PAGKOLEKTA NG BASURANG BUHOK MULA SA BARBERO AT AWTMATIKONG PAGKOMPOSTA NA MAY WEB-BASED NA KONTROL PARA SA BARANGAY NOVALICHES PROPER",
+    en: "CAPSTONE: AN IoT-BASED BARBERSHOP HAIR WASTE COLLECTION & AUTOMATED COMPOSTING SYSTEM WITH WEB-BASED PROCESS CONTROL FOR BARANGAY NOVA PROPER",
+    tl: "CAPSTONE: ISANG IoT NA PAGKOLEKTA NG BASURANG BUHOK MULA SA BARBERO AT AWTMATIKONG PAGKOMPOSTA NA MAY WEB-BASED NA KONTROL PARA SA BARANGAY NOVA PROPER",
   },
   "footer.mascot": {
     en: "Chat mascot: Snip, the Hair2Harvest scissor (3D model supplied by the project)",
@@ -85,8 +85,8 @@ export const dict: Record<string, TranslationEntry> = {
 
   /* -------------------------------------------------------------- homepage */
   "home.hero.eyebrow": {
-    en: "Now collecting · Barangay Novaliches Proper",
-    tl: "Kumukulekta na · Barangay Novaliches Proper",
+    en: "Now collecting · Barangay Nova Proper",
+    tl: "Kumukulekta na · Barangay Nova Proper",
   },
   "home.hero.title1": { en: "Hair clippings", tl: "Mga gupit na buhok" },
   "home.hero.title2": { en: "become", tl: "ay nagiging" },
@@ -101,8 +101,8 @@ export const dict: Record<string, TranslationEntry> = {
     tl: "Kinokolekta namin ang buhok na walisin ninyo at ginagawang kompost para sa mga taniman malapit dito. Kami ang pupunta sa inyo — walang app, walang login, at walang dagdag na trabaho sa inyong tindahan.",
   },
   "home.hero.capstone1": {
-    en: "A capstone project with Barangay Novaliches Proper.",
-    tl: "Isang capstone project kasama ang Barangay Novaliches Proper.",
+    en: "A capstone project with Barangay Nova Proper.",
+    tl: "Isang capstone project kasama ang Barangay Nova Proper.",
   },
   "home.hero.capstone2": {
     en: "We turn salon and barbershop hair waste into compost for local planting beds.",
@@ -213,8 +213,8 @@ export const dict: Record<string, TranslationEntry> = {
   "home.faq.lede": { en: "Short, plain answers. No technical words.", tl: "Maikli at simpleng sagot. Walang teknikal na salita." },
   "home.faq.q1": { en: "What is Hair2Harvest?", tl: "Ano ang Hair2Harvest?" },
   "home.faq.a1": {
-    en: "A free collection service for barbershops in Barangay Novaliches Proper. We pick up the hair clippings you set aside and turn them into compost for planting beds in your own barangay.",
-    tl: "Isang libreng serbisyo ng pagkolekta para sa mga barbero sa Barangay Novaliches Proper. Kinokolekta namin ang mga gupit na buhok na inyong itabi at ginagawang kompost para sa mga taniman sa inyong sariling barangay.",
+    en: "A free collection service for barbershops in Barangay Nova Proper. We pick up the hair clippings you set aside and turn them into compost for planting beds in your own barangay.",
+    tl: "Isang libreng serbisyo ng pagkolekta para sa mga barbero sa Barangay Nova Proper. Kinokolekta namin ang mga gupit na buhok na inyong itabi at ginagawang kompost para sa mga taniman sa inyong sariling barangay.",
   },
   "home.faq.q2": { en: "What do I need to do?", tl: "Ano ang kailangan kong gawin?" },
   "home.faq.a2": {
@@ -236,8 +236,8 @@ export const dict: Record<string, TranslationEntry> = {
   "home.network.title": { en: "Shops already with us.", tl: "Mga tindahang kasama na namin." },
   "home.network.seeAll": { en: "See all shops", tl: "Tingnan lahat ng tindahan" },
   "home.network.lede": {
-    en: "These are real barbershops in Barangay Novaliches Proper. We show only the shop name, barangay and partnership status — contact and pickup details stay private.",
-    tl: "Ito ay tunay na mga barbero sa Barangay Novaliches Proper. Ipinapakita lang namin ang pangalan ng tindahan, barangay, at katayuan ng partnership — ang contact at detalye ng pagkolekta ay mananatiling pribado.",
+    en: "These are real barbershops in Barangay Nova Proper. We show only the shop name, barangay and partnership status — contact and pickup details stay private.",
+    tl: "Ito ay tunay na mga barbero sa Barangay Nova Proper. Ipinapakita lang namin ang pangalan ng tindahan, barangay, at katayuan ng partnership — ang contact at detalye ng pagkolekta ay mananatiling pribado.",
   },
   "home.network.header.shop": { en: "Shop", tl: "Tindahan" },
   "home.network.header.barangay": { en: "Barangay", tl: "Barangay" },
@@ -512,8 +512,8 @@ export const dict: Record<string, TranslationEntry> = {
   "about.hero.title2": { en: "into", tl: "bilang" },
   "about.hero.title3": { en: "soil.", tl: "lupa." },
   "about.hero.lede": {
-    en: "Hair2Harvest is a student capstone project with Barangay Novaliches Proper. We pick up hair clippings from barbershops and turn them into compost for planting beds nearby. We come to the shop, and we share the results with you.",
-    tl: "Ang Hair2Harvest ay isang student capstone project kasama ang Barangay Novaliches Proper. Kinokolekta namin ang mga gupit na buhok mula sa mga barbero at ginagawang kompost para sa mga taniman malapit dito. Kami ang pupunta sa tindahan, at ibinabahagi namin ang resulta sa inyo.",
+    en: "Hair2Harvest is a student capstone project with Barangay Nova Proper. We pick up hair clippings from barbershops and turn them into compost for planting beds nearby. We come to the shop, and we share the results with you.",
+    tl: "Ang Hair2Harvest ay isang student capstone project kasama ang Barangay Nova Proper. Kinokolekta namin ang mga gupit na buhok mula sa mga barbero at ginagawang kompost para sa mga taniman malapit dito. Kami ang pupunta sa tindahan, at ibinabahagi namin ang resulta sa inyo.",
   },
   "about.story.label": { en: "Our story", tl: "Ang aming kwento" },
   "about.story.title1": { en: "We bring", tl: "Kami ang" },
@@ -532,8 +532,8 @@ export const dict: Record<string, TranslationEntry> = {
     tl: "Ang tindahan ay nakakakuha ng resibo at resulta ng lab. Ang kompost ay mapupunta sa mga taniman sa parehong barangay. Walang app, walang login, at walang dagdag na trabaho sa mga nasa likod ng upuan.",
   },
   "about.story.p4": {
-    en: "Hair2Harvest is a capstone project built together with Barangay Novaliches Proper, who back the programme and help us reach the shops in the community. We are glad to return compost the barangay can use on its own planting beds.",
-    tl: "Ang Hair2Harvest ay isang capstone project na ginawa kasama ang Barangay Novaliches Proper, na sumusuporta sa programa at tumutulong na maabot namin ang mga tindahan sa komunidad. Ikinagagalak namin na makabalik ang kompost na magagamit ng barangay sa sarili nitong mga taniman.",
+    en: "Hair2Harvest is a capstone project built together with Barangay Nova Proper, who back the programme and help us reach the shops in the community. We are glad to return compost the barangay can use on its own planting beds.",
+    tl: "Ang Hair2Harvest ay isang capstone project na ginawa kasama ang Barangay Nova Proper, na sumusuporta sa programa at tumutulong na maabot namin ang mga tindahan sa komunidad. Ikinagagalak namin na makabalik ang kompost na magagamit ng barangay sa sarili nitong mga taniman.",
   },
   "about.team.label": { en: "Our team", tl: "Ang aming koponan" },
   "about.team.title1": { en: "The people", tl: "Ang mga taong" },
@@ -595,8 +595,8 @@ export const dict: Record<string, TranslationEntry> = {
   "network.hero.title1": { en: "Shops already", tl: "Mga tindahang" },
   "network.hero.title2": { en: "with us.", tl: "kasama na namin." },
   "network.hero.lede": {
-    en: "Real barbershops in Barangay Novaliches Proper taking part in Hair2Harvest. To protect every owner, we show only the shop name, barangay and partnership status here.",
-    tl: "Tunay na mga barbero sa Barangay Novaliches Proper na kasali sa Hair2Harvest. Para protektahan ang bawat may-ari, ipinapakita lang namin ang pangalan ng tindahan, barangay, at katayuan ng partnership dito.",
+    en: "Real barbershops in Barangay Nova Proper taking part in Hair2Harvest. To protect every owner, we show only the shop name, barangay and partnership status here.",
+    tl: "Tunay na mga barbero sa Barangay Nova Proper na kasali sa Hair2Harvest. Para protektahan ang bawat may-ari, ipinapakita lang namin ang pangalan ng tindahan, barangay, at katayuan ng partnership dito.",
   },
   "network.directory.label": { en: "Directory", tl: "Talaan" },
   "network.directory.title": { en: "The shop list.", tl: "Ang listahan ng tindahan." },

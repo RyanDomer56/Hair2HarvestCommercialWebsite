@@ -70,7 +70,7 @@ export default function AboutView() {
         }
         lede={t("about.hero.lede")}
         meta={[
-          { k: t("about.meta.partner"), v: "Brgy. Novaliches Proper" },
+          { k: t("about.meta.partner"), v: "Brgy. Nova Proper" },
           { k: t("about.meta.team"), v: "13 members" },
           { k: t("about.meta.started"), v: "2026" },
           { k: t("about.meta.cost"), v: t("common.free") },

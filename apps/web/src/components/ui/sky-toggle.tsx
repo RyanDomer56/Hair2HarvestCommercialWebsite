@@ -73,11 +73,11 @@ const StyledWrapper = styled.div`
     --container-height: 2.5em;
     --container-radius: 6.25em;
     /* radius 0 - minecraft mode :) */
-    --container-light-bg: #3d7eae;
-    --container-night-bg: #1d1f2c;
+    --container-light-bg: #5b8c3a;
+    --container-night-bg: #16241a;
     --circle-container-diameter: 3.375em;
     --sun-moon-diameter: 2.125em;
-    --sun-bg: #ecca2f;
+    --sun-bg: #d9f26b;
     --moon-bg: #c4c9d1;
     --spot-color: #959db1;
     --circle-container-offset: calc(
@@ -85,7 +85,7 @@ const StyledWrapper = styled.div`
     );
     --stars-color: #fff;
     --clouds-color: #f3fdff;
-    --back-clouds-color: #aacadf;
+    --back-clouds-color: #9cc08a;
     --transition: 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
     --circle-transition: 0.3s cubic-bezier(0, -0.02, 0.35, 1.17);
   }
@@ -176,10 +176,10 @@ const StyledWrapper = styled.div`
     background-color: var(--sun-bg);
     -webkit-box-shadow:
       0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset,
-      0em -0.062em 0.062em 0em #a1872a inset;
+      0em -0.062em 0.062em 0em #3e5a1f inset;
     box-shadow:
       0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset,
-      0em -0.062em 0.062em 0em #a1872a inset;
+      0em -0.062em 0.062em 0em #3e5a1f inset;
     -webkit-filter: drop-shadow(0.062em 0.125em 0.125em rgba(0, 0, 0, 0.25))
       drop-shadow(0em 0.062em 0.125em rgba(0, 0, 0, 0.25));
     filter: drop-shadow(0.062em 0.125em 0.125em rgba(0, 0, 0, 0.25))

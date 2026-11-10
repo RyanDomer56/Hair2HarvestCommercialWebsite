@@ -120,7 +120,7 @@ export default function PartnerPage() {
                   {
                     icon: MapPin,
                     k: "We are in",
-                    v: "Brgy. Novaliches Proper",
+                    v: "Brgy. Nova Proper",
                     note: "We come to your shop",
                   },
                   {
