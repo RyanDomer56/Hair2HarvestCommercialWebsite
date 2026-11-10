@@ -8,6 +8,7 @@ import "@fontsource/montserrat/500.css";
 import "@fontsource/montserrat/600.css";
 import "@fontsource/montserrat/700.css";
 import "./globals.css";
+import StyledComponentsRegistry from "@/lib/styled-components-registry";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hair2harvest.ph"),
@@ -56,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="tl" suppressHydrationWarning>
       <head>
         {/* No-flash theme: decide dark/light before paint using a stored
-            preference, falling back to the OS setting. Keeps the candle toggle
+            preference, falling back to the OS setting. Keeps the theme toggle
             and the whole palette consistent on first render. */}
         <script
           dangerouslySetInnerHTML={{
@@ -68,7 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
-        {children}
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
       </body>
     </html>
   );

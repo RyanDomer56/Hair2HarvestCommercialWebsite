@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight, ChevronDown, Home, Menu, X } from "lucide-react";
 import { Wordmark } from "./brand";
 import { LanguageToggle } from "./language-toggle";
-import { ThemeToggle } from "./theme-toggle";
+import SkyToggle from "@/components/ui/sky-toggle";
 import { useLanguage } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -171,7 +171,7 @@ export function SiteHeader() {
           </nav>
 
           <div className="hidden items-center gap-2 md:flex">
-            <ThemeToggle />
+            <SkyToggle />
             <LanguageToggle />
             <Link href="/partner" className="btn btn-sm">
               {t("cta.partner")}
@@ -234,7 +234,7 @@ export function SiteHeader() {
               {t("cta.partner")}
             </Link>
             <div className="flex items-center gap-2 self-start">
-              <ThemeToggle />
+              <SkyToggle />
               <LanguageToggle />
             </div>
           </div>
