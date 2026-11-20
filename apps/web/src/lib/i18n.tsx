@@ -105,8 +105,8 @@ export const dict: Record<string, TranslationEntry> = {
     tl: "Isang capstone project kasama ang Barangay Nova Proper.",
   },
   "home.hero.capstone2": {
-    en: "We turn salon and barbershop hair waste into compost for local planting beds.",
-    tl: "Ginagawa namin ang basurang buhok mula sa salon at barbero bilang kompost para sa mga lokal na taniman.",
+    en: "We turn barbershop hair waste into compost for local planting beds.",
+    tl: "Ginagawa namin ang basurang buhok mula sa mga barbero bilang kompost para sa mga lokal na taniman.",
   },
   "home.hero.free1": { en: "FREE TO JOIN · NO APP · NO LOGIN", tl: "LIBRE MAKISALI · WALANG APP · WALANG LOGIN" },
   "home.hero.free2": { en: "WE COME TO YOUR SHOP", tl: "KAMI ANG PUPUNTA SA INYONG TINDAHAN" },
