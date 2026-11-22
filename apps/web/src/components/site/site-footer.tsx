@@ -29,6 +29,13 @@ const columns = [
       { labelKey: "footer.contactUs", href: "/partner#contact" },
     ],
   },
+  {
+    titleKey: "footer.legal",
+    items: [
+      { labelKey: "footer.terms", href: "/terms" },
+      { labelKey: "footer.privacy", href: "/privacy" },
+    ],
+  },
 ];
 
 export function SiteFooter() {
@@ -36,7 +43,7 @@ export function SiteFooter() {
   return (
     <footer className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--paper-sunk)]">
       <div className="shell pb-10 pt-16">
-        <div className="grid gap-12 md:grid-cols-[1.3fr_repeat(3,1fr)]">
+        <div className="grid gap-12 md:grid-cols-[1.3fr_repeat(4,1fr)]">
           <div>
             <div className="flex items-center gap-3">
               <BrandMark size={44} />

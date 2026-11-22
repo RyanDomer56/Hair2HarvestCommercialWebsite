@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Check, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
@@ -252,7 +253,18 @@ export function PartnerForm() {
             required
             className="mt-0.5 size-4 accent-[var(--moss)]"
           />
-          <span className="text-[0.8125rem] leading-[1.6] text-ink-soft">{t("form.consent")}</span>
+          <span className="text-[0.8125rem] leading-[1.6] text-ink-soft">
+            {t("form.consent")}{" "}
+            {t("form.consentRead")}{" "}
+            <Link href="/terms" className="text-moss underline underline-offset-2" target="_blank" rel="noopener noreferrer">
+              {t("legal.agreeTerms")}
+            </Link>{" "}
+            {t("form.consentAnd")}{" "}
+            <Link href="/privacy" className="text-moss underline underline-offset-2" target="_blank" rel="noopener noreferrer">
+              {t("legal.agreePrivacy")}
+            </Link>
+            .
+          </span>
         </label>
       </div>
 

@@ -81,6 +81,9 @@ export const dict: Record<string, TranslationEntry> = {
     en: "Chat mascot: Snip, the Hair2Harvest scissor (3D model supplied by the project)",
     tl: "Maskot sa chat: si Snip, ang gunting ng Hair2Harvest (3D model mula sa proyekto)",
   },
+  "footer.legal": { en: "Legal", tl: "Legal" },
+  "footer.terms": { en: "Terms and Conditions", tl: "Mga Tuntunin at Kundisyon" },
+  "footer.privacy": { en: "Privacy Policy", tl: "Patakaran sa Privacy" },
   "footer.nowCollecting": { en: "NOW COLLECTING", tl: "KUMUKULEKTA NA" },
 
   /* -------------------------------------------------------------- homepage */
@@ -744,13 +747,21 @@ export const dict: Record<string, TranslationEntry> = {
   "partner.contact.weAgree": { en: "We agree it together", tl: "Ina-agree namin ito" },
   "partner.contact.pickupNote": { en: "A time that suits your shop", tl: "Oras na bagay sa inyong tindahan" },
 
+  /* ------------------------------------------------------- legal pages */
+  "legal.effective": { en: "Effective date", tl: "Petsa ng bisa" },
+  "legal.contents": { en: "On this page", tl: "Sa pahinang ito" },
+  "legal.confirm": { en: "Agreement", tl: "Pagsang-ayon" },
+  "legal.join": { en: "Join as a partner shop", tl: "Sumali bilang partner shop" },
+  "legal.agreeTerms": { en: "Terms and Conditions", tl: "Mga Tuntunin at Kundisyon" },
+  "legal.agreePrivacy": { en: "Privacy Policy", tl: "Patakaran sa Privacy" },
+
   /* ----------------------------------------------------------- partner form */
   "form.shopName": { en: "Shop name", tl: "Pangalan ng tindahan" },
-  "form.shopNamePh": { en: "e.g. Barako Brothers Grooming", tl: "hal. Barako Brothers Grooming" },
+  "form.shopNamePh": { en: "Please input your shop name here", tl: "Pakilagay ang pangalan ng inyong tindahan dito" },
   "form.contactPerson": { en: "Contact person", tl: "Taong kontak" },
-  "form.contactPersonPh": { en: "Who should we ask for?", tl: "Kanino kami dapat magtanong?" },
+  "form.contactPersonPh": { en: "Please input your name here", tl: "Pakilagay ang inyong pangalan dito" },
   "form.mobile": { en: "Mobile number", tl: "Numero ng mobile" },
-  "form.mobilePh": { en: "917 402 1188", tl: "917 402 1188" },
+  "form.mobilePh": { en: "Please input your number here", tl: "Pakilagay ang inyong numero dito" },
   "form.mobileInvalid": {
     en: "Enter 10 digits starting with 9 (no leading 0).",
     tl: "Maglagay ng 10 digits na nagsisimula sa 9 (walang unang 0).",
@@ -759,9 +770,9 @@ export const dict: Record<string, TranslationEntry> = {
   "form.barangay": { en: "Barangay", tl: "Barangay" },
   "form.barangayOpt1": { en: "Nova Proper", tl: "Nova Proper" },
   "form.street": { en: "Street / building", tl: "Kalsada / gusali" },
-  "form.streetPh": { en: "e.g. 123 Magsaysay St.", tl: "hal. 123 Magsaysay St." },
+  "form.streetPh": { en: "Please input your street here", tl: "Pakilagay ang inyong kalsada dito" },
   "form.unit": { en: "Unit / floor (optional)", tl: "Unit / palapag (opsyonal)" },
-  "form.unitPh": { en: "e.g. Unit 4B", tl: "hal. Unit 4B" },
+  "form.unitPh": { en: "Please input your unit here", tl: "Pakilagay ang inyong unit dito" },
   "form.pickupRules": { en: "Pickup rules", tl: "Tuntunin sa pagkuha" },
   "form.frequency": { en: "Frequency", tl: "Dalas" },
   "form.frequencyOpt1": { en: "Weekly", tl: "Lingguhan" },
@@ -774,6 +785,8 @@ export const dict: Record<string, TranslationEntry> = {
     en: "Fill in these few details and we will get in touch. A collection team member does the rest when we visit.",
     tl: "Punin ang ilang detalyeng ito at kami ay makikipag-ugnayan. Ang miyembro ng collection team ang bahala sa iba kapag bibisita kami.",
   },
+  "form.consentRead": { en: "I have read and agree to the", tl: "Nabasa ko at sumasang-ayon ako sa" },
+  "form.consentAnd": { en: "and the", tl: "at sa" },
   "form.consent": {
     en: "I agree that Hair2Harvest can collect hair clippings from my shop. A collection team member will explain the programme during the visit.",
     tl: "Sumasang-ayon ako na ang Hair2Harvest ay pwedeng kumolekta ng mga gupit na buhok mula sa aking tindahan. Ipapaliwanag ng miyembro ng collection team ang programa sa visit.",
