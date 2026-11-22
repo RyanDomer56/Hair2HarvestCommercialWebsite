@@ -136,9 +136,8 @@ export default function HomePage() {
               label={t("home.section.how.label")}
               title={
                 <>
-                  {t("home.section.how.title1")} <em className="text-moss">{t("home.section.how.title3")}</em>
-                  <br />
-                  {t("home.section.how.title2")} {t("home.section.how.title3")}
+                  {t("home.section.how.title1")} {t("home.section.how.title2")}{" "}
+                  <em className="text-moss">{t("home.section.how.title3")}</em>
                 </>
               }
               lede={t("home.section.how.lede")}

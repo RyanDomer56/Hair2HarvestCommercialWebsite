@@ -152,7 +152,7 @@ export const dict: Record<string, TranslationEntry> = {
   "home.section.how.label": { en: "How it works", tl: "Paano ito gumagana" },
   "home.section.how.title1": { en: "The drum that turns", tl: "Ang bariles na nagbabago" },
   "home.section.how.title2": { en: "hair into", tl: "ng buhok sa" },
-  "home.section.how.title3": { en: "compost.", tl: "compost." },
+  "home.section.how.title3": { en: "compost", tl: "compost" },
   "home.section.how.lede": {
     en: "One machine, five simple steps. We bring a sack to your shop, collect the hair, and let it rest into compost. Drag the drum to look around — then tap through for the full process.",
     tl: "Isang makina, limang simpleng hakbang. Nagdadala kami ng sako sa inyong tindahan, kinokolekta ang buhok, at pinatatagal ito hanggang maging kompost. Ihila ang bariles para tumingin — tapos pindutin para sa buong proseso.",
