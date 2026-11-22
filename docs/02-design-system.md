@@ -1,6 +1,6 @@
 # Hair2Harvest — Design System
 
-**Direction** Soil Ledger · **Registers** Editorial (marketing) + Instrument (workspace)
+**Direction** Compost Ledger · **Registers** Editorial (marketing) + Instrument (workspace)
 
 ---
 
@@ -37,7 +37,7 @@ Every colour is named for a material in the process.
 | `moss-deep` | `#2C3518` | Hover, dark panels, the 3D frame |
 | `lime` | `#D9F26B` | The one accent. Living matter. Use on ≤ 4 % of any screen. |
 | `lime-soft` | `#EAF7B8` | Selection, subtle highlight |
-| `clay` | `#B06B3E` | Warning, "minor" grade, soil |
+| `clay` | `#B06B3E` | Warning, "minor" grade, compost |
 | `rust` | `#A6402A` | Destructive, "mixed" grade, rejected |
 
 **Rules**

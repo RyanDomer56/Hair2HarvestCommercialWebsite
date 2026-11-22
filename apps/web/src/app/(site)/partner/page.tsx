@@ -115,8 +115,8 @@ export default function PartnerPage() {
             <Reveal delay={80}>
               <div className="grid gap-px bg-[var(--line)] sm:grid-cols-2">
                 {[
-                  { icon: Phone, k: "Mobile", v: "+63 917 000 0000", note: "Mon–Sat, 9 AM–7 PM" },
-                  { icon: Mail, k: "Email", v: "hello@hair2harvest.ph", note: "We reply within a day" },
+                  { icon: Phone, k: "Mobile", v: "+63 976 556 8114", note: "Mon–Sat, 9 AM–7 PM" },
+                  { icon: Mail, k: "Email", v: "Hair2Harvest26277@gmail.com", note: "We reply within a day" },
                   {
                     icon: MapPin,
                     k: "We are in",

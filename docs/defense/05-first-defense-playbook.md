@@ -168,7 +168,7 @@ Never bluff. Say **“VERIFIED,” “ASSUMPTION,”** or **“NOT IMPLEMENTED�
 **Evidence:** `phone.ts`. **Boundary:** This is PH-specific by design.
 
 **Q-27 — How do you make the site feel calm rather than flashy?**  
-**Answer:** “The Soil Ledger system uses cream paper, olive ink, one lime accent, hairline borders, and one easing curve. Motion only uses transform, opacity, and clip-path, and reduced motion collapses it.”  
+**Answer:** “The Compost Ledger system uses cream paper, olive ink, one lime accent, hairline borders, and one easing curve. Motion only uses transform, opacity, and clip-path, and reduced motion collapses it.”
 **Evidence:** design system + globals CSS. **Boundary:** The ticker and live dot are the only loops.
 
 **Q-28 — What animations did you add most recently?**  

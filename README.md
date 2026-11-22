@@ -19,7 +19,7 @@ hair2harvest/
 │   └── api/          Express 5 · Mongoose 9 · MongoDB · zod
 ├── docs/
 │   ├── 01-system-design.md    modules, roles, status machines, NFRs
-│   ├── 02-design-system.md    "Soil Ledger" — palette, type, motion, components
+│   ├── 02-design-system.md    "Compost Ledger" — palette, type, motion, components
 │   ├── 03-data-model.md       collections, invariants, REST contract
 │   └── defense/               standards, templates, hardware baseline, Q&A
 └── package.json      npm workspaces

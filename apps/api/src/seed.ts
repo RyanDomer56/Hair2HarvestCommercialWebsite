@@ -118,7 +118,7 @@ async function seed() {
     version: 1,
     batch: (await Batch.findOne({ code: "BATCH-2512" }))!._id,
     batchCode: "BATCH-2512",
-    laboratory: "Central Luzon Soil Laboratory",
+    laboratory: "Central Luzon Compost Laboratory",
     n: 1.42,
     p: 0.86,
     k: 1.19,
@@ -133,7 +133,7 @@ async function seed() {
   });
 
   for (const [name, email, role] of [
-    ["Ryan C. Domer", "ryandomer566@gmail.com", "Admin"],
+    ["Ryan C. Domer", "Hair2Harvest26277@gmail.com", "Admin"],
     ["M. Salazar", "operator@hair2harvest.ph", "Operator"],
     ["J. Ramos", "staff@hair2harvest.ph", "Staff"],
   ] as const) {

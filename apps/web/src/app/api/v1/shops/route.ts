@@ -69,7 +69,7 @@ export async function POST(request: Request) {
       return NextResponse.json(data, { status: upstream.status });
     } catch {
       return NextResponse.json(
-        { error: "Registration service unreachable. Call 0917 000 0000." },
+        { error: "Registration service unreachable. Call 0976 556 8114." },
         { status: 503 },
       );
     }
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
     );
   } catch {
     return NextResponse.json(
-      { error: "Registration service unavailable. Call 0917 000 0000." },
+      { error: "Registration service unavailable. Call 0976 556 8114." },
       { status: 503 },
     );
   }

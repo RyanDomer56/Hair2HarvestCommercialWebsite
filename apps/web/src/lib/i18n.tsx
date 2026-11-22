@@ -60,7 +60,7 @@ export const dict: Record<string, TranslationEntry> = {
     en: "A free service for barbershops. We collect hair clippings and turn them into compost for planting beds nearby. We come to you.",
     tl: "Isang libreng serbisyo para sa mga barbero. Kinokolekta namin ang mga gupit na buhok at ginagawang kompost para sa mga taniman malapit dito. Kami ang pupunta sa inyo.",
   },
-  "footer.soilFromBarbers": { en: "SOIL FROM BARBERS", tl: "LUPA MULA SA MGA BARBERO" },
+  "footer.compostFromBarbers": { en: "COMPOST FROM BARBERS", tl: "COMPOST MULA SA MGA BARBERO" },
   "footer.barangay": {
     en: "BARANGAY NOVA PROPER · PHILIPPINES",
     tl: "BARANGAY NOVA PROPER · PILIPINAS",
@@ -93,7 +93,7 @@ export const dict: Record<string, TranslationEntry> = {
   },
   "home.hero.title1": { en: "Hair clippings", tl: "Mga gupit na buhok" },
   "home.hero.title2": { en: "become", tl: "ay nagiging" },
-  "home.hero.title3": { en: "soil", tl: "lupa" },
+  "home.hero.title3": { en: "compost", tl: "compost" },
   "home.hero.title4": { en: "for your barangay.", tl: "para sa inyong barangay." },
   "home.hero.para1a": {
     en: "Hair2Harvest is a free collection service for barbershops.",
@@ -152,7 +152,7 @@ export const dict: Record<string, TranslationEntry> = {
   "home.section.how.label": { en: "How it works", tl: "Paano ito gumagana" },
   "home.section.how.title1": { en: "The drum that turns", tl: "Ang bariles na nagbabago" },
   "home.section.how.title2": { en: "hair into", tl: "ng buhok sa" },
-  "home.section.how.title3": { en: "soil.", tl: "lupa." },
+  "home.section.how.title3": { en: "compost.", tl: "compost." },
   "home.section.how.lede": {
     en: "One machine, five simple steps. We bring a sack to your shop, collect the hair, and let it rest into compost. Drag the drum to look around — then tap through for the full process.",
     tl: "Isang makina, limang simpleng hakbang. Nagdadala kami ng sako sa inyong tindahan, kinokolekta ang buhok, at pinatatagal ito hanggang maging kompost. Ihila ang bariles para tumingin — tapos pindutin para sa buong proseso.",
@@ -198,14 +198,14 @@ export const dict: Record<string, TranslationEntry> = {
   "home.navCards.shopPartners.label": { en: "Shop Partners", tl: "Mga Tindahang Partner" },
   "home.navCards.shopPartners.desc": { en: "See the shops already with us.", tl: "Tingnan ang mga tindahang kasama na namin." },
   "home.navCards.collection.label": { en: "Collection process", tl: "Proseso ng pagkolekta" },
-  "home.navCards.collection.desc": { en: "From the chair to the soil.", tl: "Mula sa upuan hanggang sa lupa." },
+  "home.navCards.collection.desc": { en: "From the chair to the compost.", tl: "Mula sa upuan hanggang sa compost." },
   "home.navCards.register.label": { en: "Register your shop", tl: "Rehistro ang inyong tindahan" },
   "home.navCards.register.desc": { en: "Ask for a free visit.", tl: "Humiling ng libreng bisita." },
 
   "home.join.label": { en: "What happens when you join?", tl: "Ano ang mangyayari kapag sumali ka?" },
   "home.join.title": {
-    en: "You become one of the shops making soil for your own town.",
-    tl: "Nagiging isa ka sa mga tindahang gumagawa ng lupa para sa inyong sariling bayan.",
+    en: "You become one of the shops making compost for your own town.",
+    tl: "Nagiging isa ka sa mga tindahang gumagawa ng compost para sa inyong sariling bayan.",
   },
   "home.join.lede": {
     en: "Joining is simple. There is no long form to fill in, no app and no account. Here is everything that happens, in five easy steps.",
@@ -231,7 +231,7 @@ export const dict: Record<string, TranslationEntry> = {
     en: "We weigh the hair, mix it with dry leaves and other plant material, and let it rest. A laboratory checks every batch.",
     tl: "Tinimbang namin ang buhok, hinalo sa tuyong dahon at iba pang halaman, at pinatagal. Sinusuri ng laboratoryo ang bawat batch.",
   },
-  "home.join.step5.title": { en: "Your town gets the soil", tl: "Ang inyong bayan ang makakakuha ng lupa" },
+  "home.join.step5.title": { en: "Your town gets the compost", tl: "Ang inyong bayan ang makakakuha ng compost" },
   "home.join.step5.body": {
     en: "You get a receipt and the lab result. The compost goes to planting beds in your barangay.",
     tl: "Makakakuha kayo ng resibo at resulta ng lab. Ang kompost ay mapupunta sa mga taniman sa inyong barangay.",
@@ -298,7 +298,7 @@ export const dict: Record<string, TranslationEntry> = {
   "sys.meta.cost": { en: "Cost to join", tl: "Halaga para sumali" },
   "sys.hero.title1": { en: "From the chair", tl: "Mula sa upuan" },
   "sys.hero.title2": { en: "to the", tl: "hanggang sa" },
-  "sys.hero.title3": { en: "soil.", tl: "lupa." },
+  "sys.hero.title3": { en: "compost.", tl: "compost." },
   "sys.hero.lede": {
     en: "Five easy steps. We come to your shop, pick up the hair and turn it into compost for your barangay. Nothing here needs an app, an account or any extra work from you.",
     tl: "Limang madaling hakbang. Kami ang pupunta sa inyong tindahan, kukunin ang buhok, at gagawin itong kompost para sa inyong barangay. Walang kailangang app, account, o dagdag na trabaho mula sa inyo.",
@@ -455,7 +455,7 @@ export const dict: Record<string, TranslationEntry> = {
   /* Plain-language process — replaces the old lab table + batch codes. */
   "impact.journey.label": { en: "Our process", tl: "Ang proseso namin" },
   "impact.journey.title1": { en: "From your shop,", tl: "Mula sa tindahan ninyo," },
-  "impact.journey.title2": { en: "back to the soil.", tl: "balik sa lupa." },
+  "impact.journey.title2": { en: "back to the compost.", tl: "balik sa compost." },
   "impact.journey.lede": {
     en: "Four simple steps. You keep cutting hair — we handle the rest, and the compost comes back to gardens in your own barangay.",
     tl: "Apat na simpleng hakbang. Tuloy lang ang paggupit ninyo — kami ang bahala sa iba, at ang kompost ay bumabalik sa mga taniman sa inyong barangay.",
@@ -537,7 +537,7 @@ export const dict: Record<string, TranslationEntry> = {
   "about.meta.cost": { en: "Cost to join", tl: "Halaga para sumali" },
   "about.hero.title1": { en: "We turn hair", tl: "Ginagawa namin ang buhok" },
   "about.hero.title2": { en: "into", tl: "bilang" },
-  "about.hero.title3": { en: "soil.", tl: "lupa." },
+  "about.hero.title3": { en: "compost.", tl: "compost." },
   "about.hero.lede": {
     en: "Hair2Harvest is a student capstone project with Barangay Nova Proper. We pick up hair clippings from barbershops and turn them into compost for planting beds nearby. We come to the shop, and we share the results with you.",
     tl: "Ang Hair2Harvest ay isang student capstone project kasama ang Barangay Nova Proper. Kinokolekta namin ang mga gupit na buhok mula sa mga barbero at ginagawang kompost para sa mga taniman malapit dito. Kami ang pupunta sa tindahan, at ibinabahagi namin ang resulta sa inyo.",
@@ -601,8 +601,8 @@ export const dict: Record<string, TranslationEntry> = {
   },
   "about.values.local.k": { en: "Local by design", tl: "Lokal sa disenyo" },
   "about.values.local.v": {
-    en: "The hair is collected here, composted here, and the soil stays here.",
-    tl: "Ang buhok ay kinokolekta dito, kinokompost dito, at ang lupa ay mananatili dito.",
+    en: "The hair is collected here, composted here, and the compost stays here.",
+    tl: "Ang buhok ay kinokolekta dito, kinokompost dito, at ang compost ay mananatili dito.",
   },
   "about.cta.label": { en: "Work with us", tl: "Makipagtulungan sa amin" },
   "about.cta.title1": { en: "Know a shop", tl: "Kilala ninyo ang isang tindahan" },
@@ -813,8 +813,8 @@ export const dict: Record<string, TranslationEntry> = {
     tl: "WALANG ACCOUNT NA KAILANGAN · MAGTE-TEXT KAMI SA INYO",
   },
   "form.errorMsg": {
-    en: "We could not send your request. Please call or message 0917 000 0000 and we will help you join on the visit.",
-    tl: "Hindi namin maipadala ang inyong request. Pakitawag o mag-text sa 0917 000 0000 at tutulungan ka namin sumali sa visit.",
+    en: "We could not send your request. Please call or message 0976 556 8114 and we will help you join on the visit.",
+    tl: "Hindi namin maipadala ang inyong request. Pakitawag o mag-text sa 0976 556 8114 at tutulungan ka namin sumali sa visit.",
   },
   "form.privacy": {
     en: "Your details are kept private under the Data Privacy Act of 2012. We use them only to arrange your visit and pickup, and we never share them publicly.",

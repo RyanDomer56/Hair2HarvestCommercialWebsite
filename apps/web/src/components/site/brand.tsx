@@ -50,7 +50,7 @@ export function Wordmark({
             tone === "ink" ? "text-ink-mute" : "text-paper/50",
           )}
         >
-          {t("footer.soilFromBarbers")}
+          {t("footer.compostFromBarbers")}
         </span>
       </span>
     </div>

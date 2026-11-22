@@ -198,7 +198,7 @@ export function AppSidebar() {
           {!collapsed && (
             <div className="min-w-0 flex-1">
               <p className="truncate text-[0.75rem] font-medium text-[#33361a]">Ryan C. Domer</p>
-              <p className="truncate text-[0.625rem] text-[#9a9c74]">ryandomer566@gmail.com</p>
+              <p className="truncate text-[0.625rem] text-[#9a9c74]">Hair2Harvest26277@gmail.com</p>
             </div>
           )}
         </div>
@@ -264,7 +264,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
             </span>
             <div className="min-w-0 flex-1">
               <p className="truncate text-[0.75rem] font-medium text-[#33361a]">Ryan C. Domer</p>
-              <p className="truncate text-[0.625rem] text-[#9a9c74]">ryandomer566@gmail.com</p>
+              <p className="truncate text-[0.625rem] text-[#9a9c74]">Hair2Harvest26277@gmail.com</p>
             </div>
           </div>
         </div>

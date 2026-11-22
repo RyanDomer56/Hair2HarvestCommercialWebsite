@@ -44,8 +44,8 @@ export const termsDocument: LegalDocument = {
         {
           kind: "p",
           text: {
-            en: "By registering on the Hair2Harvest web platform, your shop (“Participating Barbershop”) agrees to take part voluntarily in Project Hair2Harvest — an academic capstone research initiative by fourth-year BS Information Technology students of Quezon City University (QCU), in coordination with Barangay Novaliches Proper. The platform supports the systematic collection, monitoring, and composting of discarded natural human hair into an organic soil amendment for the Joy of Urban Farming (JOUF) initiative.",
-            tl: "Sa pagrehistro sa web platform ng Hair2Harvest, ang inyong tindahan (“Participating Barbershop”) ay sumasang-ayon na sumali nang boluntaryo sa Project Hair2Harvest — isang academic capstone research ng mga fourth-year BS Information Technology student ng Quezon City University (QCU), kasama ang Barangay Novaliches Proper. Sinusuportahan ng platform ang maayos na pagkolekta, pagsubaybay, at pagkomposta ng itinapong natural na buhok ng tao upang maging organikong pataba para sa Joy of Urban Farming (JOUF).",
+            en: "By registering on the Hair2Harvest web platform, your shop (“Participating Barbershop”) agrees to take part voluntarily in Project Hair2Harvest — an academic capstone research initiative by fourth-year BS Information Technology students of Quezon City University (QCU), in coordination with Barangay Novaliches Proper. The platform supports the systematic collection, monitoring, and composting of discarded natural human hair into organic compost for the Joy of Urban Farming (JOUF) initiative.",
+            tl: "Sa pagrehistro sa web platform ng Hair2Harvest, ang inyong tindahan (“Participating Barbershop”) ay sumasang-ayon na sumali nang boluntaryo sa Project Hair2Harvest — isang academic capstone research ng mga fourth-year BS Information Technology student ng Quezon City University (QCU), kasama ang Barangay Novaliches Proper. Sinusuportahan ng platform ang maayos na pagkolekta, pagsubaybay, at pagkomposta ng itinapong natural na buhok ng tao upang maging organikong compost para sa Joy of Urban Farming (JOUF).",
           },
         },
       ],
@@ -366,8 +366,8 @@ export const privacyDocument: LegalDocument = {
         {
           kind: "p",
           text: {
-            en: "For questions about these terms, privacy concerns, or requests to update or delete your records, contact: Mikylla Tulba — Project Manager, Hair2Harvest; Adviser: Ms. Joan F. Lawan, MAIE, LPT; College of Computer Studies, Quezon City University, 673 Quirino Highway, San Bartolome, Novaliches, Quezon City.",
-            tl: "Para sa mga tanong tungkol sa mga tuntuning ito, alalahanin sa privacy, o kahilingang i-update o burahin ang inyong records, makipag-ugnayan sa: Mikylla Tulba — Project Manager, Hair2Harvest; Adviser: Ms. Joan F. Lawan, MAIE, LPT; College of Computer Studies, Quezon City University, 673 Quirino Highway, San Bartolome, Novaliches, Quezon City.",
+            en: "For questions about these terms, privacy concerns, or requests to update or delete your records, contact: Mikylla Tulba — Project Manager, Hair2Harvest; Adviser: Ms. Joan F. Lawan, MAIE, LPT; College of Computer Studies, Quezon City University, 673 Quirino Highway, San Bartolome, Novaliches, Quezon City. You may also reach the Hair2Harvest team at 0976 556 8114 or Hair2Harvest26277@gmail.com.",
+            tl: "Para sa mga tanong tungkol sa mga tuntuning ito, alalahanin sa privacy, o kahilingang i-update o burahin ang inyong records, makipag-ugnayan sa: Mikylla Tulba — Project Manager, Hair2Harvest; Adviser: Ms. Joan F. Lawan, MAIE, LPT; College of Computer Studies, Quezon City University, 673 Quirino Highway, San Bartolome, Novaliches, Quezon City. Maaari rin kayong makipag-ugnayan sa koponan ng Hair2Harvest sa 0976 556 8114 o Hair2Harvest26277@gmail.com.",
           },
         },
       ],

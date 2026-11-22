@@ -28,9 +28,9 @@ export type KnowledgeEntry = {
 
 /** Verified contact details — shown when the assistant has no checked answer. */
 export const CONTACT = {
-  phone: "+63 917 000 0000",
-  phoneLink: "+639170000000",
-  email: "hello@hair2harvest.ph",
+  phone: "+63 976 556 8114",
+  phoneLink: "+639765568114",
+  email: "Hair2Harvest26277@gmail.com",
   hours: "Mon–Sat, 9 AM–7 PM",
 };
 
@@ -428,7 +428,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     aliases: ["design", "font", "poppins", "montserrat", "colour", "color", "palette", "cream", "lime", "type", "brand"],
     promptTL: "Ano ang design system?",
     answer:
-      "'Soil Ledger'. Dalawang register — ang editorial para sa commercial site (cream #F6F2E6, olive ink #242A12, hairline rules, halos-square na sulok) at ang instrument para sa workspace (pale lime na sidebar, white na cards, 14px na radii). Eksaktong dalawang typeface: Montserrat para sa display, Poppins para sa lahat ng iba. Isang accent lang, #D9F26B, sa ilalim ng 4% ng anumang screen.",
+      "'Compost Ledger'. Dalawang register — ang editorial para sa commercial site (cream #F6F2E6, olive ink #242A12, hairline rules, halos-square na sulok) at ang instrument para sa workspace (pale lime na sidebar, white na cards, 14px na radii). Eksaktong dalawang typeface: Montserrat para sa display, Poppins para sa lahat ng iba. Isang accent lang, #D9F26B, sa ilalim ng 4% ng anumang screen.",
     source: "§1–§3",
     doc: "Design system",
     related: ["3d", "stack", "what-is"],

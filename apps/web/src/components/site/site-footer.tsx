@@ -51,7 +51,7 @@ export function SiteFooter() {
                 <p className="text-[1.05rem] font-semibold tracking-[-0.03em] text-ink">
                   Hair2Harvest
                 </p>
-                <p className="mono-tag mt-1 text-ink-mute">{t("footer.soilFromBarbers")}</p>
+                <p className="mono-tag mt-1 text-ink-mute">{t("footer.compostFromBarbers")}</p>
               </div>
             </div>
             <p className="mt-5 max-w-[30ch] text-[0.875rem] leading-relaxed text-ink-soft">

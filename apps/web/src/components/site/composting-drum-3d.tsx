@@ -355,8 +355,8 @@ function initDrumScene(
       ivory: mat(0xe0ded4, 0.45, 0.3),
       copper: mat(0xb9814a, 0.8, 0.34),
       drum: mat(0x8a9377, 0.72, 0.36),
-      soil: mat(0x3b2f20, 0.02, 0.95),
-      soilLight: mat(0x59472d, 0.02, 0.95),
+      compost: mat(0x3b2f20, 0.02, 0.95),
+      compostLight: mat(0x59472d, 0.02, 0.95),
       hair: mat(0x242a12, 0.15, 0.6),
       light: mat(LIME, 0.2, 0.25, { emissive: LIME, emissiveIntensity: 1.5 }),
       green: mat(0x8fbf52, 0.1, 0.35, { emissive: 0x6b9c32, emissiveIntensity: 0.9 }),
@@ -580,7 +580,7 @@ function initDrumScene(
       c.strokeRect(2, 2, w - 4, h - 4);
       print(c, "MCH-01", 42, 78, 38, "#d9f26b", 650);
       print(c, "·  v17 chain drive  ·  10 rpm  ·  Nova Proper", 298, 78, 27, "#b8bdc1", 450);
-      print(c, "HAIR TO SOIL  ·  QCU BSIT CAPSTONE", 44, 132, 18, "#737e88", 500);
+      print(c, "HAIR TO COMPOST  ·  QCU BSIT CAPSTONE", 44, 132, 18, "#737e88", 500);
     });
     screen(machine, 5.4, 0.62, -0.4, 0.55, FZ + 0.03, engraving.texture);
 
@@ -681,11 +681,11 @@ function initDrumScene(
     });
 
     // compost bed stays level while the paddles turn through it
-    const bed = box(drumAssembly, DRUM_L - 0.55, 0.66, 2.2, DRUM_X, DRUM_Y - 0.95, 0, M.soil, 0.26);
+    const bed = box(drumAssembly, DRUM_L - 0.55, 0.66, 2.2, DRUM_X, DRUM_Y - 0.95, 0, M.compost, 0.26);
     bed.castShadow = false;
 
     const gritGeo = new THREE.IcosahedronGeometry(0.075, 0);
-    const grit = new THREE.InstancedMesh(gritGeo, M.soilLight, 140);
+    const grit = new THREE.InstancedMesh(gritGeo, M.compostLight, 140);
     const dummy = new THREE.Object3D();
     for (let i = 0; i < 140; i++) {
       const a = (i * 2654435761) % 1000 / 1000;
@@ -828,12 +828,12 @@ function initDrumScene(
       ball(
         dischargeAssembly, 0.15 + (i % 4) * 0.04,
         DRUM_X + Math.cos(a) * r * 1.3, 3.12 + ((i * 13) % 7) * 0.025, Math.sin(a) * r,
-        i % 3 ? M.soil : M.soilLight,
+        i % 3 ? M.compost : M.compostLight,
       );
     }
 
     const crumbCount = 22;
-    const crumbs = new THREE.InstancedMesh(gritGeo, M.soilLight, crumbCount);
+    const crumbs = new THREE.InstancedMesh(gritGeo, M.compostLight, crumbCount);
     crumbs.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     dischargeAssembly.add(crumbs);
     function updateCrumbs(t: number) {

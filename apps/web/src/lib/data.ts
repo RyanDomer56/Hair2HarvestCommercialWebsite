@@ -435,7 +435,7 @@ export const labResults: LabResult[] = [
   {
     id: "LR-0412",
     batch: "BATCH-2512",
-    lab: "Central Luzon Soil Laboratory",
+    lab: "Central Luzon Compost Laboratory",
     date: "2026-10-30",
     n: 1.42,
     p: 0.86,
@@ -449,7 +449,7 @@ export const labResults: LabResult[] = [
   {
     id: "LR-0411",
     batch: "BATCH-2601",
-    lab: "Central Luzon Soil Laboratory",
+    lab: "Central Luzon Compost Laboratory",
     date: "2026-10-28",
     n: 1.18,
     p: 0.74,
@@ -463,7 +463,7 @@ export const labResults: LabResult[] = [
   {
     id: "LR-0410",
     batch: "BATCH-2602",
-    lab: "Central Luzon Soil Laboratory",
+    lab: "Central Luzon Compost Laboratory",
     date: "2026-10-26",
     n: 0.94,
     p: 0.61,
@@ -477,7 +477,7 @@ export const labResults: LabResult[] = [
   {
     id: "LR-0409",
     batch: "BATCH-2512",
-    lab: "Bureau of Soils (re-test)",
+    lab: "Bureau of Compost Testing (re-test)",
     date: "2026-10-18",
     n: 1.31,
     p: 0.81,
