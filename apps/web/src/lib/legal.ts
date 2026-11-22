@@ -3,8 +3,8 @@
  * Privacy Policy" document (November 2026).
  *
  * Each block is bilingual so the partner-facing pages render in whichever
- * language the visitor selected. The barangay is written "Nova Proper" to
- * match the unified naming used everywhere on the site.
+ * language the visitor selected. The barangay is written "Novaliches Proper" to
+ * match the wording in the supplied PDF.
  */
 
 export type LegalBlock =
@@ -44,8 +44,8 @@ export const termsDocument: LegalDocument = {
         {
           kind: "p",
           text: {
-            en: "By registering on the Hair2Harvest web platform, your shop (“Participating Barbershop”) agrees to take part voluntarily in Project Hair2Harvest — an academic capstone research initiative by fourth-year BS Information Technology students of Quezon City University (QCU), in coordination with Barangay Nova Proper. The platform supports the systematic collection, monitoring, and composting of discarded natural human hair into an organic soil amendment for the Joy of Urban Farming (JOUF) initiative.",
-            tl: "Sa pagrehistro sa web platform ng Hair2Harvest, ang inyong tindahan (“Participating Barbershop”) ay sumasang-ayon na sumali nang boluntaryo sa Project Hair2Harvest — isang academic capstone research ng mga fourth-year BS Information Technology student ng Quezon City University (QCU), kasama ang Barangay Nova Proper. Sinusuportahan ng platform ang maayos na pagkolekta, pagsubaybay, at pagkomposta ng itinapong natural na buhok ng tao upang maging organikong pataba para sa Joy of Urban Farming (JOUF).",
+            en: "By registering on the Hair2Harvest web platform, your shop (“Participating Barbershop”) agrees to take part voluntarily in Project Hair2Harvest — an academic capstone research initiative by fourth-year BS Information Technology students of Quezon City University (QCU), in coordination with Barangay Novaliches Proper. The platform supports the systematic collection, monitoring, and composting of discarded natural human hair into an organic soil amendment for the Joy of Urban Farming (JOUF) initiative.",
+            tl: "Sa pagrehistro sa web platform ng Hair2Harvest, ang inyong tindahan (“Participating Barbershop”) ay sumasang-ayon na sumali nang boluntaryo sa Project Hair2Harvest — isang academic capstone research ng mga fourth-year BS Information Technology student ng Quezon City University (QCU), kasama ang Barangay Novaliches Proper. Sinusuportahan ng platform ang maayos na pagkolekta, pagsubaybay, at pagkomposta ng itinapong natural na buhok ng tao upang maging organikong pataba para sa Joy of Urban Farming (JOUF).",
           },
         },
       ],
@@ -59,8 +59,8 @@ export const termsDocument: LegalDocument = {
           kind: "list",
           items: [
             {
-              en: "Participation is open to commercial barbershops operating within Barangay Nova Proper, Quezon City.",
-              tl: "Bukas ang paglahok sa mga komersyal na barbershop na nasa loob ng Barangay Nova Proper, Quezon City.",
+              en: "Participation is open to commercial barbershops operating within Barangay Novaliches Proper, Quezon City.",
+              tl: "Bukas ang paglahok sa mga komersyal na barbershop na nasa loob ng Barangay Novaliches Proper, Quezon City.",
             },
             {
               en: "During registration, the owner or authorized representative must give accurate business details: shop name, business address, contact information, and designated representative.",
@@ -150,8 +150,8 @@ export const termsDocument: LegalDocument = {
               tl: "Walang registration fee, membership charge, o kontribusyon na kailangan, at walang bayad para sa ibinigay na buhok maliban na lang kung napagkasunduan nang nakasulat ng lahat ng panig.",
             },
             {
-              en: "Joining does not create an employment, commercial partnership, or financial obligation between the shop, Barangay Nova Proper, and the project team.",
-              tl: "Ang paglahok ay hindi lumilikha ng employer-employee, komersyal na partnership, o pinansyal na obligasyon sa pagitan ng tindahan, Barangay Nova Proper, at ng project team.",
+              en: "Joining does not create an employment, commercial partnership, or financial obligation between the shop, Barangay Novaliches Proper, and the project team.",
+              tl: "Ang paglahok ay hindi lumilikha ng employer-employee, komersyal na partnership, o pinansyal na obligasyon sa pagitan ng tindahan, Barangay Novaliches Proper, at ng project team.",
             },
           ],
         },
@@ -198,8 +198,8 @@ export const termsDocument: LegalDocument = {
               tl: "Maaari kayong mag-withdraw anumang oras sa pamamagitan ng nakasulat na abiso (o pormal na kahilingan sa platform o sa barangay coordinator) nang hindi bababa sa pitong (7) araw bago ang nais na petsa ng pag-withdraw.",
             },
             {
-              en: "Any pending pickup is coordinated with Barangay Nova Proper or the project team after withdrawal.",
-              tl: "Ang anumang nakaiskedyul na pagkolekta ay pipiagkasunduan sa Barangay Nova Proper o sa project team pagkatapos mag-withdraw.",
+              en: "Any pending pickup is coordinated with Barangay Novaliches Proper or the project team after withdrawal.",
+              tl: "Ang anumang nakaiskedyul na pagkolekta ay pipiagkasunduan sa Barangay Novaliches Proper o sa project team pagkatapos mag-withdraw.",
             },
           ],
         },
@@ -233,8 +233,8 @@ export const privacyDocument: LegalDocument = {
           kind: "list",
           items: [
             {
-              en: "Registration and contact details: shop name, address within Barangay Nova Proper, owner or representative name, mobile number, email address, and encrypted login credentials.",
-              tl: "Mga detalye sa pagrehistro at pakikipag-ugnayan: pangalan ng tindahan, address sa loob ng Barangay Nova Proper, pangalan ng may-ari o kinatawan, mobile number, email, at naka-encrypt na login credentials.",
+              en: "Registration and contact details: shop name, address within Barangay Novaliches Proper, owner or representative name, mobile number, email address, and encrypted login credentials.",
+              tl: "Mga detalye sa pagrehistro at pakikipag-ugnayan: pangalan ng tindahan, address sa loob ng Barangay Novaliches Proper, pangalan ng may-ari o kinatawan, mobile number, email, at naka-encrypt na login credentials.",
             },
             {
               en: "Operational records: pickup schedule, collection dates and times, accepted weight in kilograms, and batch traceability logs.",
@@ -292,8 +292,8 @@ export const privacyDocument: LegalDocument = {
               tl: "Mga awtorisadong proponent ng Hair2Harvest, para sa administrasyon, pagtatala, at research.",
             },
             {
-              en: "Authorized Barangay Nova Proper personnel, to verify community collection.",
-              tl: "Mga awtorisadong tauhan ng Barangay Nova Proper, upang mapatunayan ang pagkolekta sa komunidad.",
+              en: "Authorized Barangay Novaliches Proper personnel, to verify community collection.",
+              tl: "Mga awtorisadong tauhan ng Barangay Novaliches Proper, upang mapatunayan ang pagkolekta sa komunidad.",
             },
             {
               en: "The capstone adviser and academic evaluators at Quezon City University, strictly for academic review.",
@@ -376,8 +376,8 @@ export const privacyDocument: LegalDocument = {
   closing: {
     kind: "p",
     text: {
-      en: "I confirm that I am the owner or authorized representative of the registering barbershop in Barangay Nova Proper, and I have read and agree to the Hair2Harvest Terms and Conditions — including the exclusion of chemically treated hair and general shop trash — and Privacy Policy.",
-      tl: "Pinapapatunayan ko na ako ang may-ari o awtorisadong kinatawan ng nagrehistrong barbershop sa Barangay Nova Proper, at nabasa ko at sumasang-ayon ako sa Hair2Harvest Terms and Conditions — kabilang ang pagbubukod ng kemikal na ginamot na buhok at pangkalahatang basura ng tindahan — at Privacy Policy.",
+      en: "I confirm that I am the owner or authorized representative of the registering barbershop in Barangay Novaliches Proper, and I have read and agree to the Hair2Harvest Terms and Conditions — including the exclusion of chemically treated hair and general shop trash — and Privacy Policy.",
+      tl: "Pinapapatunayan ko na ako ang may-ari o awtorisadong kinatawan ng nagrehistrong barbershop sa Barangay Novaliches Proper, at nabasa ko at sumasang-ayon ako sa Hair2Harvest Terms and Conditions — kabilang ang pagbubukod ng kemikal na ginamot na buhok at pangkalahatang basura ng tindahan — at Privacy Policy.",
     },
   },
 };
