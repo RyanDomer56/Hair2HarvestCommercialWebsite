@@ -4,12 +4,13 @@ import { useState } from "react";
 import { Check, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
+import { normalizeMobile, isPhilippineMobile } from "@/lib/phone";
 
 const frequencyOptions = ["form.frequencyOpt1", "form.frequencyOpt2", "form.frequencyOpt3"];
 
-/** Keeps the phone field digits-only and capped at 11 characters. */
+/** Digits only, trunk 0 removed, capped — matches the fixed +63 prefix. */
 function sanitizeTel(e: React.ChangeEvent<HTMLInputElement>) {
-  const clean = e.target.value.replace(/\D/g, "").slice(0, 11);
+  const clean = normalizeMobile(e.target.value);
   if (clean !== e.target.value) e.target.value = clean;
 }
 
@@ -24,8 +25,10 @@ export function PartnerForm() {
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
 
-    // A mobile number is required; block submit and show a red flag (QA #27).
-    if (!String(data.mobile ?? "").trim()) {
+    // Mobile is required and must be a real PH number. The visible prefix is
+    // +63, so normalize away the trunk 0 before sending (avoids +6309…).
+    const mobile = normalizeMobile(data.mobile);
+    if (!isPhilippineMobile(mobile)) {
       setMobileError(true);
       form.querySelector<HTMLInputElement>("input[name='mobile']")?.focus();
       return;
@@ -40,6 +43,7 @@ export function PartnerForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
+          mobile,
           countryCode: "+63",
           consent: data.consent === "on",
         }),
@@ -127,7 +131,7 @@ export function PartnerForm() {
               type="tel"
               required
               inputMode="numeric"
-              maxLength={11}
+              maxLength={10}
               placeholder={t("form.mobilePh")}
               onChange={sanitizeTel}
               aria-invalid={mobileError}
@@ -266,7 +270,11 @@ export function PartnerForm() {
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="mono-tag max-w-[32ch] leading-relaxed text-ink-mute">{t("form.requestNote")}</p>
-        <button type="submit" disabled={state === "sending"} className="btn btn-sm sm:w-auto">
+        <button
+          type="submit"
+          disabled={state === "sending"}
+          className="btn btn-sm transition-transform active:scale-[0.98] disabled:opacity-70 sm:w-auto"
+        >
           {state === "sending" ? (
             <>
               <Loader2 size={14} className="animate-spin" />

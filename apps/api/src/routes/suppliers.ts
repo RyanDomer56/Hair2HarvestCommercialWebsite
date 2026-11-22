@@ -5,6 +5,17 @@ import { record } from "../models/AuditLog.js";
 
 export const suppliersRouter = Router();
 
+/**
+ * The public form shows a fixed +63 prefix, so owners may type the trunk 0
+ * (0917…). Strip it once so the stored phone is always "+63917…".
+ */
+function normalizeMobile(raw: string): string {
+  let digits = raw.replace(/\D/g, "");
+  if (digits.startsWith("63") && digits.length > 10) digits = digits.slice(2);
+  if (digits.startsWith("0")) digits = digits.replace(/^0+/, "");
+  return digits.slice(0, 10);
+}
+
 /** Payload shape sent by the commercial website partner form. */
 const registerSchema = z.object({
   name: z.string().min(2, "Shop name is required"),
@@ -77,7 +88,7 @@ suppliersRouter.post("/", async (req, res) => {
   }
 
   const { code, shopCode } = await nextCodes();
-  const phone = `${b.countryCode}${b.mobile}`.replace(/\s+/g, "");
+  const phone = `${b.countryCode}${normalizeMobile(b.mobile)}`;
   const now = new Date();
   const { days, open, close, pickupFrequency } = operatingHoursFromPickup(
     b.frequency,

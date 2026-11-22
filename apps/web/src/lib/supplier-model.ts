@@ -1,4 +1,5 @@
 import mongoose, { type Model, type InferSchemaType } from "mongoose";
+import { normalizeMobile } from "./phone";
 
 /**
  * Mirrors the production `suppliers` collection used by the admin workspace so
@@ -97,7 +98,7 @@ export async function createSupplierFromRegistration(b: RegistrationInput) {
   const last = await Supplier.findOne().sort({ code: -1 }).lean<{ code?: string }>();
   const n = last?.code ? Number(String(last.code).replace(/\D/g, "")) + 1 : 1;
   const pad = String(n).padStart(2, "0");
-  const phone = `${b.countryCode ?? "+63"}${b.mobile}`.replace(/\s+/g, "");
+  const phone = `${b.countryCode ?? "+63"}${normalizeMobile(b.mobile)}`;
   const now = new Date();
   const { days, open, close, pickupFrequency } = operatingHoursFromPickup(
     b.frequency,

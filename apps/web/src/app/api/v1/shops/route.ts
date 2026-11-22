@@ -3,6 +3,7 @@ import { readResource } from "@/lib/read-resource";
 import { shops } from "@/lib/data";
 import { connectMongo } from "@/lib/mongo";
 import { createSupplierFromRegistration } from "@/lib/supplier-model";
+import { normalizeMobile, isPhilippineMobile } from "@/lib/phone";
 
 // Mongoose needs the Node.js runtime, not the Edge runtime.
 export const runtime = "nodejs";
@@ -39,11 +40,12 @@ export async function POST(request: Request) {
     );
   }
 
-  // Mobile must be digits only and at most 11 characters (Philippine format).
-  const mobile = String(payload.mobile ?? "");
-  if (!/^\d{1,11}$/.test(mobile)) {
+  // Strip the trunk 0 the owner may type out of habit, then validate. The
+  // fixed +63 prefix in the form means "0917…" and "917…" are the same number.
+  const mobile = normalizeMobile(payload.mobile);
+  if (!isPhilippineMobile(mobile)) {
     return NextResponse.json(
-      { error: "Mobile number must be digits only, up to 11 characters" },
+      { error: "Mobile must be 10 digits starting with 9 (no leading 0)" },
       { status: 422 },
     );
   }
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
       const upstream = await fetch(`${API_URL.replace(/\/$/, "")}/api/v1/suppliers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, mobile, countryCode: "+63" }),
         cache: "no-store",
       });
       const data = await upstream.json().catch(() => ({}));

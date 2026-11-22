@@ -523,6 +523,43 @@
   animation-play-state: paused;
 }
 
+/* Process rail: a lime hairline that draws left-to-right, then resets.
+   scaleX only (GPU), and the global reduced-motion rule already stops it. */
+.h2h-rail {
+  position: relative;
+  height: 1px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.h2h-rail-dot {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--lime);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: h2h-rail-fill 4.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes h2h-rail-fill {
+  0% {
+    transform: scaleX(0);
+    opacity: 0.35;
+  }
+  12% {
+    opacity: 1;
+  }
+  82% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
 @keyframes h2h-pulse {
   0%,
   100% {
