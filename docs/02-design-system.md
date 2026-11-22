@@ -123,7 +123,7 @@ Numbers are always `font-variant-numeric: tabular-nums`. A weight that shifts co
 | `StatBlock` | Number in Display L, unit in mono micro, caption below in `ink-mute`. No card, no border — sits on paper. |
 | `Ticker` | Infinite marquee of pickup records. Pauses on hover. Purely decorative but factually seeded from real records. |
 | `HairWeave` | Canvas of 120 strands that drift. Static frame under reduced motion. |
-| `HarvestLine3D` | The interactive five-station machine. See §9. |
+| `HarvestLine3D` | The interactive v17 chain-drive composter. See §9. |
 
 ### Workspace
 
@@ -149,15 +149,16 @@ Numbers are always `font-variant-numeric: tabular-nums`. A weight that shifts co
 
 ## 9. The 3D machine diagram
 
-`MCH-01` is the actual machine from Modules 5 and 6, not a generic factory — a **diagram you can turn**.
+`MCH-01` is the **v17 chain-drive composter** from Modules 5 and 6, not a generic factory — a **diagram you can turn**. See `docs/defense/04-hardware-systemization.md` for the full hardware baseline.
 
-- Six assemblies: **motor & gearbox**, **rotary drum**, **hair intake**, **compost discharge**, **core probe**, **control cabinet**. Every one matches a line in the system specification.
-- Visible mechanics: finned motor and spinning fan, belt with moving treads, toothed ring gear, transparent drum shell with helical paddles lifting a granular compost bed, hair falling into the hopper, crumbs leaving the chute, steam above the pile, and a temperature probe whose screen updates.
+- The drum shell is **stationary**; a 12 V worm-gear motor turns the central shaft through a 40T/10T roller chain. Five rings of three paddles lift and fold the material.
+- Six callout parts: **drum**, **shaft**, **drive**, **door**, **discharge**, **cabinet**. The sliding top door, lock pin, flanged end bushings, UCP205 pillow blocks, square-tube frame, and discharge box follow the blueprint.
+- The chain guard was removed from the public viewer by request. Physical machine guarding is a separate engineering decision and is marked `TO CONFIRM` in the hardware baseline.
 - Four modes: `Assembled`, `Cutaway` (clipping plane opens the shell), `Assemblies` (exploded, callouts de-collided), `One batch` (camera follows the material path).
-- Five cameras: `Overview`, `Drum`, `Motor`, `Top`, `Flight`.
-- Hover/click any assembly for its module and its rule. `window.__drum` exposes `setMode`, `setCamera`, `focusPart`, `play`, `pause`.
-- The scene sits in an **instrument frame**: a top status rail, five telemetry readouts (rpm, core °C, moisture, batch, session) from `/api/v1/overview`, and a footer stating the hardware safety boundary.
-- The rust-coloured E-stop on the cabinet is deliberate: the web panel only sends authorised start/stop; emergency stop, lid interlock and motor shutoff remain local hardware.
-- All six assemblies also exist as a text list in the machine section below the hero. Nothing is only available in 3D.
+- Five cameras: `Overview`, `Drum`, `Drive`, `Top`, `Flight`.
+- Hover/click any part for its function. `window.__drum` exposes `setMode`, `setCamera`, `focusPart`, `play`, `pause`.
+- The scene sits in an **instrument frame**: a top status rail, telemetry readouts (`SHAFT`, `TEMP`, `MOISTURE`, `SESSION`) from `/api/v1/overview`, and a footer stating the hardware safety boundary.
+- The E-stop is local hardware: the web panel only requests authorised start/stop; emergency stop, lid interlock and motor shutoff stay off the network.
+- All six parts also exist as a text list in the machine section below the hero. Nothing is only available in 3D.
 - The scene inherits `--font-sans` for its DOM chrome and every canvas-painted texture — no system font anywhere.
 - Under `prefers-reduced-motion` it renders one composed frame and stops. Without WebGL it shows a labelled fallback card, not a blank box.

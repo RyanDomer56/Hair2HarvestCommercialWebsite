@@ -20,9 +20,24 @@ hair2harvest/
 ├── docs/
 │   ├── 01-system-design.md    modules, roles, status machines, NFRs
 │   ├── 02-design-system.md    "Soil Ledger" — palette, type, motion, components
-│   └── 03-data-model.md       collections, invariants, REST contract
+│   ├── 03-data-model.md       collections, invariants, REST contract
+│   └── defense/               standards, templates, hardware baseline, Q&A
 └── package.json      npm workspaces
 ```
+
+## First defence documentation pack
+
+[`docs/defense/`](docs/defense/) is the defence-ready documentation layer:
+
+- [`00-README.md`](docs/defense/00-README.md) — index, evidence tags, and what still needs the final papers
+- [`01-documentation-standards.md`](docs/defense/01-documentation-standards.md) — writing, evidence, and revision rules
+- [`02-template-library.md`](docs/defense/02-template-library.md) — copy-ready document skeletons
+- [`03-system-design-functions.md`](docs/defense/03-system-design-functions.md) — current software architecture and functions
+- [`04-hardware-systemization.md`](docs/defense/04-hardware-systemization.md) — v17 chain-drive composter baseline
+- [`05-first-defense-playbook.md`](docs/defense/05-first-defense-playbook.md) — 60 likely questions and model answers
+- [`06-evidence-checklist.md`](docs/defense/06-evidence-checklist.md) — artefacts to prepare before the defence
+
+Anything not verified is labelled `TO CONFIRM`; do not present it as measured.
 
 ## Routes
 
@@ -30,15 +45,16 @@ hair2harvest/
 
 | Route | Content |
 | --- | --- |
-| `/` | Hero, live 3D harvest line, problem, process, network, materials, evidence |
-| `/system` | Station detail, grading standard, pickup rules, batch timeline, roles |
-| `/network` | Filterable shop directory, pickup rules, contact |
-| `/impact` | Collection chart, lab register, batch mass balance, planting trials |
-| `/partner` | Registration form with consent capture |
+| `/` | Hero, five-step journey, v17 3D composter, impact CTA |
+| `/system` | Five plain steps, grading, privacy, batch, v17 chain-drive machine |
+| `/network` | Shop-network explanation and status directory |
+| `/impact` | Plain-language collection journey; lab/batch internals kept out of public view |
+| `/partner` | Registration with split first/last name, fixed `+63`, and consent |
+| `/terms`, `/privacy` | Bilingual legal pages using the PDF's `Novaliches Proper` wording |
 
-**Operations workspace** — built but deliberately unlinked. No public page points at it and
-`robots.txt` disallows it, so it is reachable by URL only, for staff. It is kept in the
-codebase so it can be handed over or re-exposed on request.
+**Operations workspace** — deliberately unlinked and gated. No public page points at it;
+`/dashboard/:path*` redirects to `/login` unless a signed http-only session cookie is present.
+It is kept in the codebase so it can be handed over or re-exposed on request.
 
 | Route | Content |
 | --- | --- |
@@ -77,9 +93,10 @@ The marketing site renders from typed fixtures in `apps/web/src/lib/data.ts` so 
 
 ## Backend
 
-**It already exists.** `apps/api` is a full Express 5 + Mongoose 9 service for MongoDB — it was built
-in the first pass but not deployed, because Vercel is serverless and will not keep a long-running
-Express process alive. Until now the site rendered from typed fixtures in `apps/web/src/lib/data.ts`.
+`apps/api` is a full Express 5 + Mongoose 9 service for MongoDB. Vercel is serverless, so the
+long-running Express process is optional: when `API_URL` is set, web routes read through to it;
+when it is not set, reads fall back to typed fixtures and the public partner form writes directly
+to MongoDB through `apps/web/src/lib/supplier-model.ts`. The deployed site is live on Vercel.
 
 | Layer | What it holds |
 | --- | --- |
@@ -109,7 +126,8 @@ hosted Express service and they become a read-through to MongoDB. Unset, they re
 so the site never shows a broken state, and the swap is a single env var.
 
 `GET /api/v1/health` reports exactly which source is in use. `POST /api/v1/shops` (the partner form)
-forwards to Express when `API_URL` is set, otherwise returns `202 { reference }` and queues the visit.
+forwards to Express when `API_URL` is set; otherwise it writes directly to MongoDB through the
+supplier model. Mobile numbers are normalised in both paths.
 
 `ShopDirectory` and the machine telemetry read live through `lib/api-client.ts`, which caches the
 last good response and always falls back to fixtures on a network failure.
@@ -117,18 +135,20 @@ last good response and always falls back to fixtures on a network failure.
 ## The 3D machine
 
 `apps/web/src/components/site/composting-drum-3d.tsx` is a procedural three.js model of **MCH-01**,
-the rotary composting drum from Modules 5 and 6 — not a generic factory.
+the v17 chain-drive composter rebuilt from the supplied blueprint — not a generic factory.
 
-- A finned motor, cooling fan and gearbox drive a belt with moving treads around the drum shaft; a
-  toothed ring gear turns a transparent barrel whose helical paddles lift a granular compost bed.
-- Hair falls through the intake hopper, crumbs leave the discharge chute, steam rises off the pile,
-  and a core probe paints a live temperature onto a canvas screen.
-- Six clickable assemblies: motor, drum, intake, discharge, probe, control cabinet. Four modes
-  (Assembled / Cutaway / Assemblies / One batch) and five cameras.
+- The **drum shell stays still**; a 12 V worm-gear motor turns the central shaft through a 40T/10T
+  roller chain. Five rings of three paddles lift and fold the mix.
+- A sliding top door with lock pin, flanged end bushings, UCP205 pillow blocks, square-tube frame,
+  slide-out discharge box, cabinet, and tank follow the master drawing.
+- Six clickable parts: `drum`, `shaft`, `drive`, `door`, `discharge`, `cabinet`. Four modes
+  (Assembled / Cutaway / Assemblies / One batch) and five cameras (Overview, Drum, Drive, Top, Flight).
 - `window.__drum` exposes `setMode`, `setCamera`, `focusPart`, `play`, `pause`.
-- It sits inside an instrument frame with five telemetry readouts fed by `/api/v1/overview`.
-- No models, no images, no network. Two font families only. Degrades to a labelled fallback without
-  WebGL and freezes on one frame under `prefers-reduced-motion`.
+- E-stop, lid interlock, and motor shutoff remain local hardware; the web panel only requests
+  authorised start/stop. The chain guard was removed from the public viewer by request.
+- It sits inside an instrument frame with telemetry readouts fed by `/api/v1/overview`.
+- No models, no images, no network. Degrades to a labelled fallback without WebGL and freezes on
+  one frame under `prefers-reduced-motion`. Full details: [`docs/defense/04-hardware-systemization.md`](docs/defense/04-hardware-systemization.md).
 
 ## System assistant
 
@@ -191,6 +211,9 @@ The research behind this build has open questions, and the interface says so rat
 - Whether treated hair (~15% of clients) is acceptable in compost.
 - The real sack tare weight — configured at 0.18 kg and labelled an assumption.
 - Planting trials are `n = 1` per treatment and marked preliminary.
+- Physical sensor models, motor ratings, and final fabrication dimensions are still `TO CONFIRM`
+  against the v17 blueprint; the 3D scene is an explanatory model, not a calibrated simulation.
+- Final lab sheets must be attached before any nutrient or maturity value is presented.
 
 ## Stack
 

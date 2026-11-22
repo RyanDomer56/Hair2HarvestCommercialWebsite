@@ -3,6 +3,8 @@
 **Version** 1.0 · **Date** 2 November 2026 · **Stack** MongoDB · Express.js · React · Node.js
 **Scope** Commercial web presence + operations workspace for a barbershop hair-to-compost network in Bataan, Philippines.
 
+> **Note (22 November 2026):** This is the original design baseline. For the current implemented functions, deployment reality, and v17 hardware, use [`defense/03-system-design-functions.md`](defense/03-system-design-functions.md) and [`defense/04-hardware-systemization.md`](defense/04-hardware-systemization.md).
+
 ---
 
 ## 1. What the system is

@@ -2,6 +2,8 @@
 
 **Database** MongoDB 7 · **ODM** Mongoose 9 · **Base path** `/api/v1`
 
+> **Note (22 November 2026):** This is the original data contract baseline. Current intake writes also use the supplier model when `API_URL` is unset; see `defense/03-system-design-functions.md` §2.1 and §3.2.
+
 ---
 
 ## 1. Collections
