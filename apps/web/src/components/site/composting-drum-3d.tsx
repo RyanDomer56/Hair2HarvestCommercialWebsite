@@ -368,9 +368,6 @@ function initDrumScene(
       blue: mat(0x86b6dc, 0.25, 0.28, {
         transparent: true, opacity: 0.42, side: THREE.DoubleSide, depthWrite: false,
       }),
-      guard: mat(0x9ed36a, 0.2, 0.35, {
-        transparent: true, opacity: 0.13, side: THREE.DoubleSide, depthWrite: false,
-      }),
       paper: mat(0xf4f1ea, 0, 0.85),
     };
 
@@ -816,21 +813,6 @@ function initDrumScene(
       links.instanceMatrix.needsUpdate = true;
     }
     updateChain(0);
-
-    // translucent green chain guard, lifted in cutaway mode
-    const guardGroup = new THREE.Group();
-    driveAssembly.add(guardGroup);
-    const guardY = (DRUM_Y + MOTOR_Y) / 2 + 0.15;
-    for (const x of [SPROCKET_X - 0.19, SPROCKET_X + 0.19]) {
-      box(guardGroup, 0.035, 4.85, 2.1, x, guardY, 0, M.guard, 0.01);
-    }
-    for (const z of [-1.05, 1.05]) {
-      box(guardGroup, 0.42, 4.85, 0.035, SPROCKET_X, guardY, z, M.guard, 0.01);
-      box(guardGroup, 0.05, 4.85, 0.05, SPROCKET_X + 0.21, guardY, z, M.green, 0.01);
-    }
-    for (const y of [guardY - 2.42, guardY + 2.42]) {
-      box(guardGroup, 0.05, 0.05, 2.1, SPROCKET_X + 0.21, y, 0, M.green, 0.01);
-    }
 
     // ---------------------------------------------------------- discharge
     const dischargeAssembly = new THREE.Group();
@@ -1388,7 +1370,6 @@ function initDrumScene(
       cutPlaneY.constant = 20 - cutAmount * (20 - (DRUM_Y + 0.05));
       cutPlaneZ.constant = 20 - cutAmount * (20 - 0.15);
       shellMat.opacity = 0.36 - cutAmount * 0.16;
-      guardGroup.visible = mode !== "cutaway";
 
       parts.forEach((p) => {
         const target = spreadTargets[p.id];

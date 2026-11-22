@@ -758,8 +758,14 @@ export const dict: Record<string, TranslationEntry> = {
   /* ----------------------------------------------------------- partner form */
   "form.shopName": { en: "Shop name", tl: "Pangalan ng tindahan" },
   "form.shopNamePh": { en: "Please input your shop name here", tl: "Pakilagay ang pangalan ng inyong tindahan dito" },
-  "form.contactPerson": { en: "Contact person", tl: "Taong kontak" },
-  "form.contactPersonPh": { en: "Please input your name here", tl: "Pakilagay ang inyong pangalan dito" },
+  "form.firstName": { en: "First name", tl: "Unang pangalan" },
+  "form.firstNamePh": { en: "Please input your first name here", tl: "Pakilagay ang inyong unang pangalan dito" },
+  "form.lastName": { en: "Last name", tl: "Apelyido" },
+  "form.lastNamePh": { en: "Please input your last name here", tl: "Pakilagay ang inyong apelyido dito" },
+  "form.nameInvalid": {
+    en: "Please enter both your first name and last name.",
+    tl: "Pakilagay ang inyong unang pangalan at apelyido.",
+  },
   "form.mobile": { en: "Mobile number", tl: "Numero ng mobile" },
   "form.mobilePh": { en: "Please input your number here", tl: "Pakilagay ang inyong numero dito" },
   "form.mobileInvalid": {

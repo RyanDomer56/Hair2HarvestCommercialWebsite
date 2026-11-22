@@ -20,11 +20,28 @@ export function PartnerForm() {
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
   const [mobileError, setMobileError] = useState(false);
+  const [nameError, setNameError] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
+
+    // The form shows first and last name separately; storage keeps one owner
+    // field, so join them here before sending the payload.
+    const firstName = String(data.firstName ?? "").trim();
+    const lastName = String(data.lastName ?? "").trim();
+    if (!firstName || !lastName) {
+      setNameError(true);
+      form
+        .querySelector<HTMLInputElement>(`input[name='${!firstName ? "firstName" : "lastName"}']`)
+        ?.focus();
+      return;
+    }
+    setNameError(false);
+    const contact = `${firstName} ${lastName}`;
+    delete data.firstName;
+    delete data.lastName;
 
     // Mobile is required and must be a real PH number. The visible prefix is
     // +63, so normalize away the trunk 0 before sending (avoids +6309…).
@@ -44,6 +61,7 @@ export function PartnerForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
+          contact,
           mobile,
           countryCode: "+63",
           consent: data.consent === "on",
@@ -100,23 +118,53 @@ export function PartnerForm() {
           />
         </label>
 
-        {/* Contact person -> Owner */}
+        {/* Owner name — kept separate in the form, joined into `owner` in storage */}
         <label className="flex flex-col gap-1.5">
           <span className="mono-tag uppercase text-ink-mute">
-            {t("form.contactPerson")}
+            {t("form.firstName")}
             <span className="ml-1 text-clay">*</span>
           </span>
           <input
-            name="contact"
+            name="firstName"
             type="text"
+            autoComplete="given-name"
             required
-            placeholder={t("form.contactPersonPh")}
-            className="h-11 rounded-[3px] border border-[var(--line)] bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors placeholder:text-ink-mute/60 focus:border-moss"
+            placeholder={t("form.firstNamePh")}
+            aria-invalid={nameError}
+            className={cn(
+              "h-11 rounded-[3px] border bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors placeholder:text-ink-mute/60 focus:border-moss",
+              nameError ? "border-rust" : "border-[var(--line)]",
+            )}
           />
         </label>
 
-        {/* Mobile — fixed +63 prefix, local digits (QA #27) */}
         <label className="flex flex-col gap-1.5">
+          <span className="mono-tag uppercase text-ink-mute">
+            {t("form.lastName")}
+            <span className="ml-1 text-clay">*</span>
+          </span>
+          <input
+            name="lastName"
+            type="text"
+            autoComplete="family-name"
+            required
+            placeholder={t("form.lastNamePh")}
+            aria-invalid={nameError}
+            className={cn(
+              "h-11 rounded-[3px] border bg-paper-raised px-3 text-[0.875rem] text-ink outline-none transition-colors placeholder:text-ink-mute/60 focus:border-moss",
+              nameError ? "border-rust" : "border-[var(--line)]",
+            )}
+          />
+        </label>
+        {nameError && (
+          <span className="sm:col-span-2 -mt-2 flex items-center gap-1 text-[0.6875rem] font-medium text-rust">
+            <AlertCircle size={12} aria-hidden />
+            {t("form.nameInvalid")}
+          </span>
+        )}
+
+        {/* Mobile — fixed +63 prefix, local digits (QA #27) */}
+        <label className="flex flex-col gap-1.5 sm:col-span-2">
           <span className="mono-tag uppercase text-ink-mute">
             {t("form.mobile")}
             <span className="ml-1 text-clay">*</span>
