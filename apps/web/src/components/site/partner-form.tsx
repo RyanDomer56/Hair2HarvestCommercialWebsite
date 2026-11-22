@@ -142,7 +142,7 @@ export function PartnerForm() {
               )}
             />
           </div>
-          {mobileError ? (
+          {mobileError && (
             <span
               id="mobile-error"
               className="flex items-center gap-1 text-[0.6875rem] font-medium text-rust"
@@ -150,8 +150,6 @@ export function PartnerForm() {
               <AlertCircle size={12} aria-hidden />
               {t("form.mobileInvalid")}
             </span>
-          ) : (
-            <span className="text-[0.6875rem] text-ink-mute">{t("form.mobileHint")}</span>
           )}
         </label>
 

@@ -751,10 +751,6 @@ export const dict: Record<string, TranslationEntry> = {
   "form.contactPersonPh": { en: "Who should we ask for?", tl: "Kanino kami dapat magtanong?" },
   "form.mobile": { en: "Mobile number", tl: "Numero ng mobile" },
   "form.mobilePh": { en: "917 402 1188", tl: "917 402 1188" },
-  "form.mobileHint": {
-    en: "Just the 10 digits after +63 — start with 9, no leading 0.",
-    tl: "10 digits lang pagkatapos ng +63 — magsimula sa 9, walang unang 0.",
-  },
   "form.mobileInvalid": {
     en: "Enter 10 digits starting with 9 (no leading 0).",
     tl: "Maglagay ng 10 digits na nagsisimula sa 9 (walang unang 0).",
