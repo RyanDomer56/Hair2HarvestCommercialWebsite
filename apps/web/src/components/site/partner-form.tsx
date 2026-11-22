@@ -80,7 +80,7 @@ export function PartnerForm() {
   if (state === "done") {
     return (
       <div className="card-print flex flex-col items-start gap-4 p-8">
-        <span className="flex size-10 items-center justify-center rounded-full bg-moss text-paper-raised">
+        <span className="success-check flex size-10 items-center justify-center rounded-full bg-moss text-paper-raised">
           <Check size={18} />
         </span>
         <div>

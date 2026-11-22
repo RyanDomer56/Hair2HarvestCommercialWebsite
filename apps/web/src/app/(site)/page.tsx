@@ -73,11 +73,13 @@ export default function HomePage() {
 
               <Reveal delay={80}>
                 <h1 className="display mt-7 text-[clamp(2.4rem,6.2vw,5.4rem)] text-ink">
-                  {t("home.hero.title1")}
-                  <br />
-                  {t("home.hero.title2")} <em className="text-moss">{t("home.hero.title3")}</em>
-                  <br />
-                  {t("home.hero.title4")}
+                  <span className="hero-line"><span>{t("home.hero.title1")}</span></span>
+                  <span className="hero-line">
+                    <span>
+                      {t("home.hero.title2")} <em className="text-moss">{t("home.hero.title3")}</em>
+                    </span>
+                  </span>
+                  <span className="hero-line"><span>{t("home.hero.title4")}</span></span>
                 </h1>
               </Reveal>
             </div>
@@ -190,9 +192,13 @@ export default function HomePage() {
                 <Reveal key={c.labelKey} delay={i * 60}>
                   <Link
                     href={c.href}
-                    className="group flex h-full flex-col rounded-[4px] border border-[var(--line)] bg-paper p-5 transition-colors hover:border-moss/40 hover:bg-[color-mix(in_oklab,var(--moss)_6%,transparent)]"
+                    className="group flex h-full flex-col rounded-[4px] border border-[var(--line)] bg-paper p-5 transition-[transform,border-color,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-moss/40 hover:bg-[color-mix(in_oklab,var(--moss)_6%,transparent)]"
                   >
-                    <Icon size={20} className="text-moss" aria-hidden />
+                    <Icon
+                      size={20}
+                      className="text-moss transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110"
+                      aria-hidden
+                    />
                     <p className="mt-4 text-[0.9375rem] font-medium tracking-[-0.01em] text-ink">
                       {t(c.labelKey)}
                     </p>

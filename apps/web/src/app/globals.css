@@ -576,6 +576,87 @@
   animation: h2h-pulse 2.4s ease-in-out infinite;
 }
 
+/* Navigation menus enter with the same calm deceleration as content reveals. */
+@keyframes h2h-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.h2h-menu-in {
+  animation: h2h-menu-in 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Hero headline: each line wipes in behind its own edge, then settles. */
+@keyframes h2h-line-rise {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(12px);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+.hero-line {
+  display: block;
+}
+
+.hero-line > span {
+  display: block;
+  animation: h2h-line-rise 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-line:nth-child(1) > span { animation-delay: 60ms; }
+.hero-line:nth-child(2) > span { animation-delay: 150ms; }
+.hero-line:nth-child(3) > span { animation-delay: 240ms; }
+
+/* A quiet tick when a live readout refreshes — opacity + transform only. */
+@keyframes h2h-value-tick {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.h2h-value-tick {
+  animation: h2h-value-tick 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Success check draws itself instead of snapping into place. */
+@keyframes h2h-check-draw {
+  from { stroke-dashoffset: 24; }
+  to { stroke-dashoffset: 0; }
+}
+
+.success-check svg path {
+  stroke-dasharray: 24;
+  animation: h2h-check-draw 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+/* Thin scroll-progress rule sits on the sticky header's bottom edge. */
+.scroll-progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--lime);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+  will-change: transform;
+}
+
 /* thin scrollbars inside dark viewports */
 .thin-scroll::-webkit-scrollbar {
   height: 6px;

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, Home, Menu, X } from "lucide-react";
 import { Wordmark } from "./brand";
 import { LanguageToggle } from "./language-toggle";
@@ -58,16 +58,28 @@ const links: NavItem[] = [
 export function SiteHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const progressRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const onHome = pathname === "/";
   const { t } = useLanguage();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      if (progressRef.current) {
+        progressRef.current.style.transform = `scaleX(${progress})`;
+      }
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -91,6 +103,7 @@ export function SiteHeader() {
             : "border-b border-transparent bg-transparent",
         )}
       >
+        <div ref={progressRef} className="scroll-progress" aria-hidden />
         <div className="shell relative z-10 flex h-[72px] items-center justify-between gap-6">
           {/* The wordmark is intentionally NOT a link. Older visitors do not
               think to click a logo; the labelled Introduction button is the
@@ -147,7 +160,7 @@ export function SiteHeader() {
 
                   {l.menu && isOpen && (
                     <div className="absolute left-0 top-full pt-2">
-                      <div className="card-print w-56 overflow-hidden rounded-[6px] border border-[var(--line)] bg-paper p-1.5 shadow-[0_18px_40px_rgba(8,12,4,.18)]">
+                      <div className="h2h-menu-in card-print w-56 overflow-hidden rounded-[6px] border border-[var(--line)] bg-paper p-1.5 shadow-[0_18px_40px_rgba(8,12,4,.18)]">
                         {l.menu.map((m) => (
                           <Link
                             key={m.href}
@@ -207,7 +220,8 @@ export function SiteHeader() {
               <div key={l.href} className="border-b border-[var(--line)]">
                 <Link
                   href={l.href}
-                  className="flex items-baseline justify-between py-5"
+                  className="h2h-menu-in flex items-baseline justify-between py-5"
+                  style={{ animationDelay: `${i * 45}ms` }}
                 >
                   <span className="display text-[2rem] text-ink">{t(l.labelKey)}</span>
                   <span className="mono-tag text-ink-mute">0{i + 1}</span>
