@@ -7,18 +7,17 @@ import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeom
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 /**
- * MCH-01 — Rotary composting drum
+ * MCH-01 — Hair2Harvest Composter v17 (chain drive)
  *
- * The actual machine described by Modules 5 (Batch & Composting) and 6
- * (Machine Monitoring & Control), not a generic factory: a finned motor and
- * gearbox drive a belt around the drum shaft, a cutaway shell reveals the
- * helical paddles and the compost bed, hair enters through the intake hopper,
- * and finished compost leaves the discharge chute. A probe and a control
- * cabinet carry the live telemetry.
+ * Procedural three.js model rebuilt from the v17 blueprint: the drum stays
+ * still while a 12 V worm-gear motor turns the shaft through a guarded 40T/10T
+ * chain. Five rings of three paddles lift and fold the mix. A sliding top door,
+ * lock pin, flanged end bushings, UCP205 pillow blocks, square-tube frame,
+ * slide-in discharge box and control cabinet follow the master drawing.
  *
- * Everything is procedural three.js — no models, no images, no network.
- * The web panel only ever sends authorised start/stop: the E-stop is local
- * hardware, and it is drawn here in rust as a reminder of that boundary.
+ * Everything is generated in code — no external models, images or network.
+ * The web panel only requests authorised start/stop; the E-stop is local
+ * hardware, drawn in rust as a reminder of that boundary.
  */
 
 export type CompostingDrum3DProps = {
@@ -75,7 +74,7 @@ export default function CompostingDrum3D({
       <div
         id="scene"
         role="img"
-        aria-label="Interactive 3D cutaway of the Hair2Harvest rotary composting drum: a finned motor drives a belt and gearbox, a transparent drum reveals helical paddles turning a bed of compost, hair enters through a hopper and finished compost leaves through a discharge chute. Drag to rotate, scroll to zoom, click a part to inspect it."
+        aria-label="Interactive 3D cutaway of the Hair2Harvest v17 chain-drive composter: a horizontal drum stays still while a guarded chain turns five rings of paddles on a central shaft. A sliding top door, lock pin, discharge box and control cabinet are shown. Drag to rotate, scroll to zoom, click a part to inspect it."
       />
       <div className="vignette" />
       <header className="topbar debug-ui">
@@ -87,18 +86,18 @@ export default function CompostingDrum3D({
             </svg>
           </div>
           <div>
-            <strong>MCH-01 · Rotary drum</strong>
-            <small>Batch &amp; composting · live</small>
+            <strong>MCH-01 · v17 composter</strong>
+            <small>Chain drive · Nova Proper</small>
           </div>
         </div>
         <div className="status" id="status">
           <i />
-          <span id="status-text">Motor running</span>
-          <span>8 RPM</span>
+          <span id="status-text">Shaft mixing</span>
+          <span>10 RPM</span>
         </div>
       </header>
       <div className="scene-heading debug-ui">
-        Hair in · compost out <span className="index">MODULE 5 / MODULE 6</span>
+        Barber hair in · compost out <span className="index">NOVA PROPER · QCU</span>
       </div>
       <div className="coordinates debug-ui">MCH-01 — NOVA PROPER LINE</div>
       <div id="journey" className="debug-ui">
@@ -108,8 +107,8 @@ export default function CompostingDrum3D({
           </svg>
         </div>
         <div>
-          <strong id="journey-title">Intake</strong>
-          <small id="journey-detail">Clean hair · BATCH-2603</small>
+          <strong id="journey-title">Collect</strong>
+          <small id="journey-detail">Clean hair from partner barbers</small>
         </div>
         <div className="track">
           <i id="journey-progress" />
@@ -152,7 +151,7 @@ export default function CompostingDrum3D({
           <span className="caption">VIEW</span>
           <button data-camera="overview" aria-pressed="true">Overview</button>
           <button data-camera="drum" aria-pressed="false">Drum</button>
-          <button data-camera="motor" aria-pressed="false">Motor</button>
+          <button data-camera="drive" aria-pressed="false">Drive</button>
           <button data-camera="top" aria-pressed="false">Top</button>
           <button data-camera="flight" aria-pressed="false">Flight</button>
           <span className="divider" />
@@ -193,8 +192,8 @@ export default function CompostingDrum3D({
 // ---------------------------------------------------------------------------
 
 export type DrumMode = "assembled" | "cutaway" | "parts" | "flow";
-export type DrumCamera = "overview" | "drum" | "motor" | "top" | "flight";
-export type PartId = "motor" | "drum" | "intake" | "discharge" | "sensor" | "cabinet";
+export type DrumCamera = "overview" | "drum" | "drive" | "top" | "flight";
+export type PartId = "drum" | "shaft" | "drive" | "door" | "discharge" | "cabinet";
 
 export type DrumApi = {
   setMode: (name: string) => boolean;
@@ -365,6 +364,13 @@ function initDrumScene(
       glass: mat(0x8fa39a, 0.5, 0.14, {
         transparent: true, opacity: 0.3, side: THREE.DoubleSide, depthWrite: false,
       }),
+      steel: mat(0xaab4ba, 0.78, 0.3),
+      blue: mat(0x86b6dc, 0.25, 0.28, {
+        transparent: true, opacity: 0.42, side: THREE.DoubleSide, depthWrite: false,
+      }),
+      guard: mat(0x9ed36a, 0.2, 0.35, {
+        transparent: true, opacity: 0.13, side: THREE.DoubleSide, depthWrite: false,
+      }),
       paper: mat(0xf4f1ea, 0, 0.85),
     };
 
@@ -451,6 +457,22 @@ function initDrumScene(
       return { mesh: o, curve };
     }
 
+    /** Lathe around X: profile is [axial position, radius] in scene units. */
+    function latheX(
+      parent: THREE.Object3D,
+      profile: Array<[number, number]>,
+      m: Material,
+      segments = 48,
+    ) {
+      const pts = profile.map(([axial, radius]) => new THREE.Vector2(radius, axial));
+      const o = new THREE.Mesh(new THREE.LatheGeometry(pts, segments), m);
+      o.rotation.z = -Math.PI / 2;
+      o.castShadow = true;
+      o.receiveShadow = true;
+      parent.add(o);
+      return o;
+    }
+
     type Draw = (ctx: CanvasRenderingContext2D, w: number, h: number) => void;
     function canvasTexture(w: number, h: number, draw: Draw) {
       const c = document.createElement("canvas");
@@ -486,15 +508,22 @@ function initDrumScene(
       return o;
     }
 
-    // ------------------------------------------------------------- the skid
+    // -------------------------------------------------------- frame + floor
     const machine = new THREE.Group();
     scene.add(machine);
 
+    const FLOOR_Y = 0.16;
+    const FZ = 2.1;          // half frame width (420 mm)
+    const FX = 4.3;          // half frame length (815 mm + cabinet room)
+    const RAIL_Y = 5.14;     // bearing rail top = 513.5 mm
+    const MID_Y = 1.72;
+    const TUBE = 0.25;       // 25 x 25 x 1.5 square steel tube
+
     const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(80, 80), new THREE.ShadowMaterial({ opacity: 0.24 }),
+      new THREE.PlaneGeometry(48, 32), new THREE.ShadowMaterial({ opacity: 0.24 }),
     );
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -0.44;
+    floor.position.y = -0.02;
     floor.receiveShadow = true;
     scene.add(floor);
 
@@ -507,26 +536,42 @@ function initDrumScene(
       c.fillRect(0, 0, w, h);
     });
     const contact = new THREE.Mesh(
-      new THREE.PlaneGeometry(19, 13),
+      new THREE.PlaneGeometry(13.4, 6.6),
       new THREE.MeshBasicMaterial({
-        map: shadowTex.texture, transparent: true, depthWrite: false, opacity: 0.65,
+        map: shadowTex.texture, transparent: true, depthWrite: false, opacity: 0.6,
       }),
     );
     contact.rotation.x = -Math.PI / 2;
-    contact.position.y = -0.415;
+    contact.position.y = 0.004;
     scene.add(contact);
 
-    box(machine, 13.4, 0.38, 8.6, 0, -0.09, 0, M.base, 0.17);
-    box(machine, 13.2, 0.055, 8.42, 0, 0.13, 0, M.edge, 0.11);
-    box(machine, 13.05, 0.09, 8.3, 0, 0.19, 0, M.body, 0.1);
-    box(machine, 13.15, 0.027, 8.36, 0, -0.19, 0, M.dark, 0.06);
-    box(machine, 12.4, 0.026, 0.032, 0, -0.17, 4.34, M.light, 0.01);
+    const frame = new THREE.Group();
+    machine.add(frame);
 
-    for (const x of [-6, 6]) {
-      for (const z of [-3.5, 3.5]) {
-        cyl(machine, 0.38, 0.38, 0.25, x, -0.31, z, M.rubber);
-        cyl(machine, 0.28, 0.28, 0.09, x, -0.4, z, M.dark);
-        cyl(machine, 0.055, 0.055, 0.026, x, 0.253, z, M.chrome, 12);
+    // welded square-tube rails and uprights
+    for (const y of [FLOOR_Y, MID_Y, RAIL_Y]) {
+      for (const z of [-FZ, FZ]) {
+        box(frame, FX * 2, TUBE, TUBE, 0, y, z, M.steel, 0.012);
+      }
+    }
+    for (const x of [-FX, 0, FX]) {
+      for (const y of [FLOOR_Y, RAIL_Y]) {
+        box(frame, TUBE, TUBE, FZ * 2, x, y, 0, M.steel, 0.012);
+      }
+    }
+    for (const x of [-FX, -1.6, FX]) {
+      for (const z of [-FZ, FZ]) {
+        box(frame, TUBE, RAIL_Y - FLOOR_Y, TUBE, x, (FLOOR_Y + RAIL_Y) / 2, z, M.steel, 0.012);
+      }
+    }
+
+    // UCP205 pillow blocks carrying the shaft, not the drum
+    for (const x of [-3.45, 2.25]) {
+      box(frame, 0.76, 0.1, 0.92, x, RAIL_Y + 0.05, 0, M.body, 0.025);
+      box(frame, 0.64, 0.34, 0.64, x, RAIL_Y + 0.27, 0, M.ivory, 0.1);
+      cyl(frame, 0.23, 0.23, 0.66, x, RAIL_Y + 0.36, 0, M.dark, 20, "x");
+      for (const z of [-0.24, 0.24]) {
+        cyl(frame, 0.055, 0.055, 0.08, x, RAIL_Y + 0.13, z, M.chrome, 10);
       }
     }
 
@@ -536,92 +581,122 @@ function initDrumScene(
       c.strokeStyle = "#4d545c";
       c.lineWidth = 2;
       c.strokeRect(2, 2, w - 4, h - 4);
-      print(c, "MCH-01", 45, 79, 40, "#d9d8cd", 650);
-      print(c, "·  rotary composter  ·  8 rpm  ·  45 day cure", 285, 79, 33, "#b8bdc1", 450);
-      print(c, "MODULE 5 / BATCH    ·    MODULE 6 / MACHINE", 47, 133, 19, "#737e88", 500);
-      print(c, "No. 001", 1360, 130, 23, "#b9814a");
+      print(c, "MCH-01", 42, 78, 38, "#d9f26b", 650);
+      print(c, "·  v17 chain drive  ·  10 rpm  ·  Nova Proper", 298, 78, 27, "#b8bdc1", 450);
+      print(c, "HAIR TO SOIL  ·  QCU BSIT CAPSTONE", 44, 132, 18, "#737e88", 500);
     });
-    const nameplate = screen(machine, 7.6, 0.86, -0.3, 0.25, 3.68, engraving.texture);
-    nameplate.rotation.x = -Math.PI / 2;
+    screen(machine, 5.4, 0.62, -0.4, 0.55, FZ + 0.03, engraving.texture);
 
-    // roller stands + idler wheels
-    for (const x of [-1.5, 2.05]) {
-      for (const z of [-1.05, 1.05]) {
-        box(machine, 0.62, 0.78, 0.5, x, 0.65, z, M.body, 0.06);
-        const roller = cyl(machine, 0.26, 0.26, 0.34, x, 1.08, z, M.chrome, 20, "x");
-        roller.rotation.set(0, 0, Math.PI / 2);
-        roller.rotation.x = 0;
-      }
-      box(machine, 0.18, 0.6, 2.5, x, 0.55, 0, M.dark, 0.03);
-    }
+    // ------------------------------------------------------- drum and shaft
+    const DRUM_X = -0.6;
+    const DRUM_Y = 5.5;
+    const DRUM_L = 5.33;
+    const R_MID = 1.575;
+    const R_END_L = 1.335;
+    const R_END_R = 1.305;
 
-    // ---------------------------------------------------------- the drum
     const drumAssembly = new THREE.Group();
     machine.add(drumAssembly);
 
-    const DRUM_Y = 2.6;
-    const DRUM_R = 1.65;
-    const DRUM_L = 5.2;
+    const drumStatic = new THREE.Group();
+    drumStatic.position.set(DRUM_X, DRUM_Y, 0);
+    drumAssembly.add(drumStatic);
 
-    const drumSpin = new THREE.Group();
-    drumSpin.position.set(0.35, DRUM_Y, 0);
-    drumAssembly.add(drumSpin);
-
-    // cutaway shell — transparent so the paddles and compost are always legible
+    // bulged shell from the measured circumferences: Ø267 / Ø315 / Ø261
     const shellMat = M.glass.clone() as THREE.MeshStandardMaterial;
-    shellMat.opacity = 0.3;
-    const shell = cyl(drumSpin, DRUM_R, DRUM_R, DRUM_L, 0, 0, 0, shellMat, 48, "x");
+    shellMat.color.setHex(0x9fc4e8);
+    shellMat.opacity = 0.36;
+    const shell = latheX(
+      drumStatic,
+      [
+        [-DRUM_L / 2, R_END_L], [-2.2, 1.4], [-1.0, R_MID], [0, R_MID + 0.01],
+        [1.0, R_MID], [2.2, 1.42], [DRUM_L / 2, R_END_R],
+      ],
+      shellMat,
+      56,
+    );
     shell.castShadow = false;
 
-    // solid bands define the cylinder silhouette
-    for (const x of [-DRUM_L / 2 + 0.12, -1.05, 1.05, DRUM_L / 2 - 0.12]) {
-      ring(drumSpin, DRUM_R + 0.05, 0.075, x, 0, 0, M.copper, "x");
+    // solid bands at the five measured ring stations
+    const bandRadii: Array<[number, number]> = [
+      [-DRUM_L / 2 + 0.08, R_END_L], [-1.0, R_MID], [1.0, R_MID], [DRUM_L / 2 - 0.08, R_END_R],
+    ];
+    for (const [x, r] of bandRadii) {
+      ring(drumStatic, r + 0.02, 0.055, x, 0, 0, M.steel, "x");
     }
 
-    // end caps with bolt circles
+    // end plates, flanged bushings and 100 x 100 end plates — no support wheels
     for (const side of [-1, 1]) {
-      const x = side * (DRUM_L / 2 + 0.02);
-      const cap = cyl(drumSpin, DRUM_R + 0.06, DRUM_R + 0.06, 0.1, x, 0, 0, M.drum, 48, "x");
-      cap.material = M.drum;
-      cyl(drumSpin, 0.34, 0.34, 0.16, x + side * 0.08, 0, 0, M.chrome, 24, "x");
-      for (let i = 0; i < 12; i++) {
-        const a = (i / 12) * TAU;
-        ball(drumSpin, 0.055, x + side * 0.06, Math.cos(a) * 1.34, Math.sin(a) * 1.34, M.chrome);
+      const x = side * (DRUM_L / 2 + 0.03);
+      const r = side < 0 ? R_END_L : R_END_R;
+      cyl(drumStatic, r, r, 0.09, x, 0, 0, M.drum, 48, "x");
+      cyl(drumStatic, 0.34, 0.34, 0.22, x + side * 0.1, 0, 0, M.copper, 24, "x");
+      ring(drumStatic, 0.5, 0.06, x + side * 0.18, 0, 0, M.copper, "x");
+      box(drumStatic, 0.08, 1.0, 1.0, x + side * 0.24, 0, 0, M.steel, 0.01);
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * TAU;
+        ball(drumStatic, 0.05, x + side * 0.1, Math.cos(a) * (r - 0.18), Math.sin(a) * (r - 0.18), M.chrome);
       }
     }
 
-    // helical lifting paddles — four axial rows, six around the barrel
-    for (let row = 0; row < 4; row++) {
-      const x = -1.95 + row * 1.3;
-      for (let i = 0; i < 6; i++) {
-        const a = (i / 6) * TAU + row * 0.22;
-        const blade = box(
-          drumSpin, 1.02, 0.62, 0.09,
-          x, Math.cos(a) * 1.14, Math.sin(a) * 1.14,
-          i % 2 === 0 ? M.copper : M.edge, 0.03,
-        );
-        blade.rotation.x = a;
+    // sliding top door, rails, barrel bolt and the 3 o'clock lock pin
+    const doorAssembly = new THREE.Group();
+    drumAssembly.add(doorAssembly);
+    const door = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.62, 1.62, 1.9, 18, 1, true, Math.PI / 2 - 0.42, 0.84),
+      M.copper,
+    );
+    door.rotation.z = Math.PI / 2;
+    door.position.set(DRUM_X, DRUM_Y, 0);
+    door.castShadow = true;
+    doorAssembly.add(door);
+    for (const z of [-0.62, 0.62]) {
+      box(doorAssembly, 2.0, 0.06, 0.08, DRUM_X, DRUM_Y + 1.58, z, M.steel, 0.015);
+    }
+    box(doorAssembly, 0.1, 0.09, 0.5, DRUM_X + 0.98, DRUM_Y + 1.62, 0, M.chrome, 0.02);
+    const pinX = DRUM_X - DRUM_L / 2 - 0.32;
+    cyl(doorAssembly, 0.09, 0.09, 0.72, pinX, DRUM_Y, 1.72, M.copper, 14, "z");
+    box(doorAssembly, 0.22, 0.22, 0.12, pinX, DRUM_Y, 2.1, M.body, 0.03);
+    box(frame, 0.2, 0.44, 0.2, pinX, DRUM_Y, FZ + 0.08, M.body, 0.02);
+    box(frame, 0.14, 0.18, 0.12, pinX, DRUM_Y, FZ - 0.04, M.dark, 0.02);
+
+    // the shaft and its paddles turn; the drum shell stays still
+    const shaftSpin = new THREE.Group();
+    shaftSpin.position.set(DRUM_X, DRUM_Y, 0);
+    drumAssembly.add(shaftSpin);
+    cyl(shaftSpin, 0.167, 0.167, 6.0, 0, 0, 0, M.copper, 20, "x");
+    cyl(shaftSpin, 0.125, 0.125, 7.4, 0, 0, 0, M.chrome, 16, "x");
+
+    const ringX = [-1.155, -0.405, 0.345, 1.095, 1.845];
+    const ringLen = [1.16, 1.16, 1.16, 1.13, 0.93];
+    ringX.forEach((x, ri) => {
+      const base = ri * (40 * Math.PI / 180);
+      for (let k = 0; k < 3; k++) {
+        const pivot = new THREE.Group();
+        pivot.position.x = x;
+        pivot.rotation.x = base + k * (TAU / 3);
+        shaftSpin.add(pivot);
+        const tab = box(pivot, 0.45, 0.45, 0.06, 0, 0.2, 0, M.steel, 0.01);
+        const blade = box(pivot, 0.45, ringLen[ri], 0.06, 0, 0.22 + ringLen[ri] / 2, 0, M.copper, 0.02);
+        tab.userData.spin = true;
         blade.userData.spin = true;
       }
-    }
+    });
 
-    // central shaft
-    cyl(drumSpin, 0.14, 0.14, DRUM_L + 1.6, 0, 0, 0, M.chrome, 16, "x");
-
-    // compost bed stays level while the barrel turns around it
-    const bed = box(drumAssembly, DRUM_L - 0.5, 0.62, 2.35, 0.35, DRUM_Y - 0.92, 0, M.soil, 0.28);
+    // compost bed stays level while the paddles turn through it
+    const bed = box(drumAssembly, DRUM_L - 0.55, 0.66, 2.2, DRUM_X, DRUM_Y - 0.95, 0, M.soil, 0.26);
     bed.castShadow = false;
 
-    const gritGeo = new THREE.IcosahedronGeometry(0.085, 0);
-    const grit = new THREE.InstancedMesh(gritGeo, M.soilLight, 150);
+    const gritGeo = new THREE.IcosahedronGeometry(0.075, 0);
+    const grit = new THREE.InstancedMesh(gritGeo, M.soilLight, 140);
     const dummy = new THREE.Object3D();
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 140; i++) {
       const a = (i * 2654435761) % 1000 / 1000;
       const b = (i * 40503) % 1000 / 1000;
       dummy.position.set(
-        0.35 + (a - 0.5) * (DRUM_L - 0.8),
-        DRUM_Y - 0.72 + b * 0.36,
-        (b - 0.5) * 2.0 + (a - 0.5) * 0.4,
+        DRUM_X + (a - 0.5) * (DRUM_L - 0.8),
+        DRUM_Y - 0.86 + b * 0.38,
+        (b - 0.5) * 1.9 + (a - 0.5) * 0.3,
       );
       dummy.rotation.set(a * TAU, b * TAU, 0);
       dummy.scale.setScalar(0.5 + ((i * 7) % 9) / 12);
@@ -631,166 +706,24 @@ function initDrumScene(
     grit.instanceMatrix.needsUpdate = true;
     drumAssembly.add(grit);
 
-    // driven pulley on the shaft + ring gear on the barrel
-    const drivenPulley = new THREE.Group();
-    drivenPulley.position.set(-3.0, DRUM_Y, 0);
-    drumAssembly.add(drivenPulley);
-    cyl(drivenPulley, 0.94, 0.94, 0.22, 0, 0, 0, M.body, 32, "x");
-    ring(drivenPulley, 0.96, 0.045, -0.12, 0, 0, M.copper, "x");
-    ring(drivenPulley, 0.96, 0.045, 0.12, 0, 0, M.copper, "x");
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * TAU;
-      ball(drivenPulley, 0.05, 0.13, Math.cos(a) * 0.7, Math.sin(a) * 0.7, M.chrome);
-    }
-
-    const gearRing = new THREE.Group();
-    gearRing.position.set(-2.05, DRUM_Y, 0);
-    drumAssembly.add(gearRing);
-    ring(gearRing, DRUM_R + 0.2, 0.12, 0, 0, 0, M.copper, "x");
-    for (let i = 0; i < 36; i++) {
-      const a = (i / 36) * TAU;
-      const tooth = box(
-        gearRing, 0.16, 0.16, 0.1,
-        0, Math.cos(a) * (DRUM_R + 0.34), Math.sin(a) * (DRUM_R + 0.34),
-        M.copper, 0.015,
-      );
-      tooth.rotation.x = a;
-    }
-
-    // ---------------------------------------------------------- the motor
-    const motorAssembly = new THREE.Group();
-    machine.add(motorAssembly);
-
-    const MOTOR_Y = 1.05;
-    box(motorAssembly, 1.72, 0.94, 1.0, -4.35, MOTOR_Y, 0, M.body, 0.14);
-    // cooling fins
-    for (let i = 0; i < 11; i++) {
-      box(motorAssembly, 0.055, 1.02, 1.06, -5.05 + i * 0.14, MOTOR_Y, 0, M.edge, 0.015);
-    }
-    // terminal box + conduit
-    box(motorAssembly, 0.6, 0.3, 0.55, -4.4, MOTOR_Y + 0.62, 0, M.dark, 0.05);
-    tube(motorAssembly, [
-      [-4.4, MOTOR_Y + 0.78, 0.05], [-3.7, MOTOR_Y + 1.1, 0.05],
-      [-3.1, 1.7, 0.05], [-2.6, 1.9, 0.05],
-    ], 0.045, M.dark);
-
-    // fan cowl + spinning blades
-    cyl(motorAssembly, 0.56, 0.56, 0.34, -5.35, MOTOR_Y, 0, M.dark, 28, "x");
-    ring(motorAssembly, 0.55, 0.05, -5.53, MOTOR_Y, 0, M.chrome, "x");
-    const fan = new THREE.Group();
-    fan.position.set(-5.54, MOTOR_Y, 0);
-    motorAssembly.add(fan);
-    cyl(fan, 0.1, 0.1, 0.12, 0, 0, 0, M.chrome, 12, "x");
-    for (let i = 0; i < 6; i++) {
-      const a = (i / 6) * TAU;
-      const blade = box(fan, 0.06, 0.44, 0.2, 0.01, Math.cos(a) * 0.3, Math.sin(a) * 0.3, M.edge, 0.02);
-      blade.rotation.x = a + 0.4;
-    }
-
-    // gearbox + output shaft
-    box(motorAssembly, 0.72, 0.82, 0.82, -3.28, MOTOR_Y, 0, M.ivory, 0.1);
-    cyl(motorAssembly, 0.1, 0.1, 0.5, -2.95, MOTOR_Y, 0, M.chrome, 12, "x");
-
-    const motorPulley = new THREE.Group();
-    motorPulley.position.set(-3.0, MOTOR_Y, 0);
-    motorAssembly.add(motorPulley);
-    cyl(motorPulley, 0.48, 0.48, 0.24, 0, 0, 0, M.body, 28, "x");
-    ring(motorPulley, 0.5, 0.035, -0.13, 0, 0, M.copper, "x");
-    ring(motorPulley, 0.5, 0.035, 0.13, 0, 0, M.copper, "x");
-
-    for (const x of [-4.85, -3.9]) {
-      for (const z of [-0.42, 0.42]) {
-        box(motorAssembly, 0.34, 0.28, 0.2, x, 0.42, z, M.dark, 0.03);
-      }
-    }
-
-    // -------------------------------------------------------- belt drive
-    const beltPoints: Vec3[] = [];
-    const bigY = DRUM_Y, bigR = 1.0;
-    const smallY = MOTOR_Y, smallR = 0.54;
-    // upper arc around the driven pulley
-    for (let i = 0; i <= 18; i++) {
-      const a = -Math.PI / 2 + (i / 18) * Math.PI;
-      beltPoints.push([-3.0, bigY + bigR * Math.cos(a), bigR * Math.sin(a)]);
-    }
-    // right run down
-    beltPoints.push([-3.0, (bigY + smallY) / 2, bigR * 0.78]);
-    // lower arc around the motor pulley
-    for (let i = 0; i <= 18; i++) {
-      const a = Math.PI / 2 + (i / 18) * Math.PI;
-      beltPoints.push([-3.0, smallY + smallR * Math.cos(a), smallR * Math.sin(a)]);
-    }
-    // left run up
-    beltPoints.push([-3.0, (bigY + smallY) / 2, -bigR * 0.78]);
-
-    const beltCurve = new THREE.CatmullRomCurve3(
-      beltPoints.map((p) => new THREE.Vector3(...p)), true, "catmullrom", 0.25,
-    );
-    machine.add(new THREE.Mesh(new THREE.TubeGeometry(beltCurve, 160, 0.095, 6, true), M.edge));
-
-    // moving treads make the drive read as running
-    const treadCount = 46;
-    const treads = new THREE.InstancedMesh(boxGeo(0.14, 0.045, 0.16, 0.012), M.lime, treadCount);
-    treads.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-    machine.add(treads);
-    const beltPos = new THREE.Vector3();
-    const beltTan = new THREE.Vector3();
-    function updateBelt(t: number) {
-      for (let i = 0; i < treadCount; i++) {
-        const u = (i / treadCount + t * 0.09) % 1;
-        beltCurve.getPointAt(u, beltPos);
-        beltCurve.getTangentAt(u, beltTan);
-        dummy.position.copy(beltPos);
-        dummy.rotation.set(0, 0, Math.atan2(beltTan.y, beltTan.z));
-        dummy.scale.setScalar(1);
-        dummy.updateMatrix();
-        treads.setMatrixAt(i, dummy.matrix);
-      }
-      treads.instanceMatrix.needsUpdate = true;
-    }
-    updateBelt(0);
-
-    // ------------------------------------------------------------ intake
-    const intakeAssembly = new THREE.Group();
-    machine.add(intakeAssembly);
-    const HX = -1.75;
-    const hopper = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.0, 0.42, 1.25, 24, 1, true), M.ivory,
-    );
-    hopper.position.set(HX, 5.05, 0);
-    hopper.castShadow = true;
-    intakeAssembly.add(hopper);
-    ring(intakeAssembly, 1.0, 0.06, HX, 5.67, 0, M.edge, "y");
-    cyl(intakeAssembly, 0.42, 0.42, 0.65, HX, 4.15, 0, M.dark, 20);
-    box(intakeAssembly, 0.34, 0.05, 0.05, HX, 5.85, 0, M.lime, 0.01);
-
-    const hopperLabel = canvasTexture(512, 116, (c, w, h) => {
-      c.fillStyle = "#d9f26b";
-      c.fillRect(0, 0, w, h);
-      print(c, "INTAKE", 24, 48, 30, "#242a12", 650);
-      print(c, "CLEAN / MINOR · UNTREATED", 24, 88, 18, "#4c5136", 500);
-    });
-    const hopperPlate = screen(intakeAssembly, 1.35, 0.31, HX + 1.35, 5.05, 0, hopperLabel.texture);
-    hopperPlate.rotation.y = Math.PI / 2;
-
-    // hair falling into the hopper
-    const hairCount = 34;
-    const hairGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.34, 5);
+    // falling hair through the top door — the only input shown
+    const hairCount = 24;
+    const hairGeo = new THREE.CylinderGeometry(0.011, 0.011, 0.3, 5);
     const hair = new THREE.InstancedMesh(hairGeo, M.hair, hairCount);
     hair.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-    intakeAssembly.add(hair);
+    drumAssembly.add(hair);
     const hairSeeds = Array.from({ length: hairCount }, (_, i) => ({
       phase: (i * 0.6180339887) % 1,
-      x: HX + (((i * 73) % 100) / 100 - 0.5) * 1.2,
-      z: (((i * 41) % 100) / 100 - 0.5) * 1.2,
+      x: DRUM_X + (((i * 73) % 100) / 100 - 0.5) * 1.5,
+      z: (((i * 41) % 100) / 100 - 0.5) * 0.8,
       spin: ((i * 29) % 100) / 100 * TAU,
     }));
     function updateHair(t: number) {
       hairSeeds.forEach((s, i) => {
-        const p = (s.phase + t * 0.34) % 1;
-        dummy.position.set(s.x, 6.4 - p * 1.5, s.z);
+        const p = (s.phase + t * 0.28) % 1;
+        dummy.position.set(s.x, DRUM_Y + 2.4 - p * 1.0, s.z);
         dummy.rotation.set(Math.sin(p * TAU + s.spin) * 0.5, s.spin, p * 2);
-        dummy.scale.setScalar(0.6 + 0.4 * Math.sin(p * Math.PI));
+        dummy.scale.setScalar(0.5 + 0.4 * Math.sin(p * Math.PI));
         dummy.updateMatrix();
         hair.setMatrixAt(i, dummy.matrix);
       });
@@ -798,40 +731,139 @@ function initDrumScene(
     }
     updateHair(0);
 
-    // --------------------------------------------------------- discharge
+    // --------------------------------------------------------- chain drive
+    const driveAssembly = new THREE.Group();
+    machine.add(driveAssembly);
+
+    const SPROCKET_X = DRUM_X + DRUM_L / 2 + 0.55;
+    const BIG_R = 0.82;    // 40T, PCD 161.9 mm
+    const SMALL_R = 0.21;  // 10T, PCD 41.1 mm
+    const MOTOR_Y = 1.95;
+
+    // 40T sprocket is keyed to the mixing shaft
+    const bigSprocket = new THREE.Group();
+    bigSprocket.position.set(SPROCKET_X - DRUM_X, 0, 0);
+    shaftSpin.add(bigSprocket);
+    cyl(bigSprocket, BIG_R, BIG_R, 0.14, 0, 0, 0, M.body, 32, "x");
+    ring(bigSprocket, BIG_R + 0.03, 0.045, -0.08, 0, 0, M.steel, "x");
+    ring(bigSprocket, BIG_R + 0.03, 0.045, 0.08, 0, 0, M.steel, "x");
+    for (let i = 0; i < 20; i++) {
+      const a = (i / 20) * TAU;
+      const tooth = box(
+        bigSprocket, 0.13, 0.1, 0.1,
+        0, Math.cos(a) * (BIG_R + 0.05), Math.sin(a) * (BIG_R + 0.05), M.steel, 0.012,
+      );
+      tooth.rotation.x = a;
+    }
+    cyl(bigSprocket, 0.26, 0.26, 0.24, 0, 0, 0, M.dark, 20, "x");
+
+    // 12 V worm-gear motor on a slotted mount plate
+    box(driveAssembly, 1.5, 0.78, 0.78, SPROCKET_X + 0.95, MOTOR_Y, 0, M.body, 0.14);
+    cyl(driveAssembly, 0.42, 0.42, 0.42, SPROCKET_X + 0.42, MOTOR_Y, 0, M.ivory, 24, "x");
+    box(driveAssembly, 0.16, 0.92, 0.78, SPROCKET_X + 1.72, MOTOR_Y, 0, M.dark, 0.08);
+    for (const z of [-0.5, 0.5]) {
+      box(driveAssembly, 1.9, 0.1, 0.16, SPROCKET_X + 0.9, MID_Y + 0.05, z, M.steel, 0.02);
+    }
+    const motorSpin = new THREE.Group();
+    motorSpin.position.set(SPROCKET_X, MOTOR_Y, 0);
+    driveAssembly.add(motorSpin);
+    cyl(motorSpin, SMALL_R, SMALL_R, 0.12, 0, 0, 0, M.body, 20, "x");
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * TAU;
+      const tooth = box(
+        motorSpin, 0.1, 0.07, 0.07,
+        0, Math.cos(a) * (SMALL_R + 0.035), Math.sin(a) * (SMALL_R + 0.035), M.steel, 0.01,
+      );
+      tooth.rotation.x = a;
+    }
+    cyl(motorSpin, 0.08, 0.08, 0.2, 0, 0, 0, M.chrome, 12, "x");
+
+    // 58-link roller chain, shown as a closed loop between the sprockets
+    const chainPts: Vec3[] = [
+      [SPROCKET_X, DRUM_Y + BIG_R, 0],
+      [SPROCKET_X, DRUM_Y, BIG_R],
+      [SPROCKET_X, (DRUM_Y + MOTOR_Y) / 2, BIG_R * 0.92],
+      [SPROCKET_X, MOTOR_Y, SMALL_R + 0.02],
+      [SPROCKET_X, MOTOR_Y - SMALL_R, 0],
+      [SPROCKET_X, MOTOR_Y, -(SMALL_R + 0.02)],
+      [SPROCKET_X, (DRUM_Y + MOTOR_Y) / 2, -BIG_R * 0.92],
+      [SPROCKET_X, DRUM_Y, -BIG_R],
+    ];
+    const chainCurve = new THREE.CatmullRomCurve3(
+      chainPts.map((p) => new THREE.Vector3(...p)), true, "catmullrom", 0.18,
+    );
+    driveAssembly.add(
+      new THREE.Mesh(new THREE.TubeGeometry(chainCurve, 180, 0.045, 6, true), M.edge),
+    );
+
+    const linkCount = 58;
+    const links = new THREE.InstancedMesh(boxGeo(0.13, 0.045, 0.1, 0.01), M.steel, linkCount);
+    links.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    driveAssembly.add(links);
+    const chainPos = new THREE.Vector3();
+    const chainTan = new THREE.Vector3();
+    function updateChain(t: number) {
+      for (let i = 0; i < linkCount; i++) {
+        const u = (i / linkCount + t * 0.055) % 1;
+        chainCurve.getPointAt(u, chainPos);
+        chainCurve.getTangentAt(u, chainTan);
+        dummy.position.copy(chainPos);
+        dummy.rotation.set(0, 0, Math.atan2(chainTan.y, chainTan.z));
+        dummy.scale.setScalar(1);
+        dummy.updateMatrix();
+        links.setMatrixAt(i, dummy.matrix);
+      }
+      links.instanceMatrix.needsUpdate = true;
+    }
+    updateChain(0);
+
+    // translucent green chain guard, lifted in cutaway mode
+    const guardGroup = new THREE.Group();
+    driveAssembly.add(guardGroup);
+    const guardY = (DRUM_Y + MOTOR_Y) / 2 + 0.15;
+    for (const x of [SPROCKET_X - 0.19, SPROCKET_X + 0.19]) {
+      box(guardGroup, 0.035, 4.85, 2.1, x, guardY, 0, M.guard, 0.01);
+    }
+    for (const z of [-1.05, 1.05]) {
+      box(guardGroup, 0.42, 4.85, 0.035, SPROCKET_X, guardY, z, M.guard, 0.01);
+      box(guardGroup, 0.05, 4.85, 0.05, SPROCKET_X + 0.21, guardY, z, M.green, 0.01);
+    }
+    for (const y of [guardY - 2.42, guardY + 2.42]) {
+      box(guardGroup, 0.05, 0.05, 2.1, SPROCKET_X + 0.21, y, 0, M.green, 0.01);
+    }
+
+    // ---------------------------------------------------------- discharge
     const dischargeAssembly = new THREE.Group();
     machine.add(dischargeAssembly);
-    const chute = box(dischargeAssembly, 1.35, 0.12, 1.15, 3.35, 1.75, 0, M.copper, 0.05);
-    chute.rotation.z = -0.62;
-    box(dischargeAssembly, 0.12, 0.32, 1.15, 2.78, 2.05, 0, M.dark, 0.02);
-    box(dischargeAssembly, 2.0, 0.16, 1.55, 4.35, 0.34, 0, M.dark, 0.05);
+    box(dischargeAssembly, 4.6, 1.85, 3.2, DRUM_X, 2.1, 0, M.body, 0.06);
+    box(dischargeAssembly, 4.4, 0.08, 3.0, DRUM_X, 3.05, 0, M.steel, 0.02);
+    box(dischargeAssembly, 0.1, 0.12, 0.9, DRUM_X + 2.35, 2.1, 0, M.chrome, 0.02);
 
-    // compost mound
+    // compost settling in the slide-in box
     for (let i = 0; i < 22; i++) {
       const a = (i / 22) * TAU;
-      const r = 0.15 + (i % 5) * 0.16;
+      const r = 0.15 + (i % 5) * 0.2;
       ball(
-        dischargeAssembly, 0.16 + (i % 4) * 0.045,
-        4.35 + Math.cos(a) * r, 0.45 + ((i * 13) % 7) * 0.035, Math.sin(a) * r * 0.7,
+        dischargeAssembly, 0.15 + (i % 4) * 0.04,
+        DRUM_X + Math.cos(a) * r * 1.3, 3.12 + ((i * 13) % 7) * 0.025, Math.sin(a) * r,
         i % 3 ? M.soil : M.soilLight,
       );
     }
 
-    // falling crumbs
-    const crumbCount = 26;
+    const crumbCount = 22;
     const crumbs = new THREE.InstancedMesh(gritGeo, M.soilLight, crumbCount);
     crumbs.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     dischargeAssembly.add(crumbs);
     function updateCrumbs(t: number) {
       for (let i = 0; i < crumbCount; i++) {
-        const p = ((i * 0.618) % 1 + t * 0.45) % 1;
+        const p = ((i * 0.618) % 1 + t * 0.12) % 1;
         dummy.position.set(
-          3.85 + p * 0.6 + (((i * 17) % 10) / 10 - 0.5) * 0.3,
-          1.65 - p * 1.15,
-          (((i * 31) % 100) / 100 - 0.5) * 0.7,
+          DRUM_X + (((i * 17) % 10) / 10 - 0.5) * 3.8,
+          3.18 - p * 0.5,
+          (((i * 31) % 100) / 100 - 0.5) * 2.4,
         );
-        dummy.rotation.set(p * 4, p * 3, 0);
-        dummy.scale.setScalar(0.7);
+        dummy.rotation.set(p * 3, p * 2, 0);
+        dummy.scale.setScalar(0.65);
         dummy.updateMatrix();
         crumbs.setMatrixAt(i, dummy.matrix);
       }
@@ -842,17 +874,22 @@ function initDrumScene(
     const outLabel = canvasTexture(512, 116, (c, w, h) => {
       c.fillStyle = "#242a12";
       c.fillRect(0, 0, w, h);
-      print(c, "DISCHARGE", 24, 48, 28, "#d9f26b", 650);
-      print(c, "CURED COMPOST · 12.9 KG", 24, 88, 17, "#9a9c86", 500);
+      print(c, "COMPOST OUT", 24, 48, 28, "#d9f26b", 650);
+      print(c, "SLIDE-OUT BOX · EMPTY BY HAND", 24, 88, 16, "#9a9c86", 500);
     });
-    screen(dischargeAssembly, 1.4, 0.32, 4.35, 0.9, 0.79, outLabel.texture);
+    screen(dischargeAssembly, 1.55, 0.35, DRUM_X + 1.05, 1.15, 1.63, outLabel.texture);
 
-    // ------------------------------------------------------- temperature
+    // ------------------------------------------------------------ sensors
     const sensorAssembly = new THREE.Group();
     machine.add(sensorAssembly);
-    cyl(sensorAssembly, 0.06, 0.06, 1.5, 1.6, 4.35, -0.75, M.chrome, 12);
-    ball(sensorAssembly, 0.1, 1.6, 3.6, -0.75, M.light);
-    box(sensorAssembly, 0.1, 1.25, 0.1, 1.6, 4.9, -0.75, M.dark, 0.02);
+    cyl(sensorAssembly, 0.055, 0.055, 1.5, 0.75, 6.55, -0.55, M.chrome, 12);
+    ball(sensorAssembly, 0.09, 0.75, 5.82, -0.55, M.light);
+    box(sensorAssembly, 0.1, 1.2, 0.1, 0.75, 7.15, -0.55, M.dark, 0.02);
+    tube(sensorAssembly, [
+      [0.75, 7.72, -0.55], [1.6, 7.2, -1.2], [3.6, 4.2, -1.4], [4.55, 2.9, -0.8],
+    ], 0.035, M.dark);
+    box(sensorAssembly, 0.36, 0.5, 0.3, -2.6, 4.5, -1.75, M.ivory, 0.04);
+    box(sensorAssembly, 0.36, 0.5, 0.3, 1.7, 4.5, -1.75, M.ivory, 0.04);
 
     const probeTex = canvasTexture(420, 260, () => {});
     function drawProbe(t: number) {
@@ -860,9 +897,9 @@ function initDrumScene(
       c.fillStyle = "#12231e";
       c.fillRect(0, 0, w, h);
       print(c, "CORE TEMP", 24, 44, 20, "#9cae91", 500);
-      const temp = 58.6 + Math.sin(t * 0.35) * 0.8;
+      const temp = 52.6 + Math.sin(t * 0.35) * 0.7;
       print(c, `${temp.toFixed(1)} °C`, 22, 128, 68, "#ecedc7", 600);
-      print(c, "PROBE 02 · IN PILE", 24, 168, 15, "#6d8a72", 500);
+      print(c, "PROBE · IN THE PILE", 24, 168, 15, "#6d8a72", 500);
       c.fillStyle = "#d9f26b";
       c.fillRect(24, 202, 260 + Math.sin(t * 0.6) * 24, 8);
       c.fillStyle = "#334348";
@@ -870,18 +907,25 @@ function initDrumScene(
       probeTex.texture.needsUpdate = true;
     }
     drawProbe(0);
-    const probeScreen = screen(sensorAssembly, 1.15, 0.71, 1.6, 5.35, -0.72, probeTex.texture);
-    probeScreen.rotation.y = 0.18;
+    const probeScreen = screen(sensorAssembly, 1.05, 0.65, 0.75, 7.75, -0.52, probeTex.texture);
+    probeScreen.rotation.y = 0.12;
 
-    // ------------------------------------------------------ control panel
+    // ------------------------------------------------------ control cabinet
     const cabinetAssembly = new THREE.Group();
-    // Children are authored at z=-2.45 (behind the drum). Shift the whole
-    // assembly forward and left so the panel reads from the default camera.
-    cabinetAssembly.position.set(-0.8, 0, 4.95);
+    cabinetAssembly.position.set(5.15, 0, 0);
     machine.add(cabinetAssembly);
-    box(cabinetAssembly, 1.35, 2.15, 0.55, -4.5, 1.35, -2.45, M.ivory, 0.09);
-    box(cabinetAssembly, 1.5, 0.13, 0.65, -4.5, 2.48, -2.45, M.body, 0.05);
-    box(cabinetAssembly, 0.18, 0.32, 0.18, -4.5, 0.16, -2.45, M.dark, 0.03);
+    box(cabinetAssembly, 1.7, 2.6, 1.5, 0, 1.45, 0, M.ivory, 0.1);
+    box(cabinetAssembly, 1.85, 0.14, 1.62, 0, 2.82, 0, M.body, 0.05);
+    box(cabinetAssembly, 0.22, 0.34, 0.22, 0, 0.18, 0, M.dark, 0.03);
+
+    // 3 L water tank on top with float switch
+    const tank = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.9, 1.0), M.blue);
+    tank.position.set(0, 3.36, 0);
+    tank.castShadow = true;
+    cabinetAssembly.add(tank);
+    box(cabinetAssembly, 1.22, 0.08, 1.06, 0, 3.84, 0, M.steel, 0.02);
+    cyl(cabinetAssembly, 0.06, 0.06, 0.42, 0.36, 3.98, 0, M.chrome, 10);
+    ball(cabinetAssembly, 0.09, 0.36, 4.2, 0, M.light);
 
     const panelTex = canvasTexture(560, 620, () => {});
     function drawPanel(t: number) {
@@ -889,14 +933,14 @@ function initDrumScene(
       c.fillStyle = "#111b20";
       c.fillRect(0, 0, w, h);
       print(c, "MCH-01", 28, 52, 24, "#d9f26b", 650);
-      print(c, "MODULE 06", 400, 52, 17, "#607475", 500);
+      print(c, "NOVA PROPER", 350, 52, 16, "#607475", 500);
       c.fillStyle = "#202c30";
       c.fillRect(24, 76, 512, 3);
       const rows = [
-        ["MOTOR", "RUNNING", "#d9f26b"],
-        ["DRUM", "8 RPM", "#d4d8cc"],
+        ["SHAFT", "MIXING", "#d9f26b"],
+        ["SPEED", "10 RPM", "#d4d8cc"],
+        ["TEMP", "52 °C", "#d4d8cc"],
         ["MOISTURE", "54 %", "#d4d8cc"],
-        ["BATCH", "2603", "#d4d8cc"],
       ] as const;
       rows.forEach(([k, v, col], i) => {
         const y = 130 + i * 84;
@@ -915,21 +959,21 @@ function initDrumScene(
       panelTex.texture.needsUpdate = true;
     }
     drawPanel(0);
-    screen(cabinetAssembly, 1.06, 1.18, -4.5, 1.72, -2.165, panelTex.texture);
+    screen(cabinetAssembly, 1.2, 1.3, 0, 1.78, 0.77, panelTex.texture);
 
-    // start / stop / local e-stop
-    cyl(cabinetAssembly, 0.11, 0.11, 0.06, -4.9, 0.82, -2.14, M.green, 18, "z");
-    cyl(cabinetAssembly, 0.11, 0.11, 0.06, -4.5, 0.82, -2.14, M.ivory, 18, "z");
-    cyl(cabinetAssembly, 0.15, 0.15, 0.09, -4.05, 0.82, -2.14, M.rust, 20, "z");
-    ring(cabinetAssembly, 0.19, 0.025, -4.05, 0.82, -2.12, M.chrome, "z");
+    // local ON/OFF, STOP and latching E-STOP
+    cyl(cabinetAssembly, 0.1, 0.1, 0.06, -0.52, 0.95, 0.78, M.green, 18, "z");
+    cyl(cabinetAssembly, 0.1, 0.1, 0.06, 0, 0.95, 0.78, M.ivory, 18, "z");
+    cyl(cabinetAssembly, 0.14, 0.14, 0.09, 0.52, 0.95, 0.78, M.rust, 20, "z");
+    ring(cabinetAssembly, 0.18, 0.025, 0.52, 0.95, 0.8, M.chrome, "z");
 
     const cabinetLabel = canvasTexture(512, 116, (c, w, h) => {
       c.fillStyle = "#e0ded4";
       c.fillRect(0, 0, w, h);
-      print(c, "LOCAL E-STOP", 24, 48, 26, "#a6402a", 650);
-      print(c, "WEB = AUTHORISED START/STOP", 24, 88, 16, "#556059", 500);
+      print(c, "LOCAL CONTROLS", 24, 48, 26, "#a6402a", 650);
+      print(c, "WEB REQUESTS SESSIONS", 24, 88, 16, "#556059", 500);
     });
-    screen(cabinetAssembly, 1.2, 0.27, -4.5, 2.72, -2.45, cabinetLabel.texture);
+    screen(cabinetAssembly, 1.28, 0.29, 0, 2.66, 0.77, cabinetLabel.texture);
 
     // ------------------------------------------------------------- steam
     const steamTex = canvasTexture(128, 128, (c, w, h) => {
@@ -945,7 +989,7 @@ function initDrumScene(
     const steamPlanes: THREE.Mesh[] = [];
     for (let i = 0; i < 7; i++) {
       const p = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.5), steamMat.clone());
-      p.position.set(-1.4 + i * 0.7, 4.5, -0.7 + (i % 3) * 0.4);
+      p.position.set(DRUM_X - 1.4 + i * 0.5, DRUM_Y + 1.7, -0.5 + (i % 3) * 0.35);
       p.userData.phase = (i * 0.618) % 1;
       machine.add(p);
       steamPlanes.push(p);
@@ -954,37 +998,37 @@ function initDrumScene(
     // ------------------------------------------------------------- parts
     const partDefs: Omit<PartDef, "group" | "base" | "label" | "anchor" | "index">[] = [
       {
-        id: "motor", name: "Motor & gearbox", meta: "Module 6 · 8 rpm",
-        desc: "Finned 3-phase motor, fan and reducer. The web panel sends authorised start/stop only — E-stop stays in local hardware.",
+        id: "drum", name: "Composting drum", meta: "25 L · Ø315 middle",
+        desc: "The drum stays still. The shaft turns inside it; slide the top door only when emptying.",
       },
       {
-        id: "drum", name: "Rotary drum", meta: "Module 5 · batch 2603",
-        desc: "Helical paddles lift and turn the mix. Temperature, moisture and turning events are logged against the batch ID.",
+        id: "shaft", name: "Mixing shaft", meta: "15 paddles · 10 rpm",
+        desc: "Five rings of three paddles lift and fold the hair and compost. The drum itself does not spin.",
       },
       {
-        id: "intake", name: "Hair intake", meta: "Clean / minor only",
-        desc: "Only clean and minor, untreated hair is weighed into a recipe. Mixed or treated stock is held on a separate line.",
+        id: "drive", name: "Chain drive", meta: "12 V motor · 40T / 10T",
+        desc: "A slow worm-gear motor turns the shaft through a guarded roller chain.",
       },
       {
-        id: "discharge", name: "Compost discharge", meta: "12.9 kg cured",
-        desc: "After 45 days the pile stops reheating. Cured compost is weighed out and a sample goes to the laboratory.",
+        id: "door", name: "Door & lock pin", meta: "Top opening · locked",
+        desc: "The pin holds the drum at home. Stop and unlock before sliding the door to empty.",
       },
       {
-        id: "sensor", name: "Core probe", meta: "58.6 °C · 54% moisture",
-        desc: "Live core temperature and moisture. A pile that reheats is not mature, and its stage cannot be skipped.",
+        id: "discharge", name: "Discharge box", meta: "~55 L · slide-out",
+        desc: "Finished compost drops into the box below the drum and is emptied by hand.",
       },
       {
-        id: "cabinet", name: "Control cabinet", meta: "Session log · operator",
-        desc: "Every operating session records start, end, duration, readings, operator and batch. Alerts fire on overheating or faults.",
+        id: "cabinet", name: "Control cabinet", meta: "Start / stop / E-stop",
+        desc: "Local controls run the machine. The website only requests authorised sessions.",
       },
     ];
 
     const assemblies: Record<PartId, THREE.Group> = {
-      motor: motorAssembly,
-      drum: drumAssembly,
-      intake: intakeAssembly,
+      drum: drumStatic,
+      shaft: shaftSpin,
+      drive: driveAssembly,
+      door: doorAssembly,
       discharge: dischargeAssembly,
-      sensor: sensorAssembly,
       cabinet: cabinetAssembly,
     };
 
@@ -1014,21 +1058,21 @@ function initDrumScene(
 
     // anchor points for the exploded-view callouts
     const anchors: Record<PartId, Vec3> = {
-      motor: [-4.3, 1.9, 0],
-      drum: [0.35, 4.4, 0],
-      intake: [-1.75, 5.9, 0],
-      discharge: [4.2, 1.1, 0],
-      sensor: [1.6, 5.6, -0.75],
-      cabinet: [-4.5, 2.9, -2.45],
+      drum: [DRUM_X - 1.0, DRUM_Y + 1.5, 0],
+      shaft: [DRUM_X + 0.4, DRUM_Y + 0.4, 0],
+      drive: [SPROCKET_X + 0.4, 4.2, 0],
+      door: [DRUM_X - 0.2, DRUM_Y + 1.9, 0],
+      discharge: [DRUM_X + 0.6, 2.5, 1.4],
+      cabinet: [5.15, 2.9, 0.7],
     };
     parts.forEach((p) => p.anchor.fromArray(anchors[p.id]));
     const spreadTargets: Record<PartId, Vec3> = {
-      motor: [-2.1, 0, -0.7],
-      drum: [0, 0.35, 0],
-      intake: [-0.9, 1.0, 0],
-      discharge: [1.7, 0, 0],
-      sensor: [0.9, 0.9, 0],
-      cabinet: [-1.5, 0, -1.3],
+      drum: [0, 0.3, -0.6],
+      shaft: [0, -0.35, 0.7],
+      drive: [1.1, 0, 0],
+      door: [0, 0.9, 0],
+      discharge: [0, -0.45, 0],
+      cabinet: [1.0, 0, 0],
     };
 
     // ------------------------------------------------------------ states
@@ -1057,10 +1101,13 @@ function initDrumScene(
     let contextLost = false;
 
     const desiredPosition = new THREE.Vector3();
-    const desiredTarget = new THREE.Vector3(0, 1.95, 0);
-    const viewDirection = new THREE.Vector3(10.5, 8.4, 17).normalize();
-    const cutPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 20);
-    shellMat.clippingPlanes = [cutPlane];
+    const desiredTarget = new THREE.Vector3(0, 3.1, 0);
+    const viewDirection = new THREE.Vector3(9.5, 7.2, 16).normalize();
+    // Keep y <= cY OR z <= cZ: only the front-top quarter is removed.
+    const cutPlaneY = new THREE.Plane(new THREE.Vector3(0, -1, 0), 20);
+    const cutPlaneZ = new THREE.Plane(new THREE.Vector3(0, 0, -1), 20);
+    shellMat.clippingPlanes = [cutPlaneY, cutPlaneZ];
+    shellMat.clipIntersection = true;
 
     let baseDistance = 27;
     let sized = false;
@@ -1084,9 +1131,9 @@ function initDrumScene(
       const aspect = width / height;
       const availableWidth = mobile ? 0.9 : Math.min(0.6, aspect > 2 ? 0.55 : 0.6);
       const horizontalFit =
-        16.4 / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * aspect * availableWidth);
+        12.8 / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * aspect * availableWidth);
       const verticalFit =
-        12.2 / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * (embedded ? 0.85 : 0.78));
+        10.6 / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * (embedded ? 0.85 : 0.78));
       baseDistance =
         Math.max(horizontalFit, verticalFit) *
         (embedded ? (mobile ? 0.9 : 0.68) : mobile ? 0.82 : 0.76);
@@ -1105,13 +1152,13 @@ function initDrumScene(
     function setCameraGoal() {
       const expand = mode === "parts" ? 1.16 : 1;
       if (cameraMode === "drum") {
-        desiredTarget.set(0.4, DRUM_Y, 0);
-        desiredPosition.copy(desiredTarget).addScaledVector(viewDirection, mobile ? 10 : 13);
-      } else if (cameraMode === "motor") {
-        desiredTarget.set(-3.7, 1.5, 0);
-        desiredPosition.copy(desiredTarget).addScaledVector(viewDirection, mobile ? 9 : 11);
+        desiredTarget.set(DRUM_X, DRUM_Y, 0);
+        desiredPosition.copy(desiredTarget).addScaledVector(viewDirection, mobile ? 9 : 12);
+      } else if (cameraMode === "drive") {
+        desiredTarget.set(SPROCKET_X + 0.2, 3.7, 0);
+        desiredPosition.copy(desiredTarget).addScaledVector(viewDirection, mobile ? 8 : 10);
       } else {
-        desiredTarget.set(0, 1.95, 0);
+        desiredTarget.set(0, 3.1, 0);
         const distance = baseDistance * expand;
         if (cameraMode === "top") {
           desiredPosition.set(0.01, distance * 0.95, 0.9).add(desiredTarget);
@@ -1137,8 +1184,9 @@ function initDrumScene(
       parts: "parts", flow: "flow",
     };
     const cameraAliases: Record<string, DrumCamera> = {
-      Overview: "overview", Drum: "drum", Motor: "motor", Top: "top", Flight: "flight",
-      overview: "overview", drum: "drum", motor: "motor", top: "top", flight: "flight",
+      Overview: "overview", Drum: "drum", Drive: "drive", Top: "top", Flight: "flight",
+      overview: "overview", drum: "drum", drive: "drive", Motor: "drive", motor: "drive",
+      top: "top", flight: "flight",
     };
 
     function setMode(name: string) {
@@ -1150,7 +1198,7 @@ function initDrumScene(
         lastDraw = -1;
         play();
         cameraMode = "overview";
-      } else if (cameraMode === "drum" || cameraMode === "motor") {
+      } else if (cameraMode === "drum" || cameraMode === "drive") {
         if (mode === "assembled") cameraMode = "overview";
       }
       setCameraGoal();
@@ -1164,7 +1212,7 @@ function initDrumScene(
       if (!part) return false;
       selected = id;
       if (mode === "flow") mode = "assembled";
-      cameraMode = id === "motor" || id === "cabinet" ? "motor" : "drum";
+      cameraMode = id === "drive" || id === "cabinet" ? "drive" : "drum";
       lastInteraction = performance.now();
       setCameraGoal();
       cameraAnimating = true;
@@ -1192,7 +1240,7 @@ function initDrumScene(
         ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect x="2" y="1" width="2.5" height="10" rx=".5"/><rect x="7.5" y="1" width="2.5" height="10" rx=".5"/></svg>'
         : '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1l8 5-8 5z"/></svg>';
       $("status").classList.toggle("paused", !playing);
-      $("status-text").textContent = playing ? "Motor running" : "Motor paused";
+      $("status-text").textContent = playing ? "Shaft mixing" : "Shaft paused";
     }
 
     function play() { playing = true; syncPlayback(); return true; }
@@ -1307,11 +1355,11 @@ function initDrumScene(
     });
 
     const journeySteps: Array<[string, string]> = [
-      ["Intake", "Clean hair · BATCH-2603 · 21.2 kg"],
-      ["Weighed in", "Recipe v3.3 · 45 / 30 / 25"],
-      ["Turning", "8 rpm · core 58.6 °C · 61% moisture"],
-      ["Curing", "Day 45 · pile stable, no reheating"],
-      ["Discharge", "12.9 kg cured compost · lab sample drawn"],
+      ["Collect", "Clean hair from partner barbers"],
+      ["Load", "Through the sliding top door"],
+      ["Mix", "Paddles turn slowly at 10 rpm"],
+      ["Rest", "The pile settles and matures"],
+      ["Return", "Compost slides out below the drum"],
     ];
 
     let prevJourney = -1;
@@ -1337,8 +1385,10 @@ function initDrumScene(
       // modes
       spread = THREE.MathUtils.lerp(spread, mode === "parts" ? 1 : 0, smooth);
       cutAmount = THREE.MathUtils.lerp(cutAmount, mode === "cutaway" ? 1 : 0, smooth);
-      cutPlane.constant = 20 - cutAmount * 17.4; // 20 → 2.6, slicing the shell at drum height
-      shellMat.opacity = 0.3 - cutAmount * 0.22;
+      cutPlaneY.constant = 20 - cutAmount * (20 - (DRUM_Y + 0.05));
+      cutPlaneZ.constant = 20 - cutAmount * (20 - 0.15);
+      shellMat.opacity = 0.36 - cutAmount * 0.16;
+      guardGroup.visible = mode !== "cutaway";
 
       parts.forEach((p) => {
         const target = spreadTargets[p.id];
@@ -1349,17 +1399,14 @@ function initDrumScene(
         );
       });
 
-      // rotation: motor, pulleys, barrel, gear ring
+      // only the shaft, its paddles and the 40T sprocket turn
       const turn = t * 0.52;
-      drumSpin.rotation.x = turn;
-      gearRing.rotation.x = turn;
-      drivenPulley.rotation.x = turn * 1.95;
-      motorPulley.rotation.x = -turn * 3.8;
-      fan.rotation.x = -t * 4.2;
+      shaftSpin.rotation.x = turn;
+      motorSpin.rotation.x = -turn * 4;
 
       // material flow
       if (t - lastDraw > 1 / 20 || lastDraw < 0) {
-        updateBelt(t);
+        updateChain(t);
         updateHair(t);
         updateCrumbs(t);
         drawProbe(t);
@@ -1369,10 +1416,10 @@ function initDrumScene(
 
       steamPlanes.forEach((p, i) => {
         const p2 = (p.userData.phase + t * 0.14) % 1;
-        p.position.y = 4.35 + p2 * 1.9;
-        p.position.x = -1.4 + i * 0.7 + Math.sin(p2 * 4 + i) * 0.22;
+        p.position.y = DRUM_Y + 1.7 + p2 * 1.5;
+        p.position.x = DRUM_X - 1.4 + i * 0.5 + Math.sin(p2 * 4 + i) * 0.18;
         p.scale.setScalar(0.6 + p2 * 1.3);
-        (p.material as THREE.MeshBasicMaterial).opacity = 0.16 * Math.sin(p2 * Math.PI);
+        (p.material as THREE.MeshBasicMaterial).opacity = 0.14 * Math.sin(p2 * Math.PI);
       });
 
       // one-batch journey
@@ -1398,7 +1445,7 @@ function initDrumScene(
           .set(Math.sin(a + 0.55) * d * 0.83, d * (0.48 + Math.sin(a * 0.7) * 0.08), Math.cos(a + 0.55) * d * 0.83)
           .add(desiredTarget);
         cameraAnimating = true;
-      } else if ((cameraMode === "drum" || cameraMode === "motor") && cameraAnimating) {
+      } else if ((cameraMode === "drum" || cameraMode === "drive") && cameraAnimating) {
         setCameraGoal();
       }
 
